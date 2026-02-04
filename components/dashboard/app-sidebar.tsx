@@ -195,7 +195,7 @@ function NavItemWithSub({ item }: { item: NavItem }) {
           asChild
           isActive={item.isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 data-[active=true]:bg-zinc-900 data-[active=true]:text-zinc-100"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
         >
           <a href={item.href} className="flex items-center justify-between">
             <span className="flex items-center gap-2">
@@ -203,7 +203,7 @@ function NavItemWithSub({ item }: { item: NavItem }) {
               <span className="text-[13px]">{item.title}</span>
             </span>
             {item.badge && (
-              <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-zinc-800 text-zinc-400 border-0">
+              <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-secondary text-muted-foreground border-0">
                 {item.badge}
               </Badge>
             )}
@@ -219,7 +219,7 @@ function NavItemWithSub({ item }: { item: NavItem }) {
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
             tooltip={item.title}
-            className="transition-colors duration-150 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 data-[state=open]:text-zinc-100"
+            className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground"
           >
             <item.icon className="size-4" />
             <span className="text-[13px]">{item.title}</span>
@@ -233,7 +233,7 @@ function NavItemWithSub({ item }: { item: NavItem }) {
                 <SidebarMenuSubButton
                   asChild
                   isActive={subItem.isActive}
-                  className="text-zinc-500 hover:text-zinc-100 data-[active=true]:text-zinc-100 text-[12px]"
+                  className="text-muted-foreground hover:text-foreground data-[active=true]:text-foreground text-[12px]"
                 >
                   <a href={subItem.href}>{subItem.title}</a>
                 </SidebarMenuSubButton>
@@ -246,9 +246,13 @@ function NavItemWithSub({ item }: { item: NavItem }) {
   )
 }
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  collapsible?: "offcanvas" | "icon" | "none"
+}
+
+export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   return (
-    <Sidebar collapsible="icon" className="border-r border-zinc-800/50 bg-zinc-950">
+    <Sidebar collapsible={collapsible} className="border-r border-sidebar-border bg-sidebar">
       <SidebarHeader className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -256,38 +260,38 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-zinc-900 data-[state=open]:text-zinc-100 hover:bg-zinc-900 transition-colors duration-150"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors duration-150"
                 >
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-zinc-100 text-zinc-900 shrink-0">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
                     <Sparkles className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold tracking-tight text-zinc-100">
+                    <span className="truncate font-semibold tracking-tight text-foreground">
                       Aurora
                     </span>
-                    <span className="truncate text-xs text-zinc-500">
+                    <span className="truncate text-xs text-muted-foreground">
                       Reforged
                     </span>
                   </div>
-                  <ChevronsUpDown className="ml-auto size-4 text-zinc-600" />
+                  <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 bg-zinc-900 border-zinc-800"
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 bg-popover border-border"
                 align="start"
                 side="bottom"
                 sideOffset={4}
               >
-                <DropdownMenuItem className="text-zinc-100 focus:bg-zinc-800 focus:text-zinc-100">
+                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
                   <Sparkles className="mr-2 size-4" />
                   Aurora Reforged
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-zinc-800" />
-                <DropdownMenuItem className="text-zinc-500 focus:bg-zinc-800 focus:text-zinc-400">
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem className="text-muted-foreground focus:bg-accent focus:text-accent-foreground">
                   <Globe className="mr-2 size-4" />
                   Switch tenant
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-zinc-500 focus:bg-zinc-800 focus:text-zinc-400">
+                <DropdownMenuItem className="text-muted-foreground focus:bg-accent focus:text-accent-foreground">
                   <Palette className="mr-2 size-4" />
                   Customize branding
                 </DropdownMenuItem>
@@ -297,11 +301,11 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarSeparator className="bg-zinc-800/50" />
+      <SidebarSeparator className="bg-sidebar-border" />
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-zinc-600 uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
             Core Kernel
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -313,10 +317,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-zinc-800/50" />
+        <SidebarSeparator className="bg-sidebar-border" />
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-zinc-600 uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
             Business Modules
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -328,10 +332,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-zinc-800/50" />
+        <SidebarSeparator className="bg-sidebar-border" />
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-zinc-600 uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
             Support
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -351,40 +355,40 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-zinc-900 data-[state=open]:text-zinc-100 hover:bg-zinc-900 transition-colors duration-150"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors duration-150"
                 >
                   <Avatar className="size-8 rounded-md shrink-0">
-                    <AvatarFallback className="rounded-md bg-zinc-800 text-zinc-400 text-xs font-medium">
+                    <AvatarFallback className="rounded-md bg-secondary text-muted-foreground text-xs font-medium">
                       AD
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium tracking-tight text-zinc-100 text-[13px]">
+                    <span className="truncate font-medium tracking-tight text-foreground text-[13px]">
                       Admin User
                     </span>
-                    <span className="truncate text-xs text-zinc-500">
+                    <span className="truncate text-xs text-muted-foreground">
                       Super Admin
                     </span>
                   </div>
-                  <ChevronsUpDown className="ml-auto size-4 text-zinc-600" />
+                  <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 bg-zinc-900 border-zinc-800"
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 bg-popover border-border"
                 side="bottom"
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem className="text-zinc-100 focus:bg-zinc-800 focus:text-zinc-100">
+                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
                   <Key className="mr-2 size-4" />
                   API Keys
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-zinc-100 focus:bg-zinc-800 focus:text-zinc-100">
+                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
                   <Settings className="mr-2 size-4" />
                   Account settings
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-zinc-800" />
-                <DropdownMenuItem className="text-red-400 focus:bg-zinc-800 focus:text-red-400">
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem className="text-destructive-foreground focus:bg-accent focus:text-destructive-foreground">
                   <LogOut className="mr-2 size-4" />
                   Log out
                 </DropdownMenuItem>

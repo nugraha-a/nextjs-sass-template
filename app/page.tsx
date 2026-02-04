@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { useState, useEffect } from "react"
+import { SidebarProvider, SidebarInset, useSidebar } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { OverviewDashboard } from "@/components/modules/overview-dashboard"
@@ -10,6 +10,8 @@ import { TenantManagement } from "@/components/modules/tenant-management"
 import { IAMDashboard } from "@/components/modules/iam-dashboard"
 import { WorkflowDesigner } from "@/components/modules/workflow-designer"
 import { FinanceModule } from "@/components/modules/finance-module"
+import { useThemeSettings, type SidebarMode } from "@/contexts/theme-settings-context"
+import { cn } from "@/lib/utils"
 
 type ModuleKey = "overview" | "config" | "tenants" | "iam" | "workflow" | "finance"
 
@@ -40,29 +42,132 @@ const modules: Record<ModuleKey, { title: string; breadcrumbs: { label: string; 
   },
 }
 
-export default function DashboardPage() {
-  const [activeModule, setActiveModule] = useState<ModuleKey>("overview")
-  const currentModule = modules[activeModule]
+function DashboardContent({ 
+  activeModule, 
+  setActiveModule,
+  currentModule 
+}: { 
+  activeModule: ModuleKey
+  setActiveModule: (module: ModuleKey) => void
+  currentModule: typeof modules[ModuleKey]
+}) {
+  const { contentMode, sidebarMode } = useThemeSettings()
+  const { setOpen } = useSidebar()
+
+  // Apply sidebar mode
+  useEffect(() => {
+    if (sidebarMode === "compact") {
+      setOpen(false)
+    } else if (sidebarMode === "normal") {
+      setOpen(true)
+    }
+    // offcanvas mode will be handled by the sidebar's collapsible prop
+  }, [sidebarMode, setOpen])
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <DashboardHeader
-          title={currentModule.title}
-          breadcrumbs={currentModule.breadcrumbs}
-          activeModule={activeModule}
-          onModuleChange={setActiveModule}
-        />
-        <main className="flex-1 overflow-auto bg-zinc-950">
+    <SidebarInset className="bg-background">
+      <DashboardHeader
+        title={currentModule.title}
+        breadcrumbs={currentModule.breadcrumbs}
+        activeModule={activeModule}
+        onModuleChange={(module) => setActiveModule(module as ModuleKey)}
+      />
+      <main className={cn(
+        "flex-1 overflow-auto bg-background",
+        contentMode === "compact" && "content-container"
+      )}>
+        <div className={cn(
+          contentMode === "compact" && "max-w-7xl mx-auto"
+        )}>
           {activeModule === "overview" && <OverviewDashboard />}
           {activeModule === "config" && <ConfigurationEngine />}
           {activeModule === "tenants" && <TenantManagement />}
           {activeModule === "iam" && <IAMDashboard />}
           {activeModule === "workflow" && <WorkflowDesigner />}
           {activeModule === "finance" && <FinanceModule />}
-        </main>
-      </SidebarInset>
+        </div>
+      </main>
+    </SidebarInset>
+  )
+}
+
+function getSidebarCollapsible(mode: SidebarMode): "offcanvas" | "icon" | "none" {
+  switch (mode) {
+    case "offcanvas":
+      return "offcanvas"
+    case "compact":
+      return "icon"
+    default:
+      return "icon"
+  }
+}
+
+export default function DashboardPage() {
+  const [activeModule, setActiveModule] = useState<ModuleKey>("overview")
+  const [mounted, setMounted] = useState(false)
+  const currentModule = modules[activeModule]
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Read sidebar mode from localStorage directly for initial render
+  const [initialSidebarMode, setInitialSidebarMode] = useState<SidebarMode>("normal")
+  
+  useEffect(() => {
+    const stored = localStorage.getItem("aurora-theme-settings")
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (parsed.sidebarMode) {
+          setInitialSidebarMode(parsed.sidebarMode)
+        }
+      } catch {
+        // Use default
+      }
+    }
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    )
+  }
+
+  return (
+    <SidebarProviderWithSettings 
+      activeModule={activeModule}
+      setActiveModule={setActiveModule}
+      currentModule={currentModule}
+      initialSidebarMode={initialSidebarMode}
+    />
+  )
+}
+
+function SidebarProviderWithSettings({
+  activeModule,
+  setActiveModule,
+  currentModule,
+  initialSidebarMode,
+}: {
+  activeModule: ModuleKey
+  setActiveModule: (module: ModuleKey) => void
+  currentModule: typeof modules[ModuleKey]
+  initialSidebarMode: SidebarMode
+}) {
+  const { sidebarMode } = useThemeSettings()
+  const collapsible = getSidebarCollapsible(sidebarMode || initialSidebarMode)
+  
+  return (
+    <SidebarProvider defaultOpen={sidebarMode !== "compact"}>
+      <AppSidebar collapsible={collapsible} />
+      <DashboardContent 
+        activeModule={activeModule}
+        setActiveModule={setActiveModule}
+        currentModule={currentModule}
+      />
     </SidebarProvider>
   )
 }
