@@ -73,23 +73,25 @@ export function ThemeSettingsPanel() {
           <span className="sr-only">Theme Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[340px] sm:w-[400px] bg-background border-border overflow-y-auto">
-        <SheetHeader className="pb-4">
-          <SheetTitle className="text-foreground flex items-center gap-2">
-            <Settings className="size-4" />
-            Theme Settings
-          </SheetTitle>
-          <SheetDescription className="text-muted-foreground text-xs">
-            Customize the appearance and layout of your dashboard
-          </SheetDescription>
-        </SheetHeader>
+      <SheetContent className="w-[320px] sm:w-[360px] bg-background border-border overflow-y-auto p-0">
+        <div className="p-5 pb-0">
+          <SheetHeader className="pb-5">
+            <SheetTitle className="text-foreground flex items-center gap-2 text-sm">
+              <Settings className="size-4" />
+              Theme Settings
+            </SheetTitle>
+            <SheetDescription className="text-muted-foreground text-xs">
+              Customize the appearance and layout of your dashboard
+            </SheetDescription>
+          </SheetHeader>
+        </div>
 
-        <div className="space-y-6">
+        <div className="px-5 pb-5 space-y-5">
           {/* Sidebar Settings */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <PanelLeft className="size-4 text-muted-foreground" />
-              <Label className="text-xs font-medium text-foreground uppercase tracking-wider">
+              <PanelLeft className="size-3.5 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Sidebar Mode
               </Label>
             </div>
@@ -116,7 +118,7 @@ export function ThemeSettingsPanel() {
                 label="Offcanvas"
               />
             </div>
-            <p className="text-[10px] text-muted-foreground/70">
+            <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
               {sidebarMode === "normal" && "Full sidebar with text labels visible"}
               {sidebarMode === "compact" && "Collapsed sidebar showing only icons"}
               {sidebarMode === "offcanvas" && "Hidden sidebar with floating icon trigger"}
@@ -126,10 +128,10 @@ export function ThemeSettingsPanel() {
           <Separator className="bg-border" />
 
           {/* Theme Mode */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Monitor className="size-4 text-muted-foreground" />
-              <Label className="text-xs font-medium text-foreground uppercase tracking-wider">
+              <Monitor className="size-3.5 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Theme Mode
               </Label>
             </div>
@@ -161,47 +163,52 @@ export function ThemeSettingsPanel() {
           <Separator className="bg-border" />
 
           {/* Color Scheme */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Palette className="size-4 text-muted-foreground" />
-              <Label className="text-xs font-medium text-foreground uppercase tracking-wider">
+              <Palette className="size-3.5 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Color Scheme
               </Label>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {colorSchemes.map((scheme) => (
-                <button
+            <div className="grid grid-cols-4 gap-1.5">
+              {colorSchemes.slice(0, 4).map((scheme) => (
+                <ColorSchemeButton
                   key={scheme.value}
+                  scheme={scheme}
+                  isSelected={colorScheme === scheme.value}
                   onClick={() => setColorScheme(scheme.value)}
-                  className={cn(
-                    "flex flex-col items-center gap-1.5 p-2 rounded-md border transition-all duration-150",
-                    colorScheme === scheme.value
-                      ? "border-primary bg-secondary"
-                      : "border-border hover:border-border/80 hover:bg-secondary/50"
-                  )}
-                >
-                  <div className={cn("size-6 rounded-full", scheme.preview)} />
-                  <span className="text-[10px] text-muted-foreground">{scheme.label}</span>
-                </button>
+                />
               ))}
+            </div>
+            <div className="grid grid-cols-4 gap-1.5">
+              {colorSchemes.slice(4).map((scheme) => (
+                <ColorSchemeButton
+                  key={scheme.value}
+                  scheme={scheme}
+                  isSelected={colorScheme === scheme.value}
+                  onClick={() => setColorScheme(scheme.value)}
+                />
+              ))}
+              {/* Empty placeholder to fill the 4th column */}
+              <div className="hidden" />
             </div>
           </div>
 
           <Separator className="bg-border" />
 
           {/* Typography */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Type className="size-4 text-muted-foreground" />
-              <Label className="text-xs font-medium text-foreground uppercase tracking-wider">
+              <Type className="size-3.5 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Typography
               </Label>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1.5">
                 <Label className="text-[10px] text-muted-foreground">Font Family</Label>
                 <Select value={fontFamily} onValueChange={(value) => setFontFamily(value as FontFamily)}>
-                  <SelectTrigger className="h-8 text-xs bg-secondary border-border text-foreground focus:ring-ring">
+                  <SelectTrigger className="h-9 text-xs bg-secondary border-border text-foreground focus:ring-ring">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
@@ -220,7 +227,7 @@ export function ThemeSettingsPanel() {
               <div className="space-y-1.5">
                 <Label className="text-[10px] text-muted-foreground">Font Size</Label>
                 <Select value={fontSize} onValueChange={(value) => setFontSize(value as FontSize)}>
-                  <SelectTrigger className="h-8 text-xs bg-secondary border-border text-foreground focus:ring-ring">
+                  <SelectTrigger className="h-9 text-xs bg-secondary border-border text-foreground focus:ring-ring">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
@@ -242,10 +249,10 @@ export function ThemeSettingsPanel() {
           <Separator className="bg-border" />
 
           {/* Content Mode */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Maximize2 className="size-4 text-muted-foreground" />
-              <Label className="text-xs font-medium text-foreground uppercase tracking-wider">
+              <Maximize2 className="size-3.5 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Content Width
               </Label>
             </div>
@@ -256,7 +263,7 @@ export function ThemeSettingsPanel() {
                 onClick={() => setContentMode("compact")}
                 icon={<Minimize2 className="size-4" />}
                 label="Compact"
-                description="Centered, max-width container"
+                description="Max-width container"
               />
               <ContentModeButton
                 mode="full"
@@ -264,7 +271,7 @@ export function ThemeSettingsPanel() {
                 onClick={() => setContentMode("full")}
                 icon={<Maximize2 className="size-4" />}
                 label="Full Width"
-                description="Edge-to-edge content"
+                description="Edge-to-edge"
               />
             </div>
           </div>
@@ -276,7 +283,7 @@ export function ThemeSettingsPanel() {
             variant="outline"
             size="sm"
             onClick={resetToDefaults}
-            className="w-full h-8 text-xs border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
+            className="w-full h-9 text-xs border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
           >
             <RotateCcw className="size-3 mr-2" />
             Reset to Defaults
@@ -304,14 +311,14 @@ function SidebarModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1.5 p-3 rounded-md border transition-all duration-150",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px]",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
       )}
     >
       {icon}
-      <span className="text-[10px]">{label}</span>
+      <span className="text-[10px] font-medium">{label}</span>
     </button>
   )
 }
@@ -333,14 +340,39 @@ function ThemeModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1.5 p-3 rounded-md border transition-all duration-150",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px]",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
       )}
     >
       {icon}
-      <span className="text-[10px]">{label}</span>
+      <span className="text-[10px] font-medium">{label}</span>
+    </button>
+  )
+}
+
+function ColorSchemeButton({
+  scheme,
+  isSelected,
+  onClick,
+}: {
+  scheme: { value: ColorScheme; label: string; preview: string }
+  isSelected: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex flex-col items-center justify-center gap-1.5 py-2 px-1.5 rounded-md border transition-all duration-150 min-h-[52px]",
+        isSelected
+          ? "border-primary bg-secondary"
+          : "border-border hover:border-border/80 hover:bg-secondary/50"
+      )}
+    >
+      <div className={cn("size-5 rounded-full", scheme.preview)} />
+      <span className="text-[9px] text-muted-foreground font-medium">{scheme.label}</span>
     </button>
   )
 }
@@ -364,7 +396,7 @@ function ContentModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1 p-3 rounded-md border transition-all duration-150",
+        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px]",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
