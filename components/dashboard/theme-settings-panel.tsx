@@ -73,24 +73,24 @@ export function ThemeSettingsPanel() {
           <span className="sr-only">Theme Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[320px] sm:w-[360px] bg-background border-border overflow-y-auto p-0">
-        <div className="p-5 pb-0">
-          <SheetHeader className="pb-5">
-            <SheetTitle className="text-foreground flex items-center gap-2 text-sm">
+      <SheetContent className="w-[320px] sm:w-[360px] bg-background border-border overflow-y-auto p-0 flex flex-col h-full">
+        <div className="p-6 border-b border-border shrink-0">
+          <SheetHeader className="p-0">
+            <SheetTitle className="text-foreground flex items-center gap-2 text-base font-semibold">
               <Settings className="size-4" />
               Theme Settings
             </SheetTitle>
-            <SheetDescription className="text-muted-foreground text-xs">
+            <SheetDescription className="text-muted-foreground text-xs mt-1">
               Customize the appearance and layout of your dashboard
             </SheetDescription>
           </SheetHeader>
         </div>
 
-        <div className="px-5 pb-5 space-y-5">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Sidebar Settings */}
           <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <PanelLeft className="size-3.5 text-muted-foreground" />
+              <PanelLeft className="size-4 text-muted-foreground" />
               <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Sidebar Mode
               </Label>
@@ -130,7 +130,7 @@ export function ThemeSettingsPanel() {
           {/* Theme Mode */}
           <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Monitor className="size-3.5 text-muted-foreground" />
+              <Monitor className="size-4 text-muted-foreground" />
               <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Theme Mode
               </Label>
@@ -165,7 +165,7 @@ export function ThemeSettingsPanel() {
           {/* Color Scheme */}
           <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Palette className="size-3.5 text-muted-foreground" />
+              <Palette className="size-4 text-muted-foreground" />
               <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Color Scheme
               </Label>
@@ -199,7 +199,7 @@ export function ThemeSettingsPanel() {
           {/* Typography */}
           <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Type className="size-3.5 text-muted-foreground" />
+              <Type className="size-4 text-muted-foreground" />
               <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Typography
               </Label>
@@ -251,7 +251,7 @@ export function ThemeSettingsPanel() {
           {/* Content Mode */}
           <div className="space-y-2.5">
             <div className="flex items-center gap-2">
-              <Maximize2 className="size-3.5 text-muted-foreground" />
+              <Maximize2 className="size-4 text-muted-foreground" />
               <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
                 Content Width
               </Label>
