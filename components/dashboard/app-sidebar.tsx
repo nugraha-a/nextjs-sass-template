@@ -44,6 +44,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
@@ -51,6 +52,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import {
   Collapsible,
@@ -185,8 +187,14 @@ const supportItems: NavItem[] = [
   { title: "Help & Docs", icon: HelpCircle, href: "#help" },
 ]
 
+import { cn } from "@/lib/utils"
+
+// ... (imports remain)
+
 function NavItemWithSub({ item }: { item: NavItem }) {
+  const { state } = useSidebar()
   const [isOpen, setIsOpen] = useState(item.isActive || false)
+  const isCollapsed = state === "collapsed"
 
   if (!item.items) {
     return (
@@ -195,20 +203,55 @@ function NavItemWithSub({ item }: { item: NavItem }) {
           asChild
           isActive={item.isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
         >
-          <a href={item.href} className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <item.icon className="size-4" />
-              <span className="text-[13px]">{item.title}</span>
+          <a href={item.href} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
+            <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
+              <item.icon className="size-4 shrink-0" />
+              <span className="text-[13px] group-data-[collapsible=icon]:hidden">{item.title}</span>
             </span>
             {item.badge && (
-              <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-secondary text-muted-foreground border-0">
+              <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-secondary text-muted-foreground border-0 group-data-[collapsible=icon]:hidden">
                 {item.badge}
               </Badge>
             )}
           </a>
         </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
+  }
+
+  if (isCollapsed) {
+    return (
+      <SidebarMenuItem>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              tooltip={item.title}
+              isActive={item.isActive}
+              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground"
+            >
+              <item.icon className="size-4 shrink-0" />
+              <span className="sr-only">{item.title}</span>
+              <ChevronRight className="ml-auto size-4 hidden" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            side="right" 
+            align="start" 
+            className="w-52 bg-popover/95 backdrop-blur-sm border-border animate-in slide-in-from-left-2 fade-in-50 duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] shadow-xl ml-2"
+          >
+            <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5 flex items-center justify-between">
+              {item.title}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-border" />
+            {item.items.map((subItem) => (
+              <DropdownMenuItem key={subItem.title} asChild className="text-[13px] text-muted-foreground focus:text-foreground focus:bg-accent/50 cursor-pointer py-2 px-2 transition-colors duration-200">
+                <a href={subItem.href}>{subItem.title}</a>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarMenuItem>
     )
   }
@@ -219,11 +262,11 @@ function NavItemWithSub({ item }: { item: NavItem }) {
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
             tooltip={item.title}
-            className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground"
+            className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
           >
-            <item.icon className="size-4" />
-            <span className="text-[13px]">{item.title}</span>
-            <ChevronRight className="ml-auto size-4 transition-transform duration-150 group-data-[state=open]/collapsible:rotate-90" />
+            <item.icon className="size-4 shrink-0" />
+            <span className="text-[13px] group-data-[collapsible=icon]:hidden">{item.title}</span>
+            <ChevronRight className="ml-auto size-4 transition-transform duration-150 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>

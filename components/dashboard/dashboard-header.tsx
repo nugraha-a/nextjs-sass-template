@@ -1,11 +1,12 @@
 "use client"
 
-import { ChevronRight, Bell, Search, Command } from "lucide-react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { ChevronRight, Bell, Search, Command, PanelLeft } from "lucide-react"
+import { useSidebar } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ThemeSettingsPanel } from "@/components/dashboard/theme-settings-panel"
+import { useThemeSettings } from "@/contexts/theme-settings-context"
 
 interface DashboardHeaderProps {
   title?: string
@@ -19,13 +20,34 @@ export function DashboardHeader({
   activeModule = "overview",
   onModuleChange,
 }: DashboardHeaderProps) {
+  const { toggleSidebar } = useSidebar()
+  const { sidebarMode, setSidebarMode } = useThemeSettings()
+
+  const handleSidebarToggle = () => {
+    if (sidebarMode === "offcanvas") {
+      toggleSidebar()
+      return
+    }
+    
+    // Toggle between normal and compact
+    setSidebarMode(sidebarMode === "normal" ? "compact" : "normal")
+  }
+
   return (
     <header className="flex flex-col border-b border-border bg-background">
       {/* Top Row: Sidebar Trigger & Breadcrumbs */}
       <div className="flex h-12 w-full items-center border-b border-border">
         {/* Sidebar Trigger Box */}
-        <div className="flex h-full w-12 shrink-0 items-center justify-center border-r border-border">
-          <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:ring-0 focus-visible:outline-none" />
+        <div className="flex h-full w-12 shrink-0 items-center justify-center border-r border-border relative z-20">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 -ml-1 text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:ring-0 focus-visible:outline-none"
+            onClick={handleSidebarToggle}
+          >
+            <PanelLeft className="size-4" />
+            <span className="sr-only">Toggle Sidebar</span>
+          </Button>
         </div>
 
         {/* Breadcrumbs & Actions */}

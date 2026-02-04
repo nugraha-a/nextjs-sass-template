@@ -204,11 +204,14 @@ export function ThemeSettingsPanel() {
                 Typography
               </Label>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label className="text-[10px] text-muted-foreground">Font Family</Label>
+                <div className="flex items-center justify-between">
+                  <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Font Family</Label>
+                  <span className="text-[9px] text-muted-foreground/50">{fontFamilies.find(f => f.value === fontFamily)?.label}</span>
+                </div>
                 <Select value={fontFamily} onValueChange={(value) => setFontFamily(value as FontFamily)}>
-                  <SelectTrigger className="h-9 text-xs bg-secondary border-border text-foreground focus:ring-ring">
+                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
@@ -225,9 +228,12 @@ export function ThemeSettingsPanel() {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[10px] text-muted-foreground">Font Size</Label>
+                <div className="flex items-center justify-between">
+                  <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Font Size</Label>
+                  <span className="text-[9px] text-muted-foreground/50">{fontSizes.find(f => f.value === fontSize)?.label}</span>
+                </div>
                 <Select value={fontSize} onValueChange={(value) => setFontSize(value as FontSize)}>
-                  <SelectTrigger className="h-9 text-xs bg-secondary border-border text-foreground focus:ring-ring">
+                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">

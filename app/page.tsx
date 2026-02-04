@@ -65,17 +65,14 @@ function DashboardContent({
   }, [sidebarMode, setOpen])
 
   return (
-    <SidebarInset className="bg-background">
+    <SidebarInset className="bg-background h-screen flex flex-col overflow-hidden">
       <DashboardHeader
         title={currentModule.title}
         breadcrumbs={currentModule.breadcrumbs}
         activeModule={activeModule}
         onModuleChange={(module) => setActiveModule(module as ModuleKey)}
       />
-      <main className={cn(
-        "flex-1 overflow-auto bg-background",
-        contentMode === "compact" && "content-container"
-      )}>
+      <main className="flex-1 overflow-auto bg-background">
         <div className={cn(
           contentMode === "compact" && "max-w-7xl mx-auto"
         )}>

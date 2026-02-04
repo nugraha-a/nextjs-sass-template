@@ -9,15 +9,15 @@
 }
 
 html[data-font-size="small"] {
-  --font-scale: 0.875;
+  font-size: 14px;
 }
 
 html[data-font-size="medium"] {
-  --font-scale: 1;
+  font-size: 16px;
 }
 
 html[data-font-size="large"] {
-  --font-scale: 1.125;
+  font-size: 18px;
 }
 
 /* Zinc Color Scheme (Default) */
@@ -499,6 +499,18 @@ html.dark[data-color-scheme="rose"] {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  --animate-collapsible-down: collapsible-down 0.3s cubic-bezier(0.2, 0.4, 0, 1);
+  --animate-collapsible-up: collapsible-up 0.3s cubic-bezier(0.2, 0.4, 0, 1);
+
+  @keyframes collapsible-down {
+    from { height: 0; }
+    to { height: var(--radix-collapsible-content-height); }
+  }
+  @keyframes collapsible-up {
+    from { height: var(--radix-collapsible-content-height); }
+    to { height: 0; }
+  }
 }
 
 @layer base {
