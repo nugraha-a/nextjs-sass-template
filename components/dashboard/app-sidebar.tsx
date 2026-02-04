@@ -252,7 +252,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   return (
-    <Sidebar collapsible={collapsible} className="border-r border-sidebar-border bg-sidebar">
+    <Sidebar collapsible={collapsible} className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -301,7 +301,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarSeparator className="bg-sidebar-border" />
+      <SidebarSeparator />
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
@@ -317,7 +317,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-sidebar-border" />
+        <SidebarSeparator />
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
@@ -332,7 +332,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-sidebar-border" />
+        <SidebarSeparator />
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
