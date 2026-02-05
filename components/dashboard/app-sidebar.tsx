@@ -348,7 +348,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
             Core Kernel
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -363,7 +363,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
             Business Modules
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -378,7 +378,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-3 mb-1">
+          <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
             Support
           </SidebarGroupLabel>
           <SidebarGroupContent>
