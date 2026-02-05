@@ -214,20 +214,20 @@ export function ConfigurationEngine() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Primary Language</Label>
+                  <Label className="text-[12px] text-muted-foreground">Primary Language</Label>
                   <Select
                     value={locale.language}
                     onValueChange={(value) => setLocale((prev) => ({ ...prev, language: value }))}
                   >
-                    <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
+                    <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectContent className="bg-popover border-border">
                       {localeOptions.languages.map((lang) => (
                         <SelectItem
                           key={lang}
                           value={lang}
-                          className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                          className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           {lang}
                         </SelectItem>
@@ -236,21 +236,21 @@ export function ConfigurationEngine() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Timezone</Label>
+                  <Label className="text-[12px] text-muted-foreground">Timezone</Label>
                   <Select
                     value={locale.timezone}
                     onValueChange={(value) => setLocale((prev) => ({ ...prev, timezone: value }))}
                   >
-                    <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
-                      <Clock className="size-3.5 mr-2 text-zinc-600" />
+                    <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
+                      <Clock className="size-3.5 mr-2 text-muted-foreground" />
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectContent className="bg-popover border-border">
                       {localeOptions.timezones.map((tz) => (
                         <SelectItem
                           key={tz}
                           value={tz}
-                          className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                          className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           {tz}
                         </SelectItem>
@@ -293,20 +293,20 @@ export function ConfigurationEngine() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Base Currency</Label>
+                  <Label className="text-[12px] text-muted-foreground">Base Currency</Label>
                   <Select
                     value={locale.currency}
                     onValueChange={(value) => setLocale((prev) => ({ ...prev, currency: value }))}
                   >
-                    <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
+                    <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectContent className="bg-popover border-border">
                       {localeOptions.currencies.map((cur) => (
                         <SelectItem
                           key={cur}
                           value={cur}
-                          className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                          className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           {cur}
                         </SelectItem>
@@ -315,20 +315,20 @@ export function ConfigurationEngine() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Fiscal Year</Label>
+                  <Label className="text-[12px] text-muted-foreground">Fiscal Year</Label>
                   <Select
                     value={locale.fiscalYear}
                     onValueChange={(value) => setLocale((prev) => ({ ...prev, fiscalYear: value }))}
                   >
-                    <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
+                    <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectContent className="bg-popover border-border">
                       {localeOptions.fiscalYears.map((fy) => (
                         <SelectItem
                           key={fy}
                           value={fy}
-                          className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                          className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           {fy}
                         </SelectItem>
@@ -366,11 +366,11 @@ export function ConfigurationEngine() {
                 {featureFlags.map((feature) => (
                   <div
                     key={feature.key}
-                    className="flex items-center justify-between py-3 border-b border-zinc-800/50 last:border-0"
+                    className="flex items-center justify-between py-3 border-b border-border last:border-0"
                   >
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-medium text-zinc-100">
+                        <span className="text-[13px] font-medium text-foreground">
                           {feature.label}
                         </span>
                         {features[feature.key] ? (
@@ -378,12 +378,12 @@ export function ConfigurationEngine() {
                             Enabled
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-zinc-800 text-zinc-500 border-0 text-[10px]">
+                          <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[10px]">
                             Disabled
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[12px] text-zinc-500">{feature.description}</p>
+                      <p className="text-[12px] text-muted-foreground">{feature.description}</p>
                     </div>
                     <Switch
                       checked={features[feature.key]}
@@ -458,7 +458,7 @@ export function ConfigurationEngine() {
                   <div className="space-y-2">
                     <Label className="text-[12px] text-muted-foreground">Primary Color</Label>
                     <div className="flex items-center gap-2">
-                      <div className="size-9 rounded-md bg-zinc-100 border border-zinc-200" />
+                      <div className="size-9 rounded-md bg-secondary border border-border" />
                       <Input
                         defaultValue="#FAFAFA"
                         className="h-9 bg-background border-input text-[13px] text-foreground font-mono"
@@ -468,7 +468,7 @@ export function ConfigurationEngine() {
                   <div className="space-y-2">
                     <Label className="text-[12px] text-muted-foreground">Accent Color</Label>
                     <div className="flex items-center gap-2">
-                      <div className="size-9 rounded-md bg-zinc-700 border border-zinc-600" />
+                      <div className="size-9 rounded-md bg-muted border border-border" />
                       <Input
                         defaultValue="#3F3F46"
                         className="h-9 bg-background border-input text-[13px] text-foreground font-mono"

@@ -122,8 +122,8 @@ function WorkflowCanvas() {
         className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px)
+            linear-gradient(to right, rgb(228 228 231 / 0.3) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(228 228 231 / 0.3) 1px, transparent 1px)
           `,
           backgroundSize: "20px 20px",
         }}
@@ -133,24 +133,24 @@ function WorkflowCanvas() {
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="hsl(var(--muted-foreground))" />
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--muted-foreground)" />
           </marker>
         </defs>
         {/* Start to Condition */}
-        <line x1="90" y1="150" x2="180" y2="150" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <line x1="90" y1="150" x2="180" y2="150" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Condition to Manager (Yes) */}
-        <path d="M 240 130 Q 280 80 380 80" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 240 130 Q 280 80 380 80" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Condition to CFO (No) */}
-        <path d="M 240 170 Q 280 220 380 220" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 240 170 Q 280 220 380 220" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Manager to Finance */}
-        <path d="M 480 80 Q 520 80 520 130 Q 520 150 580 150" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 480 80 Q 520 80 520 130 Q 520 150 580 150" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* CFO to Finance */}
-        <path d="M 480 220 Q 520 220 520 170 Q 520 150 580 150" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 480 220 Q 520 220 520 170 Q 520 150 580 150" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Finance to End */}
-        <line x1="680" y1="150" x2="780" y2="150" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <line x1="680" y1="150" x2="780" y2="150" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Labels */}
-        <text x="290" y="70" fill="hsl(var(--muted-foreground))" fontSize="10">Yes</text>
-        <text x="290" y="240" fill="hsl(var(--muted-foreground))" fontSize="10">No</text>
+        <text x="290" y="70" fill="var(--muted-foreground)" fontSize="10">Yes</text>
+        <text x="290" y="240" fill="var(--muted-foreground)" fontSize="10">No</text>
       </svg>
 
       {/* Nodes */}

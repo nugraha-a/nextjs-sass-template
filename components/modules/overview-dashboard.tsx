@@ -178,7 +178,7 @@ export function OverviewDashboard() {
                   <span className="text-muted-foreground">Users</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="size-2 rounded-full bg-secondary-foreground" />
+                  <div className="size-2 rounded-full bg-chart-2" />
                   <span className="text-muted-foreground">Transactions</span>
                 </div>
               </div>
@@ -190,47 +190,48 @@ export function OverviewDashboard() {
                 <AreaChart data={activityData}>
                   <defs>
                     <linearGradient id="userGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgb(244 244 245)" stopOpacity={0.2} />
-                      <stop offset="100%" stopColor="rgb(244 244 245)" stopOpacity={0} />
+                      <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="txGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgb(82 82 91)" stopOpacity={0.2} />
-                      <stop offset="100%" stopColor="rgb(82 82 91)" stopOpacity={0} />
+                      <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis
                     dataKey="date"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "rgb(113 113 122)", fontSize: 11 }}
+                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "rgb(113 113 122)", fontSize: 11 }}
+                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                     tickFormatter={(value) => `${value / 1000}k`}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgb(24 24 27)",
-                      border: "1px solid rgb(39 39 42)",
+                      backgroundColor: "var(--color-popover)",
+                      border: "1px solid var(--color-border)",
                       borderRadius: "8px",
                       fontSize: "12px",
+                      color: "var(--color-popover-foreground)",
                     }}
-                    labelStyle={{ color: "rgb(161 161 170)" }}
-                    itemStyle={{ color: "rgb(244 244 245)" }}
+                    labelStyle={{ color: "var(--color-muted-foreground)" }}
+                    itemStyle={{ color: "var(--color-foreground)" }}
                   />
                   <Area
                     type="monotone"
                     dataKey="users"
-                    stroke="rgb(244 244 245)"
+                    stroke="var(--color-primary)"
                     strokeWidth={1.5}
                     fill="url(#userGradient)"
                   />
                   <Area
                     type="monotone"
                     dataKey="transactions"
-                    stroke="rgb(82 82 91)"
+                    stroke="var(--color-chart-2)"
                     strokeWidth={1.5}
                     fill="url(#txGradient)"
                   />
@@ -308,14 +309,14 @@ export function OverviewDashboard() {
                     {approval.amount}
                   </span>
                 )}
-                <Badge
+                  <Badge
                   variant="outline"
                   className={`text-[10px] capitalize border-0 ${
                     approval.priority === "high"
                       ? "bg-red-500/10 text-red-400"
                       : approval.priority === "medium"
                         ? "bg-amber-500/10 text-amber-400"
-                        : "bg-zinc-500/10 text-zinc-400"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {approval.priority}

@@ -99,7 +99,7 @@ function getStatusBadge(status: string) {
     case "active":
       return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-0 text-[10px]"><CheckCircle2 className="size-3 mr-1" />Active</Badge>
     case "inactive":
-      return <Badge variant="secondary" className="bg-zinc-500/10 text-zinc-400 border-0 text-[10px]"><XCircle className="size-3 mr-1" />Inactive</Badge>
+      return <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[10px]"><XCircle className="size-3 mr-1" />Inactive</Badge>
     case "pending":
       return <Badge variant="secondary" className="bg-amber-500/10 text-amber-400 border-0 text-[10px]"><Clock className="size-3 mr-1" />Pending</Badge>
     default:
@@ -116,10 +116,10 @@ export function IAMDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Identity & Access Management
           </h1>
-          <p className="text-[13px] text-zinc-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             Manage users, roles, permissions, and audit security events
           </p>
         </div>
@@ -384,19 +384,19 @@ export function IAMDashboard() {
 
         {/* Audit Log Tab */}
         <TabsContent value="audit" className="space-y-4">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-zinc-100">Security Audit Log</CardTitle>
+                <CardTitle className="text-sm font-medium text-card-foreground">Security Audit Log</CardTitle>
                 <div className="flex items-center gap-2">
                   <div className="relative">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-zinc-600" />
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search logs..."
-                      className="h-8 w-64 pl-8 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 placeholder:text-zinc-600"
+                      className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
-                  <Button size="sm" variant="outline" className="h-8 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100">
+                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
                     Export
                   </Button>
                 </div>
@@ -405,33 +405,33 @@ export function IAMDashboard() {
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pl-6">Timestamp</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">User</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Action</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Target</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pr-6">IP Address</TableHead>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">Timestamp</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">User</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Action</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Target</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6">IP Address</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {auditLogs.map((log) => (
-                    <TableRow key={log.id} className="border-zinc-800/50 hover:bg-zinc-800/30">
-                      <TableCell className="py-3 pl-6 text-[12px] text-zinc-500 font-mono">{log.timestamp}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-300">{log.user}</TableCell>
+                    <TableRow key={log.id} className="border-border hover:bg-muted/50">
+                      <TableCell className="py-3 pl-6 text-[12px] text-muted-foreground font-mono">{log.timestamp}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-foreground">{log.user}</TableCell>
                       <TableCell className="py-3">
                         <Badge
                           variant="secondary"
                           className={`text-[10px] border-0 ${
                             log.action.includes("Failed")
                               ? "bg-red-500/10 text-red-400"
-                              : "bg-zinc-800 text-zinc-300"
+                              : "bg-secondary text-secondary-foreground"
                           }`}
                         >
                           {log.action}
                         </Badge>
                       </TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-400">{log.target}</TableCell>
-                      <TableCell className="py-3 pr-6 text-[12px] text-zinc-600 font-mono">{log.ip}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-muted-foreground">{log.target}</TableCell>
+                      <TableCell className="py-3 pr-6 text-[12px] text-muted-foreground font-mono">{log.ip}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

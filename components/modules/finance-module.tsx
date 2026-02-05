@@ -82,11 +82,11 @@ const revenueData = [
 ]
 
 const expenseCategories = [
-  { name: "Payroll", value: 45, color: "hsl(var(--chart-1))" },
-  { name: "Operations", value: 25, color: "hsl(var(--chart-2))" },
-  { name: "Marketing", value: 15, color: "hsl(var(--chart-3))" },
-  { name: "Technology", value: 10, color: "hsl(var(--chart-4))" },
-  { name: "Other", value: 5, color: "hsl(var(--chart-5))" },
+  { name: "Payroll", value: 45, color: "var(--chart-1)" },
+  { name: "Operations", value: 25, color: "var(--chart-2)" },
+  { name: "Marketing", value: 15, color: "var(--chart-3)" },
+  { name: "Technology", value: 10, color: "var(--chart-4)" },
+  { name: "Other", value: 5, color: "var(--chart-5)" },
 ]
 
 const budgetItems = [
@@ -229,7 +229,7 @@ export function FinanceModule() {
                       <span className="text-muted-foreground">Revenue</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className="size-2 rounded-full bg-muted-foreground/30" />
+                      <div className="size-2 rounded-full bg-chart-2" />
                       <span className="text-muted-foreground">Expenses</span>
                     </div>
                   </div>
@@ -241,20 +241,20 @@ export function FinanceModule() {
                     <BarChart data={revenueData} barGap={4}>
                       <defs>
                         <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                          <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.8}/>
+                          <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.3}/>
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
+                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
-                        labelStyle={{ color: "hsl(var(--muted-foreground))" }}
+                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
+                        labelStyle={{ color: "var(--muted-foreground)" }}
                         formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
-                        cursor={{ fill: "hsl(var(--muted)/0.3)" }}
+                        cursor={{ fill: "var(--muted)" }}
                       />
                       <Bar dataKey="revenue" fill="url(#colorRevenue)" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="expenses" fill="hsl(var(--muted-foreground)/0.3)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="expenses" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -285,7 +285,7 @@ export function FinanceModule() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
+                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
                         formatter={(value: number) => [`${value}%`, ""]}
                       />
                     </RePieChart>
