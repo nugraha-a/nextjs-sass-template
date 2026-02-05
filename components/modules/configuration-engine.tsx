@@ -71,14 +71,14 @@ export function ConfigurationEngine() {
   })
 
   return (
-    <div className="mx-auto max-w-7xl p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Configuration Engine
           </h1>
-          <p className="text-[13px] text-zinc-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             Customize terminology, localization, and feature toggles without code changes
           </p>
         </div>
@@ -86,14 +86,14 @@ export function ConfigurationEngine() {
           <Button
             variant="outline"
             size="sm"
-            className="h-8 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900"
+            className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent"
           >
             <RotateCcw className="size-3.5 mr-1.5" />
             Reset
           </Button>
           <Button
             size="sm"
-            className="h-8 bg-zinc-100 text-zinc-900 hover:bg-zinc-200"
+            className="h-8 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <Save className="size-3.5 mr-1.5" />
             Save Changes
@@ -102,31 +102,31 @@ export function ConfigurationEngine() {
       </div>
 
       <Tabs defaultValue="terminology" className="space-y-6">
-        <TabsList className="bg-zinc-900/50 border border-zinc-800/50 p-1 h-10">
+        <TabsList className="bg-muted border border-border p-1 h-10">
           <TabsTrigger
             value="terminology"
-            className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100"
+            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             <Tags className="size-3.5 mr-1.5" />
             Terminology
           </TabsTrigger>
           <TabsTrigger
             value="localization"
-            className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100"
+            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             <Globe className="size-3.5 mr-1.5" />
             Localization
           </TabsTrigger>
           <TabsTrigger
             value="features"
-            className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100"
+            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             <ToggleLeft className="size-3.5 mr-1.5" />
             Feature Flags
           </TabsTrigger>
           <TabsTrigger
             value="branding"
-            className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100"
+            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             <Palette className="size-3.5 mr-1.5" />
             Branding
@@ -135,12 +135,12 @@ export function ConfigurationEngine() {
 
         {/* Terminology Tab */}
         <TabsContent value="terminology" className="space-y-6">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-sm font-medium text-zinc-100">
+              <CardTitle className="text-sm font-medium text-card-foreground">
                 Organization Terminology
               </CardTitle>
-              <CardDescription className="text-[12px] text-zinc-500">
+              <CardDescription className="text-[12px] text-muted-foreground">
                 Customize labels to match your organization's language. Changes apply across all modules.
               </CardDescription>
             </CardHeader>
@@ -148,22 +148,22 @@ export function ConfigurationEngine() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {terminologyConfig.map((term) => (
                   <div key={term.key} className="space-y-2">
-                    <Label className="text-[12px] text-zinc-500">{term.label}</Label>
+                    <Label className="text-[12px] text-muted-foreground">{term.label}</Label>
                     <Select
                       value={terminology[term.key]}
                       onValueChange={(value) =>
                         setTerminology((prev) => ({ ...prev, [term.key]: value }))
                       }
                     >
-                      <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
+                      <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-800">
+                      <SelectContent className="bg-popover border-border">
                         {term.options.map((option) => (
                           <SelectItem
                             key={option}
                             value={option}
-                            className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                            className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                           >
                             {option}
                           </SelectItem>
@@ -174,24 +174,24 @@ export function ConfigurationEngine() {
                 ))}
               </div>
 
-              <Separator className="bg-zinc-800/50" />
+              <Separator className="bg-border" />
 
               <div className="space-y-2">
-                <Label className="text-[12px] text-zinc-500">Custom Terms</Label>
+                <Label className="text-[12px] text-muted-foreground">Custom Terms</Label>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="flex gap-2">
                     <Input
                       placeholder="Term key (e.g., project)"
-                      className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 placeholder:text-zinc-600"
+                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                     <Input
                       placeholder="Display label"
-                      className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 placeholder:text-zinc-600"
+                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-9 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100"
+                      className="h-9 border-border bg-transparent text-muted-foreground hover:text-foreground"
                     >
                       Add
                     </Button>
@@ -205,9 +205,9 @@ export function ConfigurationEngine() {
         {/* Localization Tab */}
         <TabsContent value="localization" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-zinc-100 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-card-foreground flex items-center gap-2">
                   <Globe className="size-4" />
                   Language & Region
                 </CardTitle>
@@ -259,21 +259,21 @@ export function ConfigurationEngine() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Date Format</Label>
+                  <Label className="text-[12px] text-muted-foreground">Date Format</Label>
                   <Select
                     value={locale.dateFormat}
                     onValueChange={(value) => setLocale((prev) => ({ ...prev, dateFormat: value }))}
                   >
-                    <SelectTrigger className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100">
-                      <Calendar className="size-3.5 mr-2 text-zinc-600" />
+                    <SelectTrigger className="h-9 bg-background border-input text-[13px] text-foreground">
+                      <Calendar className="size-3.5 mr-2 text-muted-foreground" />
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectContent className="bg-popover border-border">
                       {localeOptions.dateFormats.map((fmt) => (
                         <SelectItem
                           key={fmt}
                           value={fmt}
-                          className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100"
+                          className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           {fmt}
                         </SelectItem>
@@ -284,9 +284,9 @@ export function ConfigurationEngine() {
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-zinc-100 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-card-foreground flex items-center gap-2">
                   <DollarSign className="size-4" />
                   Financial Settings
                 </CardTitle>
@@ -337,12 +337,12 @@ export function ConfigurationEngine() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Number Format</Label>
-                  <div className="flex items-center gap-4 text-[13px] text-zinc-400">
-                    <Badge variant="secondary" className="bg-zinc-800 text-zinc-300 border-0">
+                  <Label className="text-[12px] text-muted-foreground">Number Format</Label>
+                  <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
+                    <Badge variant="secondary" className="bg-secondary text-muted-foreground border-border">
                       1,234.56
                     </Badge>
-                    <span className="text-zinc-600">Based on locale settings</span>
+                    <span className="text-muted-foreground/70">Based on locale settings</span>
                   </div>
                 </div>
               </CardContent>
@@ -352,12 +352,12 @@ export function ConfigurationEngine() {
 
         {/* Feature Flags Tab */}
         <TabsContent value="features" className="space-y-6">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-sm font-medium text-zinc-100">
+              <CardTitle className="text-sm font-medium text-foreground">
                 Feature Toggles
               </CardTitle>
-              <CardDescription className="text-[12px] text-zinc-500">
+              <CardDescription className="text-[12px] text-muted-foreground">
                 Enable or disable features for this tenant. Changes take effect immediately.
               </CardDescription>
             </CardHeader>
@@ -402,40 +402,40 @@ export function ConfigurationEngine() {
         {/* Branding Tab */}
         <TabsContent value="branding" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-zinc-100">
+                <CardTitle className="text-sm font-medium text-foreground">
                   Brand Identity
                 </CardTitle>
-                <CardDescription className="text-[12px] text-zinc-500">
+                <CardDescription className="text-[12px] text-muted-foreground">
                   Customize the platform appearance for your organization
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Organization Name</Label>
+                  <Label className="text-[12px] text-muted-foreground">Organization Name</Label>
                   <Input
                     defaultValue="Aurora Reforged"
-                    className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100"
+                    className="h-9 bg-background border-input text-[13px] text-foreground"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Tagline</Label>
+                  <Label className="text-[12px] text-muted-foreground">Tagline</Label>
                   <Input
                     defaultValue="One Platform. Infinite Configurations."
-                    className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100"
+                    className="h-9 bg-background border-input text-[13px] text-foreground"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Logo</Label>
+                  <Label className="text-[12px] text-muted-foreground">Logo</Label>
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center justify-center size-16 rounded-lg bg-zinc-800 border border-zinc-700/50">
-                      <Palette className="size-6 text-zinc-500" />
+                    <div className="flex items-center justify-center size-16 rounded-lg bg-secondary border border-border">
+                      <Palette className="size-6 text-muted-foreground" />
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100"
+                      className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground"
                     >
                       Upload Logo
                     </Button>
@@ -444,59 +444,59 @@ export function ConfigurationEngine() {
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-zinc-100">
+                <CardTitle className="text-sm font-medium text-card-foreground">
                   Color Theme
                 </CardTitle>
-                <CardDescription className="text-[12px] text-zinc-500">
+                <CardDescription className="text-[12px] text-muted-foreground">
                   Define your brand colors for the interface
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 grid-cols-2">
                   <div className="space-y-2">
-                    <Label className="text-[12px] text-zinc-500">Primary Color</Label>
+                    <Label className="text-[12px] text-muted-foreground">Primary Color</Label>
                     <div className="flex items-center gap-2">
                       <div className="size-9 rounded-md bg-zinc-100 border border-zinc-200" />
                       <Input
                         defaultValue="#FAFAFA"
-                        className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 font-mono"
+                        className="h-9 bg-background border-input text-[13px] text-foreground font-mono"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[12px] text-zinc-500">Accent Color</Label>
+                    <Label className="text-[12px] text-muted-foreground">Accent Color</Label>
                     <div className="flex items-center gap-2">
                       <div className="size-9 rounded-md bg-zinc-700 border border-zinc-600" />
                       <Input
                         defaultValue="#3F3F46"
-                        className="h-9 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 font-mono"
+                        className="h-9 bg-background border-input text-[13px] text-foreground font-mono"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[12px] text-zinc-500">Theme Mode</Label>
+                  <Label className="text-[12px] text-muted-foreground">Theme Mode</Label>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 h-9 border-zinc-700 bg-zinc-800 text-zinc-100"
+                      className="flex-1 h-9 border-border bg-secondary text-foreground"
                     >
                       Dark
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 h-9 border-zinc-800 bg-transparent text-zinc-500"
+                      className="flex-1 h-9 border-border bg-transparent text-muted-foreground"
                     >
                       Light
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 h-9 border-zinc-800 bg-transparent text-zinc-500"
+                      className="flex-1 h-9 border-border bg-transparent text-muted-foreground"
                     >
                       System
                     </Button>

@@ -82,11 +82,11 @@ const revenueData = [
 ]
 
 const expenseCategories = [
-  { name: "Payroll", value: 45, color: "rgb(244 244 245)" },
-  { name: "Operations", value: 25, color: "rgb(161 161 170)" },
-  { name: "Marketing", value: 15, color: "rgb(113 113 122)" },
-  { name: "Technology", value: 10, color: "rgb(82 82 91)" },
-  { name: "Other", value: 5, color: "rgb(63 63 70)" },
+  { name: "Payroll", value: 45, color: "hsl(var(--chart-1))" },
+  { name: "Operations", value: 25, color: "hsl(var(--chart-2))" },
+  { name: "Marketing", value: 15, color: "hsl(var(--chart-3))" },
+  { name: "Technology", value: 10, color: "hsl(var(--chart-4))" },
+  { name: "Other", value: 5, color: "hsl(var(--chart-5))" },
 ]
 
 const budgetItems = [
@@ -136,7 +136,7 @@ function getAccountTypeBadge(type: string) {
     Liability: "bg-red-500/10 text-red-400",
     Equity: "bg-blue-500/10 text-blue-400",
     Revenue: "bg-amber-500/10 text-amber-400",
-    Expense: "bg-zinc-500/10 text-zinc-400",
+    Expense: "bg-muted/50 text-muted-foreground",
   }
   return <Badge variant="secondary" className={`${colors[type]} border-0 text-[10px]`}>{type}</Badge>
 }
@@ -145,30 +145,30 @@ export function FinanceModule() {
   const [period, setPeriod] = useState("this-month")
 
   return (
-    <div className="mx-auto max-w-7xl p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Finance & Accounting
           </h1>
-          <p className="text-[13px] text-zinc-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             General ledger, accounts payable/receivable, budgeting, and financial reporting
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="h-8 w-36 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-300">
+            <SelectTrigger className="h-8 w-36 bg-background border-input text-[13px] text-muted-foreground">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-800">
-              <SelectItem value="this-month" className="text-[13px] text-zinc-300 focus:bg-zinc-800">This Month</SelectItem>
-              <SelectItem value="last-month" className="text-[13px] text-zinc-300 focus:bg-zinc-800">Last Month</SelectItem>
-              <SelectItem value="this-quarter" className="text-[13px] text-zinc-300 focus:bg-zinc-800">This Quarter</SelectItem>
-              <SelectItem value="this-year" className="text-[13px] text-zinc-300 focus:bg-zinc-800">This Year</SelectItem>
+            <SelectContent className="bg-popover border-border">
+              <SelectItem value="this-month" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">This Month</SelectItem>
+              <SelectItem value="last-month" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">Last Month</SelectItem>
+              <SelectItem value="this-quarter" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">This Quarter</SelectItem>
+              <SelectItem value="this-year" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">This Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button size="sm" className="h-8 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+          <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
             <Plus className="size-3.5 mr-1.5" />
             New Entry
           </Button>
@@ -178,11 +178,11 @@ export function FinanceModule() {
       {/* Financial Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {financialStats.map((stat) => (
-          <Card key={stat.label} className="bg-zinc-900/50 border-zinc-800/50">
+          <Card key={stat.label} className="bg-card border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center justify-center size-9 rounded-lg bg-zinc-800/50">
-                  <stat.icon className="size-4 text-zinc-400" />
+                <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
+                  <stat.icon className="size-4 text-muted-foreground" />
                 </div>
                 <span className={`flex items-center gap-1 text-[11px] font-medium ${stat.trend === "up" ? "text-emerald-500" : "text-red-500"}`}>
                   {stat.trend === "up" ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
@@ -190,8 +190,8 @@ export function FinanceModule() {
                 </span>
               </div>
               <div className="mt-3">
-                <p className="text-xl font-semibold text-zinc-100 tracking-tight">{stat.value}</p>
-                <p className="text-[11px] text-zinc-500 mt-0.5">{stat.label}</p>
+                <p className="text-xl font-semibold text-card-foreground tracking-tight">{stat.value}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
@@ -199,17 +199,17 @@ export function FinanceModule() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-zinc-900/50 border border-zinc-800/50 p-1 h-10">
-          <TabsTrigger value="overview" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+        <TabsList className="bg-muted border border-border p-1 h-10">
+          <TabsTrigger value="overview" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <BarChart3 className="size-3.5 mr-1.5" />Overview
           </TabsTrigger>
-          <TabsTrigger value="transactions" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsTrigger value="transactions" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <Receipt className="size-3.5 mr-1.5" />Transactions
           </TabsTrigger>
-          <TabsTrigger value="budget" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsTrigger value="budget" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <PieChart className="size-3.5 mr-1.5" />Budget
           </TabsTrigger>
-          <TabsTrigger value="accounts" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsTrigger value="accounts" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <FileText className="size-3.5 mr-1.5" />Chart of Accounts
           </TabsTrigger>
         </TabsList>
@@ -218,18 +218,19 @@ export function FinanceModule() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Revenue vs Expenses Chart */}
-            <Card className="lg:col-span-2 bg-zinc-900/50 border-zinc-800/50">
+            {/* Revenue vs Expenses Chart */}
+            <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-zinc-100">Revenue vs Expenses</CardTitle>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Revenue vs Expenses</CardTitle>
                   <div className="flex items-center gap-4 text-[11px]">
                     <div className="flex items-center gap-1.5">
-                      <div className="size-2 rounded-full bg-zinc-100" />
-                      <span className="text-zinc-500">Revenue</span>
+                      <div className="size-2 rounded-full bg-primary" />
+                      <span className="text-muted-foreground">Revenue</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <div className="size-2 rounded-full bg-zinc-600" />
-                      <span className="text-zinc-500">Expenses</span>
+                      <div className="size-2 rounded-full bg-muted-foreground/30" />
+                      <span className="text-muted-foreground">Expenses</span>
                     </div>
                   </div>
                 </div>
@@ -238,15 +239,22 @@ export function FinanceModule() {
                 <div className="h-[280px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={revenueData} barGap={4}>
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "rgb(113 113 122)", fontSize: 11 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgb(113 113 122)", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
+                      <defs>
+                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "rgb(24 24 27)", border: "1px solid rgb(39 39 42)", borderRadius: "8px", fontSize: "12px" }}
-                        labelStyle={{ color: "rgb(161 161 170)" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
+                        labelStyle={{ color: "hsl(var(--muted-foreground))" }}
                         formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
+                        cursor={{ fill: "hsl(var(--muted)/0.3)" }}
                       />
-                      <Bar dataKey="revenue" fill="rgb(244 244 245)" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="expenses" fill="rgb(82 82 91)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="revenue" fill="url(#colorRevenue)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="expenses" fill="hsl(var(--muted-foreground)/0.3)" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -254,9 +262,10 @@ export function FinanceModule() {
             </Card>
 
             {/* Expense Breakdown */}
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            {/* Expense Breakdown */}
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-zinc-100">Expense Breakdown</CardTitle>
+                <CardTitle className="text-sm font-medium text-card-foreground">Expense Breakdown</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="h-[180px]">
@@ -276,7 +285,7 @@ export function FinanceModule() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "rgb(24 24 27)", border: "1px solid rgb(39 39 42)", borderRadius: "8px", fontSize: "12px" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
                         formatter={(value: number) => [`${value}%`, ""]}
                       />
                     </RePieChart>
@@ -287,9 +296,9 @@ export function FinanceModule() {
                     <div key={cat.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="size-2 rounded-full" style={{ backgroundColor: cat.color }} />
-                        <span className="text-[12px] text-zinc-400">{cat.name}</span>
+                        <span className="text-[12px] text-muted-foreground">{cat.name}</span>
                       </div>
-                      <span className="text-[12px] text-zinc-300 font-medium">{cat.value}%</span>
+                      <span className="text-[12px] text-foreground font-medium">{cat.value}%</span>
                     </div>
                   ))}
                 </div>
@@ -300,19 +309,19 @@ export function FinanceModule() {
 
         {/* Transactions Tab */}
         <TabsContent value="transactions" className="space-y-4">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-zinc-100">Recent Transactions</CardTitle>
+                <CardTitle className="text-sm font-medium text-card-foreground">Recent Transactions</CardTitle>
                 <div className="flex items-center gap-2">
                   <div className="relative">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-zinc-600" />
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search transactions..."
-                      className="h-8 w-64 pl-8 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 placeholder:text-zinc-600"
+                      className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
-                  <Button size="sm" variant="outline" className="h-8 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100">
+                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
                     <Download className="size-3.5 mr-1.5" />Export
                   </Button>
                 </div>
@@ -321,35 +330,39 @@ export function FinanceModule() {
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pl-6">Transaction ID</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Type</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Description</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Amount</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Status</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Date</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">Transaction ID</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Type</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Description</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Amount</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Status</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Date</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {recentTransactions.map((txn) => (
-                    <TableRow key={txn.id} className="border-zinc-800/50 hover:bg-zinc-800/30">
-                      <TableCell className="py-3 pl-6 text-[12px] text-zinc-400 font-mono">{txn.id}</TableCell>
+                    <TableRow key={txn.id} className="border-border hover:bg-muted/50">
+                      <TableCell className="py-3 pl-6 text-[12px] text-muted-foreground font-mono">{txn.id}</TableCell>
                       <TableCell className="py-3">
-                        <Badge variant="secondary" className="bg-zinc-800 text-zinc-300 border-0 text-[10px]">{txn.type}</Badge>
+                        <Badge variant="secondary" className="bg-secondary text-secondary-foreground border-0 text-[10px]">{txn.type}</Badge>
                       </TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-100">{txn.description}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-foreground">{txn.description}</TableCell>
                       <TableCell className="py-3">
-                        <span className={`text-[13px] font-medium ${txn.amount > 0 ? "text-emerald-400" : "text-zinc-300"}`}>
+                        <span className={`text-[13px] font-medium ${txn.amount > 0 ? "text-emerald-500" : "text-card-foreground"}`}>
                           {txn.amount > 0 ? "+" : ""}{txn.amount.toLocaleString("en-US", { style: "currency", currency: "USD" })}
                         </span>
                       </TableCell>
                       <TableCell className="py-3">{getStatusBadge(txn.status)}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-500">{txn.date}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-muted-foreground">{txn.date}</TableCell>
                       <TableCell className="py-3 pr-6 text-right">
-                        <Button variant="ghost" size="icon" className="size-7 text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800">
-                          <MoreHorizontal className="size-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="size-7 text-muted-foreground hover:text-foreground hover:bg-muted">
+                              <MoreHorizontal className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -361,14 +374,14 @@ export function FinanceModule() {
 
         {/* Budget Tab */}
         <TabsContent value="budget" className="space-y-4">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-sm font-medium text-zinc-100">Budget Allocation</CardTitle>
-                  <CardDescription className="text-[12px] text-zinc-500">Track spending against allocated budgets</CardDescription>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Budget Allocation</CardTitle>
+                  <CardDescription className="text-[12px] text-muted-foreground">Track spending against allocated budgets</CardDescription>
                 </div>
-                <Button size="sm" variant="outline" className="h-8 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100">
+                <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
                   <Upload className="size-3.5 mr-1.5" />Import Budget
                 </Button>
               </div>
@@ -381,26 +394,26 @@ export function FinanceModule() {
                   <div key={item.department} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-8 rounded-md bg-zinc-800/50">
-                          <Building2 className="size-4 text-zinc-500" />
+                        <div className="flex items-center justify-center size-8 rounded-md bg-secondary">
+                          <Building2 className="size-4 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="text-[13px] font-medium text-zinc-100">{item.department}</p>
-                          <p className="text-[11px] text-zinc-500">
+                          <p className="text-[13px] font-medium text-foreground">{item.department}</p>
+                          <p className="text-[11px] text-muted-foreground">
                             ${item.spent.toLocaleString()} of ${item.allocated.toLocaleString()}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={`text-[13px] font-medium ${isOverBudget ? "text-red-400" : "text-zinc-100"}`}>
+                        <p className={`text-[13px] font-medium ${isOverBudget ? "text-red-400" : "text-foreground"}`}>
                           {percentUsed}%
                         </p>
-                        <p className="text-[11px] text-zinc-500">${item.remaining.toLocaleString()} remaining</p>
+                        <p className="text-[11px] text-muted-foreground">${item.remaining.toLocaleString()} remaining</p>
                       </div>
                     </div>
                     <Progress
                       value={percentUsed}
-                      className="h-1.5 bg-zinc-800"
+                      className="h-1.5 bg-muted"
                     />
                   </div>
                 )
@@ -411,11 +424,11 @@ export function FinanceModule() {
 
         {/* Chart of Accounts Tab */}
         <TabsContent value="accounts" className="space-y-4">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-zinc-100">Chart of Accounts</CardTitle>
-                <Button size="sm" className="h-8 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+                <CardTitle className="text-sm font-medium text-card-foreground">Chart of Accounts</CardTitle>
+                <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="size-3.5 mr-1.5" />Add Account
                 </Button>
               </div>
@@ -423,21 +436,21 @@ export function FinanceModule() {
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pl-6">Code</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Account Name</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Type</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pr-6 text-right">Balance</TableHead>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">Code</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Account Name</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Type</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {chartOfAccounts.map((account) => (
-                    <TableRow key={account.code} className="border-zinc-800/50 hover:bg-zinc-800/30">
-                      <TableCell className="py-3 pl-6 text-[12px] text-zinc-400 font-mono">{account.code}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-100">{account.name}</TableCell>
+                    <TableRow key={account.code} className="border-border hover:bg-muted/50">
+                      <TableCell className="py-3 pl-6 text-[12px] text-muted-foreground font-mono">{account.code}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-foreground">{account.name}</TableCell>
                       <TableCell className="py-3">{getAccountTypeBadge(account.type)}</TableCell>
                       <TableCell className="py-3 pr-6 text-right">
-                        <span className={`text-[13px] font-medium font-mono ${account.balance < 0 ? "text-zinc-400" : "text-zinc-100"}`}>
+                        <span className={`text-[13px] font-medium font-mono ${account.balance < 0 ? "text-muted-foreground" : "text-foreground"}`}>
                           {account.balance < 0 ? "(" : ""}${Math.abs(account.balance).toLocaleString()}{account.balance < 0 ? ")" : ""}
                         </span>
                       </TableCell>

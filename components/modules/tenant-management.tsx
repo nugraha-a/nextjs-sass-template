@@ -163,12 +163,12 @@ function getStatusBadge(status: string) {
 
 function getPlanBadge(plan: string) {
   const colors: Record<string, string> = {
-    Enterprise: "bg-zinc-100 text-zinc-900",
-    Professional: "bg-zinc-700 text-zinc-100",
-    Starter: "bg-zinc-800 text-zinc-400",
+    Enterprise: "bg-primary/10 text-primary",
+    Professional: "bg-secondary text-secondary-foreground",
+    Starter: "bg-muted text-muted-foreground",
   }
   return (
-    <Badge variant="secondary" className={`${colors[plan] || "bg-zinc-800 text-zinc-400"} border-0 text-[10px]`}>
+    <Badge variant="secondary" className={`${colors[plan] || "bg-muted text-muted-foreground"} border-0 text-[10px]`}>
       {plan}
     </Badge>
   )
@@ -185,20 +185,20 @@ export function TenantManagement() {
   })
 
   return (
-    <div className="mx-auto max-w-7xl p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Tenant Management
           </h1>
-          <p className="text-[13px] text-zinc-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             Manage organizations, subscriptions, and billing across the platform
           </p>
         </div>
         <Button
           size="sm"
-          className="h-8 bg-zinc-100 text-zinc-900 hover:bg-zinc-200"
+          className="h-8 bg-primary text-primary-foreground hover:bg-primary/90"
         >
           <Plus className="size-3.5 mr-1.5" />
           Add Tenant
@@ -208,17 +208,17 @@ export function TenantManagement() {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="bg-zinc-900/50 border-zinc-800/50">
+          <Card key={stat.label} className="bg-card border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center justify-center size-9 rounded-lg bg-zinc-800/50">
-                  <stat.icon className="size-4 text-zinc-400" />
+                <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
+                  <stat.icon className="size-4 text-muted-foreground" />
                 </div>
                 <span className="text-[11px] text-emerald-500 font-medium">{stat.change}</span>
               </div>
               <div className="mt-3">
-                <p className="text-xl font-semibold text-zinc-100 tracking-tight">{stat.value}</p>
-                <p className="text-[11px] text-zinc-500 mt-0.5">{stat.label}</p>
+                <p className="text-xl font-semibold text-card-foreground tracking-tight">{stat.value}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
@@ -226,38 +226,38 @@ export function TenantManagement() {
       </div>
 
       {/* Tenants Table */}
-      <Card className="bg-zinc-900/50 border-zinc-800/50">
+      <Card className="bg-card border-border">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-zinc-100">
+            <CardTitle className="text-sm font-medium text-card-foreground">
               All Tenants
             </CardTitle>
             <div className="flex items-center gap-2">
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-zinc-600" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                 <Input
                   placeholder="Search tenants..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-8 w-64 pl-8 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-100 placeholder:text-zinc-600"
+                  className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-8 w-32 bg-zinc-900 border-zinc-800 text-[13px] text-zinc-400">
+                <SelectTrigger className="h-8 w-32 bg-background border-input text-[13px] text-muted-foreground">
                   <Filter className="size-3.5 mr-1.5" />
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-zinc-800">
-                  <SelectItem value="all" className="text-[13px] text-zinc-300 focus:bg-zinc-800">
+                <SelectContent className="bg-popover border-border">
+                  <SelectItem value="all" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                     All Status
                   </SelectItem>
-                  <SelectItem value="active" className="text-[13px] text-zinc-300 focus:bg-zinc-800">
+                  <SelectItem value="active" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                     Active
                   </SelectItem>
-                  <SelectItem value="trial" className="text-[13px] text-zinc-300 focus:bg-zinc-800">
+                  <SelectItem value="trial" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                     Trial
                   </SelectItem>
-                  <SelectItem value="suspended" className="text-[13px] text-zinc-300 focus:bg-zinc-800">
+                  <SelectItem value="suspended" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                     Suspended
                   </SelectItem>
                 </SelectContent>
@@ -268,43 +268,43 @@ export function TenantManagement() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pl-6">
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">
                   Organization
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
                   Plan
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
                   Status
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
                   Users
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
                   MRR
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
                   Created
                 </TableHead>
-                <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pr-6 text-right">
+                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">
                   Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredTenants.map((tenant) => (
-                <TableRow key={tenant.id} className="border-zinc-800/50 hover:bg-zinc-800/30">
+                <TableRow key={tenant.id} className="border-border hover:bg-muted/50">
                   <TableCell className="py-3 pl-6">
                     <div className="flex items-center gap-3">
                       <Avatar className="size-8 rounded-md">
-                        <AvatarFallback className="rounded-md bg-zinc-800 text-zinc-400 text-[10px] font-medium">
+                        <AvatarFallback className="rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium">
                           {tenant.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-[13px] font-medium text-zinc-100">{tenant.name}</p>
-                        <p className="text-[11px] text-zinc-500">{tenant.industry}</p>
+                        <p className="text-[13px] font-medium text-foreground">{tenant.name}</p>
+                        <p className="text-[11px] text-muted-foreground">{tenant.industry}</p>
                       </div>
                     </div>
                   </TableCell>
@@ -312,19 +312,19 @@ export function TenantManagement() {
                   <TableCell className="py-3">{getStatusBadge(tenant.status)}</TableCell>
                   <TableCell className="py-3">
                     <div className="flex items-center gap-1.5">
-                      <Users className="size-3.5 text-zinc-600" />
-                      <span className="text-[13px] text-zinc-400">{tenant.users}</span>
+                      <Users className="size-3.5 text-muted-foreground" />
+                      <span className="text-[13px] text-muted-foreground">{tenant.users}</span>
                     </div>
                   </TableCell>
                   <TableCell className="py-3">
-                    <span className="text-[13px] text-zinc-100 font-medium">
+                    <span className="text-[13px] text-foreground font-medium">
                       ${tenant.mrr.toLocaleString()}
                     </span>
                   </TableCell>
                   <TableCell className="py-3">
                     <div className="flex items-center gap-1.5">
-                      <Calendar className="size-3.5 text-zinc-600" />
-                      <span className="text-[13px] text-zinc-500">{tenant.createdAt}</span>
+                      <Calendar className="size-3.5 text-muted-foreground" />
+                      <span className="text-[13px] text-muted-foreground">{tenant.createdAt}</span>
                     </div>
                   </TableCell>
                   <TableCell className="py-3 pr-6 text-right">
@@ -333,26 +333,26 @@ export function TenantManagement() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="size-7 text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800"
+                          className="size-7 text-muted-foreground hover:text-foreground hover:bg-muted"
                         >
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 w-44">
-                        <DropdownMenuItem className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100">
+                      <DropdownMenuContent align="end" className="bg-popover border-border w-44">
+                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                           <Eye className="size-3.5 mr-2" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100">
+                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                           <Settings className="size-3.5 mr-2" />
                           Manage
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-[13px] text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100">
+                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
                           <ArrowUpRight className="size-3.5 mr-2" />
                           Login as Tenant
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-zinc-800" />
-                        <DropdownMenuItem className="text-[13px] text-red-400 focus:bg-zinc-800 focus:text-red-400">
+                        <DropdownMenuSeparator className="bg-border" />
+                        <DropdownMenuItem className="text-[13px] text-destructive focus:bg-destructive/10 focus:text-destructive">
                           <Trash2 className="size-3.5 mr-2" />
                           Suspend
                         </DropdownMenuItem>

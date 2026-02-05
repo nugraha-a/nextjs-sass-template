@@ -51,7 +51,7 @@ function DashboardContent({
   setActiveModule: (module: ModuleKey) => void
   currentModule: typeof modules[ModuleKey]
 }) {
-  const { contentMode, sidebarMode } = useThemeSettings()
+  const { sidebarMode } = useThemeSettings()
   const { setOpen } = useSidebar()
 
   // Apply sidebar mode
@@ -73,9 +73,7 @@ function DashboardContent({
         onModuleChange={(module) => setActiveModule(module as ModuleKey)}
       />
       <main className="flex-1 overflow-auto bg-background">
-        <div className={cn(
-          contentMode === "compact" && "max-w-7xl mx-auto"
-        )}>
+        <div className="content-container h-full">
           {activeModule === "overview" && <OverviewDashboard />}
           {activeModule === "config" && <ConfigurationEngine />}
           {activeModule === "tenants" && <TenantManagement />}

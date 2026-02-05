@@ -132,12 +132,12 @@ export function OverviewDashboard() {
         {stats.map((stat) => (
           <Card
             key={stat.title}
-            className="bg-zinc-900/50 border-zinc-800/50 hover:border-zinc-700/50 transition-colors duration-150"
+            className="bg-card border-border hover:border-primary/50 transition-colors duration-150"
           >
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center justify-center size-10 rounded-lg bg-zinc-800/50">
-                  <stat.icon className="size-5 text-zinc-400" />
+                <div className="flex items-center justify-center size-10 rounded-lg bg-secondary">
+                  <stat.icon className="size-5 text-muted-foreground" />
                 </div>
                 <div
                   className={`flex items-center gap-1 text-[12px] font-medium ${
@@ -153,10 +153,10 @@ export function OverviewDashboard() {
                 </div>
               </div>
               <div className="mt-3">
-                <p className="text-2xl font-semibold text-zinc-100 tracking-tight">
+                <p className="text-2xl font-semibold text-card-foreground tracking-tight">
                   {stat.value}
                 </p>
-                <p className="text-[12px] text-zinc-500 mt-0.5">{stat.title}</p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">{stat.title}</p>
               </div>
             </CardContent>
           </Card>
@@ -166,20 +166,20 @@ export function OverviewDashboard() {
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Activity Chart */}
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-zinc-100">
+              <CardTitle className="text-sm font-medium text-card-foreground">
                 Platform Activity
               </CardTitle>
               <div className="flex items-center gap-4 text-[11px]">
                 <div className="flex items-center gap-1.5">
-                  <div className="size-2 rounded-full bg-zinc-100" />
-                  <span className="text-zinc-500">Users</span>
+                  <div className="size-2 rounded-full bg-primary" />
+                  <span className="text-muted-foreground">Users</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="size-2 rounded-full bg-zinc-600" />
-                  <span className="text-zinc-500">Transactions</span>
+                  <div className="size-2 rounded-full bg-secondary-foreground" />
+                  <span className="text-muted-foreground">Transactions</span>
                 </div>
               </div>
             </div>
@@ -241,9 +241,9 @@ export function OverviewDashboard() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-100">
+            <CardTitle className="text-sm font-medium text-card-foreground">
               Recent Activity
             </CardTitle>
           </CardHeader>
@@ -252,22 +252,22 @@ export function OverviewDashboard() {
               {recentActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-center gap-3 py-2.5 border-b border-zinc-800/50 last:border-0"
+                  className="flex items-center gap-3 py-2.5 border-b border-border last:border-0"
                 >
-                  <div className="flex items-center justify-center size-8 rounded-md bg-zinc-800/50">
-                    {activity.type === "tenant" && <Building2 className="size-4 text-zinc-400" />}
-                    {activity.type === "workflow" && <Activity className="size-4 text-zinc-400" />}
-                    {activity.type === "finance" && <DollarSign className="size-4 text-zinc-400" />}
-                    {activity.type === "iam" && <Users className="size-4 text-zinc-400" />}
-                    {activity.type === "config" && <FileText className="size-4 text-zinc-400" />}
+                  <div className="flex items-center justify-center size-8 rounded-md bg-secondary">
+                    {activity.type === "tenant" && <Building2 className="size-4 text-muted-foreground" />}
+                    {activity.type === "workflow" && <Activity className="size-4 text-muted-foreground" />}
+                    {activity.type === "finance" && <DollarSign className="size-4 text-muted-foreground" />}
+                    {activity.type === "iam" && <Users className="size-4 text-muted-foreground" />}
+                    {activity.type === "config" && <FileText className="size-4 text-muted-foreground" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] text-zinc-100 truncate">
+                    <p className="text-[13px] text-card-foreground truncate">
                       {activity.action}
                     </p>
-                    <p className="text-[11px] text-zinc-500">{activity.tenant}</p>
+                    <p className="text-[11px] text-muted-foreground">{activity.tenant}</p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-zinc-600">
+                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                     <Clock className="size-3" />
                     {activity.time}
                   </div>
@@ -279,13 +279,13 @@ export function OverviewDashboard() {
       </div>
 
       {/* Pending Approvals */}
-      <Card className="bg-zinc-900/50 border-zinc-800/50">
+      <Card className="bg-card border-border">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-zinc-100">
+            <CardTitle className="text-sm font-medium text-card-foreground">
               Pending Approvals
             </CardTitle>
-            <Badge variant="secondary" className="bg-zinc-800 text-zinc-400 border-0 text-[10px]">
+            <Badge variant="secondary" className="bg-secondary text-muted-foreground border-border text-[10px]">
               {pendingApprovals.length} pending
             </Badge>
           </div>
@@ -295,16 +295,16 @@ export function OverviewDashboard() {
             {pendingApprovals.map((approval) => (
               <div
                 key={approval.id}
-                className="flex items-center gap-3 py-3 border-b border-zinc-800/50 last:border-0"
+                className="flex items-center gap-3 py-3 border-b border-border last:border-0"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] text-zinc-100">{approval.title}</p>
-                  <p className="text-[11px] text-zinc-500">
+                  <p className="text-[13px] text-card-foreground">{approval.title}</p>
+                  <p className="text-[11px] text-muted-foreground">
                     Requested by {approval.requester}
                   </p>
                 </div>
                 {approval.amount && (
-                  <span className="text-[13px] font-medium text-zinc-100">
+                  <span className="text-[13px] font-medium text-card-foreground">
                     {approval.amount}
                   </span>
                 )}

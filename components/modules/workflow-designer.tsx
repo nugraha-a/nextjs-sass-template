@@ -116,14 +116,14 @@ function getStatusBadge(status: string) {
 
 function WorkflowCanvas() {
   return (
-    <div className="relative h-[300px] bg-zinc-950 rounded-lg border border-zinc-800/50 overflow-hidden">
+    <div className="relative h-[300px] bg-background rounded-lg border border-border overflow-hidden">
       {/* Grid background */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgb(39 39 42 / 0.3) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(39 39 42 / 0.3) 1px, transparent 1px)
+            linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
+            linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px)
           `,
           backgroundSize: "20px 20px",
         }}
@@ -133,24 +133,24 @@ function WorkflowCanvas() {
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="rgb(113 113 122)" />
+            <polygon points="0 0, 10 3.5, 0 7" fill="hsl(var(--muted-foreground))" />
           </marker>
         </defs>
         {/* Start to Condition */}
-        <line x1="90" y1="150" x2="180" y2="150" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <line x1="90" y1="150" x2="180" y2="150" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Condition to Manager (Yes) */}
-        <path d="M 240 130 Q 280 80 380 80" fill="none" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 240 130 Q 280 80 380 80" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Condition to CFO (No) */}
-        <path d="M 240 170 Q 280 220 380 220" fill="none" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 240 170 Q 280 220 380 220" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Manager to Finance */}
-        <path d="M 480 80 Q 520 80 520 130 Q 520 150 580 150" fill="none" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 480 80 Q 520 80 520 130 Q 520 150 580 150" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* CFO to Finance */}
-        <path d="M 480 220 Q 520 220 520 170 Q 520 150 580 150" fill="none" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <path d="M 480 220 Q 520 220 520 170 Q 520 150 580 150" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Finance to End */}
-        <line x1="680" y1="150" x2="780" y2="150" stroke="rgb(113 113 122)" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
+        <line x1="680" y1="150" x2="780" y2="150" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
         {/* Labels */}
-        <text x="290" y="70" fill="rgb(161 161 170)" fontSize="10">Yes</text>
-        <text x="290" y="240" fill="rgb(161 161 170)" fontSize="10">No</text>
+        <text x="290" y="70" fill="hsl(var(--muted-foreground))" fontSize="10">Yes</text>
+        <text x="290" y="240" fill="hsl(var(--muted-foreground))" fontSize="10">No</text>
       </svg>
 
       {/* Nodes */}
@@ -166,8 +166,8 @@ function WorkflowCanvas() {
             </div>
           )}
           {node.type === "end" && (
-            <div className="flex items-center justify-center size-10 rounded-full bg-zinc-700/50 border-2 border-zinc-600">
-              <Square className="size-4 text-zinc-400 fill-zinc-400" />
+            <div className="flex items-center justify-center size-10 rounded-full bg-muted border-2 border-border">
+              <Square className="size-4 text-muted-foreground fill-muted-foreground" />
             </div>
           )}
           {node.type === "condition" && (
@@ -176,22 +176,22 @@ function WorkflowCanvas() {
             </div>
           )}
           {node.type === "action" && (
-            <div className="flex items-center justify-center px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg">
-              <span className="text-[11px] text-zinc-300">{node.label}</span>
+            <div className="flex items-center justify-center px-4 py-2 bg-secondary border border-border rounded-lg">
+              <span className="text-[11px] text-foreground">{node.label}</span>
             </div>
           )}
           {(node.type === "start" || node.type === "end" || node.type === "condition") && (
-            <span className="mt-2 text-[10px] text-zinc-500">{node.label}</span>
+            <span className="mt-2 text-[10px] text-muted-foreground">{node.label}</span>
           )}
         </div>
       ))}
 
       {/* Toolbar */}
       <div className="absolute top-3 right-3 flex items-center gap-1">
-        <Button size="sm" variant="ghost" className="h-7 px-2 text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800">
+        <Button size="sm" variant="ghost" className="h-7 px-2 text-muted-foreground hover:text-foreground hover:bg-muted">
           <Plus className="size-3.5" />
         </Button>
-        <Button size="sm" variant="ghost" className="h-7 px-2 text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800">
+        <Button size="sm" variant="ghost" className="h-7 px-2 text-muted-foreground hover:text-foreground hover:bg-muted">
           <GitBranch className="size-3.5" />
         </Button>
       </div>
@@ -203,18 +203,18 @@ export function WorkflowDesigner() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<number | null>(1)
 
   return (
-    <div className="mx-auto max-w-7xl p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Workflow Engine
           </h1>
-          <p className="text-[13px] text-zinc-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             Design, deploy, and monitor approval workflows and business rules
           </p>
         </div>
-        <Button size="sm" className="h-8 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+        <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
           <Plus className="size-3.5 mr-1.5" />
           New Workflow
         </Button>
@@ -222,54 +222,54 @@ export function WorkflowDesigner() {
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center size-9 rounded-lg bg-zinc-800/50">
-                <Workflow className="size-4 text-zinc-400" />
+              <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
+                <Workflow className="size-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-xl font-semibold text-zinc-100">12</p>
-                <p className="text-[11px] text-zinc-500">Active Workflows</p>
+                <p className="text-xl font-semibold text-card-foreground">12</p>
+                <p className="text-[11px] text-muted-foreground">Active Workflows</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center size-9 rounded-lg bg-amber-500/10">
                 <Clock className="size-4 text-amber-400" />
               </div>
               <div>
-                <p className="text-xl font-semibold text-zinc-100">47</p>
-                <p className="text-[11px] text-zinc-500">Pending Approvals</p>
+                <p className="text-xl font-semibold text-card-foreground">47</p>
+                <p className="text-[11px] text-muted-foreground">Pending Approvals</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center size-9 rounded-lg bg-emerald-500/10">
                 <Zap className="size-4 text-emerald-400" />
               </div>
               <div>
-                <p className="text-xl font-semibold text-zinc-100">502</p>
-                <p className="text-[11px] text-zinc-500">Triggered Today</p>
+                <p className="text-xl font-semibold text-card-foreground">502</p>
+                <p className="text-[11px] text-muted-foreground">Triggered Today</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-zinc-900/50 border-zinc-800/50">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center size-9 rounded-lg bg-red-500/10">
                 <AlertTriangle className="size-4 text-red-400" />
               </div>
               <div>
-                <p className="text-xl font-semibold text-zinc-100">3</p>
-                <p className="text-[11px] text-zinc-500">SLA Breaches</p>
+                <p className="text-xl font-semibold text-card-foreground">3</p>
+                <p className="text-[11px] text-muted-foreground">SLA Breaches</p>
               </div>
             </div>
           </CardContent>
@@ -277,14 +277,14 @@ export function WorkflowDesigner() {
       </div>
 
       <Tabs defaultValue="designer" className="space-y-6">
-        <TabsList className="bg-zinc-900/50 border border-zinc-800/50 p-1 h-10">
-          <TabsTrigger value="designer" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+        <TabsList className="bg-muted border border-border p-1 h-10">
+          <TabsTrigger value="designer" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <GitBranch className="size-3.5 mr-1.5" />Visual Designer
           </TabsTrigger>
-          <TabsTrigger value="rules" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsTrigger value="rules" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <FileCode className="size-3.5 mr-1.5" />Rule Engine
           </TabsTrigger>
-          <TabsTrigger value="instances" className="text-[13px] data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsTrigger value="instances" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
             <Play className="size-3.5 mr-1.5" />Active Instances
           </TabsTrigger>
         </TabsList>
@@ -293,9 +293,9 @@ export function WorkflowDesigner() {
         <TabsContent value="designer" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Workflow List */}
-            <Card className="bg-zinc-900/50 border-zinc-800/50">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-zinc-100">Workflow Templates</CardTitle>
+                <CardTitle className="text-sm font-medium text-card-foreground">Workflow Templates</CardTitle>
               </CardHeader>
               <CardContent className="p-2">
                 <div className="space-y-1">
@@ -306,24 +306,24 @@ export function WorkflowDesigner() {
                       onClick={() => setSelectedWorkflow(wf.id)}
                       className={`w-full text-left p-3 rounded-lg transition-colors ${
                         selectedWorkflow === wf.id
-                          ? "bg-zinc-800 border border-zinc-700"
-                          : "hover:bg-zinc-800/50"
+                          ? "bg-secondary border border-border"
+                          : "hover:bg-muted/50"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[13px] font-medium text-zinc-100">{wf.name}</span>
+                        <span className="text-[13px] font-medium text-foreground">{wf.name}</span>
                         {wf.active ? (
                           <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-0 text-[9px]">
                             Active
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-zinc-800 text-zinc-500 border-0 text-[9px]">
+                          <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[9px]">
                             Draft
                           </Badge>
                         )}
                       </div>
-                      <p className="text-[11px] text-zinc-500 mt-1">{wf.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-[10px] text-zinc-600">
+                      <p className="text-[11px] text-muted-foreground mt-1">{wf.description}</p>
+                      <div className="flex items-center gap-4 mt-2 text-[10px] text-muted-foreground">
                         <span>{wf.nodes} nodes</span>
                         <span>{wf.triggers} triggers</span>
                       </div>
@@ -334,22 +334,22 @@ export function WorkflowDesigner() {
             </Card>
 
             {/* Canvas */}
-            <Card className="lg:col-span-2 bg-zinc-900/50 border-zinc-800/50">
+            <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-medium text-zinc-100">
+                    <CardTitle className="text-sm font-medium text-card-foreground">
                       {workflowTemplates.find((w) => w.id === selectedWorkflow)?.name}
                     </CardTitle>
-                    <CardDescription className="text-[11px] text-zinc-500">
+                    <CardDescription className="text-[11px] text-muted-foreground">
                       Drag and drop to modify the workflow
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="h-7 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100">
+                    <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground">
                       <Play className="size-3 mr-1" />Test
                     </Button>
-                    <Button size="sm" className="h-7 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+                    <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90">
                       Deploy
                     </Button>
                   </div>
@@ -364,20 +364,20 @@ export function WorkflowDesigner() {
 
         {/* Rule Engine Tab */}
         <TabsContent value="rules" className="space-y-6">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-sm font-medium text-zinc-100">Business Rules DSL</CardTitle>
-                  <CardDescription className="text-[11px] text-zinc-500">
+                  <CardTitle className="text-sm font-medium text-card-foreground">Business Rules DSL</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">
                     Define declarative rules for workflow automation
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="h-7 border-zinc-800 bg-transparent text-zinc-400 hover:text-zinc-100">
+                  <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground">
                     Validate
                   </Button>
-                  <Button size="sm" className="h-7 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+                  <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90">
                     Save Rules
                   </Button>
                 </div>
@@ -387,7 +387,7 @@ export function WorkflowDesigner() {
               <Textarea
                 value={ruleCode}
                 readOnly
-                className="h-[400px] font-mono text-[12px] bg-zinc-950 border-zinc-800 text-zinc-300 resize-none"
+                className="h-[400px] font-mono text-[12px] bg-muted border-input text-foreground resize-none"
               />
             </CardContent>
           </Card>
@@ -395,49 +395,49 @@ export function WorkflowDesigner() {
 
         {/* Active Instances Tab */}
         <TabsContent value="instances" className="space-y-4">
-          <Card className="bg-zinc-900/50 border-zinc-800/50">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium text-zinc-100">Active Workflow Instances</CardTitle>
+              <CardTitle className="text-sm font-medium text-card-foreground">Active Workflow Instances</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pl-6">Instance ID</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Workflow</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Status</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Current Step</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Initiator</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10">Amount</TableHead>
-                    <TableHead className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">Instance ID</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Workflow</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Status</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Current Step</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Initiator</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Amount</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {activeInstances.map((instance) => (
-                    <TableRow key={instance.id} className="border-zinc-800/50 hover:bg-zinc-800/30">
-                      <TableCell className="py-3 pl-6 text-[12px] text-zinc-400 font-mono">{instance.id}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-100">{instance.workflow}</TableCell>
+                    <TableRow key={instance.id} className="border-border hover:bg-muted/50">
+                      <TableCell className="py-3 pl-6 text-[12px] text-muted-foreground font-mono">{instance.id}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-foreground">{instance.workflow}</TableCell>
                       <TableCell className="py-3">{getStatusBadge(instance.status)}</TableCell>
                       <TableCell className="py-3">
                         <div className="flex items-center gap-1.5">
-                          <ChevronRight className="size-3.5 text-zinc-600" />
-                          <span className="text-[13px] text-zinc-300">{instance.currentStep}</span>
+                          <ChevronRight className="size-3.5 text-muted-foreground" />
+                          <span className="text-[13px] text-muted-foreground">{instance.currentStep}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-400">{instance.initiator}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-zinc-100 font-medium">{instance.amount || "-"}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-muted-foreground">{instance.initiator}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-foreground font-medium">{instance.amount || "-"}</TableCell>
                       <TableCell className="py-3 pr-6 text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-7 text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800">
+                            <Button variant="ghost" size="icon" className="size-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                               <MoreHorizontal className="size-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 w-44">
-                            <DropdownMenuItem className="text-[13px] text-zinc-300 focus:bg-zinc-800"><Eye className="size-3.5 mr-2" />View Details</DropdownMenuItem>
-                            <DropdownMenuItem className="text-[13px] text-zinc-300 focus:bg-zinc-800"><Edit2 className="size-3.5 mr-2" />Reassign</DropdownMenuItem>
-                            <DropdownMenuSeparator className="bg-zinc-800" />
-                            <DropdownMenuItem className="text-[13px] text-red-400 focus:bg-zinc-800"><Pause className="size-3.5 mr-2" />Cancel</DropdownMenuItem>
+                          <DropdownMenuContent align="end" className="bg-popover border-border w-44">
+                            <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"><Eye className="size-3.5 mr-2" />View Details</DropdownMenuItem>
+                            <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground"><Edit2 className="size-3.5 mr-2" />Reassign</DropdownMenuItem>
+                            <DropdownMenuSeparator className="bg-border" />
+                            <DropdownMenuItem className="text-[13px] text-destructive focus:bg-destructive/10 focus:text-destructive"><Pause className="size-3.5 mr-2" />Cancel</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
