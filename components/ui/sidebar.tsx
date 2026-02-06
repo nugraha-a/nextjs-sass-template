@@ -511,6 +511,31 @@ function SidebarMenuButton({
   const Comp = asChild ? Slot : 'button'
   const { isMobile, state } = useSidebar()
 
+  // Fix: Control the tooltip open state to prevent "reappearance" after click
+  const [isOpen, setIsOpen] = React.useState(false)
+  const hasClickedRef = React.useRef(isActive)
+
+  // Sync isActive changes to suppression state
+  React.useEffect(() => {
+    if (isActive) {
+      hasClickedRef.current = true
+      setIsOpen(false)
+    }
+  }, [isActive])
+
+  const handleOnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+     hasClickedRef.current = true
+     setIsOpen(false)
+     e.currentTarget.blur()
+     props.onClick?.(e)
+  }
+
+  const handleOnPointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
+     hasClickedRef.current = false
+     setIsOpen(false)
+     props.onPointerLeave?.(e)
+  }
+
   const button = (
     <Comp
       data-slot="sidebar-menu-button"
@@ -519,6 +544,8 @@ function SidebarMenuButton({
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...props}
+      onClick={handleOnClick}
+      onPointerLeave={handleOnPointerLeave}
     />
   )
 
@@ -533,7 +560,10 @@ function SidebarMenuButton({
   }
 
   return (
-    <Tooltip>
+    <Tooltip open={isOpen} onOpenChange={(open) => {
+        if (open && hasClickedRef.current) return
+        setIsOpen(open)
+    }}>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent
         side="right"

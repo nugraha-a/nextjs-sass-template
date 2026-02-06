@@ -76,7 +76,7 @@ function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActi
       <SidebarMenuSubButton
         asChild
         isActive={isActive}
-        className="text-muted-foreground hover:text-foreground data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium text-xs leading-normal"
+        className="text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold text-xs leading-normal transition-all duration-200"
       >
         <Link ref={ref} href={subItem.href}>{subItem.title}</Link>
       </SidebarMenuSubButton>
@@ -120,7 +120,7 @@ function NavItemWithSub({
           asChild
           isActive={isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
         >
           <Link ref={leafRef} href={item.href || "#"} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
@@ -146,7 +146,7 @@ function NavItemWithSub({
             <SidebarMenuButton
               tooltip={isDropdownOpen ? undefined : item.title}
               isActive={isActive}
-              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground"
+              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-primary/10 data-[state=open]:text-primary"
             >
               <item.icon className="size-4 shrink-0" />
               <span className="sr-only">{item.title}</span>
@@ -179,18 +179,20 @@ function NavItemWithSub({
                 asChild 
                 className={cn(
                   "group flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer transition-all duration-200 outline-none",
-                  isSubActive ? "bg-secondary/70 text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
+                  isSubActive 
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm" 
+                    : "text-muted-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent"
                 )}
               >
                 <Link href={subItem.href} className="w-full flex items-center gap-2">
                    {/* Clean Dot Indicator */}
                    <div className={cn(
                       "flex items-center justify-center size-3 shrink-0 transition-colors",
-                      isSubActive ? "text-primary" : "text-border group-hover:text-muted-foreground"
+                      isSubActive ? "text-primary" : "text-border group-hover:text-sidebar-foreground"
                    )}>
                         <div className={cn(
                             "size-1.5 rounded-full bg-current shadow-sm", 
-                            !isSubActive && "scale-75 opacity-70"
+                            !isSubActive && "scale-75 opacity-70 group-hover:opacity-100 group-hover:scale-90 transition-all"
                         )} />
                    </div>
                    <span className={cn("text-[13px] leading-tight", isSubActive ? "font-medium" : "font-normal")}>

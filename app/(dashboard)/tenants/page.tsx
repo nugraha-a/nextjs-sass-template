@@ -318,7 +318,7 @@ export default function TenantsPage() {
                   </TableCell>
                   <TableCell className="py-3">
                     <span className="text-[13px] text-foreground font-medium">
-                      ${tenant.mrr.toLocaleString()}
+                      ${tenant.mrr.toLocaleString('en-US')}
                     </span>
                   </TableCell>
                   <TableCell className="py-3">
