@@ -32,7 +32,7 @@ const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
   themeMode: "system",
   colorScheme: "zinc",
-  fontFamily: "geist",
+  fontFamily: "inter",
   fontSize: "medium",
   contentMode: "full",
 }

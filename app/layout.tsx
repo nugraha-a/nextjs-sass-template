@@ -35,6 +35,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { themeScript } from "@/lib/theme-script"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,7 +44,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistMono.variable} ${inter.variable} ${openSans.variable} ${jakarta.variable} ${geistSans.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${geistMono.variable} ${inter.variable} ${openSans.variable} ${jakarta.variable} ${geistSans.variable} font-sans antialiased`}>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

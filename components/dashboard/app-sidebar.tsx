@@ -14,6 +14,8 @@ import {
   LogOut,
 } from "lucide-react"
 
+import { cn } from "@/lib/utils"
+
 import {
   Sidebar,
   SidebarContent,
@@ -74,7 +76,7 @@ function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActi
       <SidebarMenuSubButton
         asChild
         isActive={isActive}
-        className="text-muted-foreground hover:text-foreground data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium text-[12px]"
+        className="text-muted-foreground hover:text-foreground data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium text-xs leading-normal"
       >
         <Link ref={ref} href={subItem.href}>{subItem.title}</Link>
       </SidebarMenuSubButton>
@@ -94,6 +96,7 @@ function NavItemWithSub({
   const pathname = usePathname()
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   
   // Determine if this item or any of its children are active
   const isActive = item.href 
@@ -122,7 +125,7 @@ function NavItemWithSub({
           <Link ref={leafRef} href={item.href || "#"} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
               <item.icon className="size-4 shrink-0" />
-              <span className="text-[13px] group-data-[collapsible=icon]:hidden">{item.title}</span>
+              <span className="text-sm leading-4 group-data-[collapsible=icon]:hidden">{item.title}</span>
             </span>
             {item.badge && (
               <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-secondary text-muted-foreground border-0 group-data-[collapsible=icon]:hidden">
@@ -138,10 +141,10 @@ function NavItemWithSub({
   if (isCollapsed) {
     return (
       <SidebarMenuItem>
-        <DropdownMenu modal={false}>
+        <DropdownMenu modal={false} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
-              tooltip={item.title}
+              tooltip={isDropdownOpen ? undefined : item.title}
               isActive={isActive}
               className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground"
             >
@@ -153,19 +156,50 @@ function NavItemWithSub({
           <DropdownMenuContent 
             side="right" 
             align="start" 
-            className="w-52 bg-popover/95 backdrop-blur-sm border-border animate-in slide-in-from-left-2 fade-in-50 duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] shadow-xl ml-2"
+            className="w-60 p-1.5 bg-popover/95 backdrop-blur-sm border-border/40 animate-in slide-in-from-left-2 fade-in-50 duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] shadow-2xl ml-2 rounded-xl"
+            sideOffset={-4}
           >
-            <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5 flex items-center justify-between">
-              {item.title}
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-border" />
+            {/* Header with Icon Box */}
+            <div className="flex items-center gap-2.5 px-2.5 py-2 mb-1 border-b border-border/40 pb-2">
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-accent/50 text-sidebar-accent-foreground ring-1 ring-border/30">
+                    <item.icon className="size-3.5" />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                    <span className="text-[13px] font-semibold tracking-tight text-foreground leading-none">{item.title}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium leading-none opacity-80">Module Group</span>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-0.5 mt-0.5">
             {item.items.map((subItem) => {
               const isSubActive = pathname === subItem.href
               return (
-              <DropdownMenuItem key={subItem.title} asChild className={`text-[13px] cursor-pointer py-2 px-2 transition-colors duration-200 ${isSubActive ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground focus:text-foreground focus:bg-accent/50"}`}>
-                <Link href={subItem.href}>{subItem.title}</Link>
+              <DropdownMenuItem 
+                key={subItem.title} 
+                asChild 
+                className={cn(
+                  "group flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer transition-all duration-200 outline-none",
+                  isSubActive ? "bg-secondary/70 text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
+                )}
+              >
+                <Link href={subItem.href} className="w-full flex items-center gap-2">
+                   {/* Clean Dot Indicator */}
+                   <div className={cn(
+                      "flex items-center justify-center size-3 shrink-0 transition-colors",
+                      isSubActive ? "text-primary" : "text-border group-hover:text-muted-foreground"
+                   )}>
+                        <div className={cn(
+                            "size-1.5 rounded-full bg-current shadow-sm", 
+                            !isSubActive && "scale-75 opacity-70"
+                        )} />
+                   </div>
+                   <span className={cn("text-[13px] leading-tight", isSubActive ? "font-medium" : "font-normal")}>
+                     {subItem.title}
+                   </span>
+                </Link>
               </DropdownMenuItem>
             )})}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
@@ -185,7 +219,7 @@ function NavItemWithSub({
             className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
           >
             <item.icon className="size-4 shrink-0" />
-            <span className="text-[13px] group-data-[collapsible=icon]:hidden">{item.title}</span>
+            <span className="text-sm leading-4 group-data-[collapsible=icon]:hidden">{item.title}</span>
             <ChevronRight className="ml-auto size-4 transition-transform duration-150 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
