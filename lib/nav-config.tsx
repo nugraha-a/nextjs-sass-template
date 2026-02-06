@@ -45,7 +45,7 @@ export const kernelModules: NavItem[] = [
     ],
   },
   {
-    title: "Tenant Management",
+    title: "Tenant",
     icon: Building2,
     items: [
       { title: "Tenant Management", href: "/tenants" },
@@ -65,7 +65,7 @@ export const kernelModules: NavItem[] = [
     ],
   },
   {
-    title: "Workflow Engine",
+    title: "Workflow",
     icon: Workflow,
     items: [
       { title: "Workflow Engine", href: "/workflow" },
