@@ -5,7 +5,7 @@ import { useTheme } from "next-themes"
 
 export type SidebarMode = "normal" | "compact" | "offcanvas"
 export type ContentMode = "compact" | "full"
-export type FontFamily = "geist" | "inter" | "system"
+export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
 export type ColorScheme = "zinc" | "slate" | "neutral" | "blue" | "green" | "orange" | "rose"
 

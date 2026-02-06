@@ -33,9 +33,10 @@ const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
 ]
 
 const fontFamilies: { value: FontFamily; label: string }[] = [
+  { value: "open-sans", label: "Open Sans" },
+  { value: "jakarta", label: "Jakarta Sans" },
+  { value: "inter", label: "Inter (Default)" },
   { value: "geist", label: "Geist" },
-  { value: "inter", label: "Inter" },
-  { value: "system", label: "System Default" },
 ]
 
 const fontSizes: { value: FontSize; label: string }[] = [

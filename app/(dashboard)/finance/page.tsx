@@ -11,7 +11,6 @@ import {
   PieChart,
   BarChart3,
   Search,
-  Filter,
   Plus,
   MoreHorizontal,
   Download,
@@ -20,7 +19,6 @@ import {
   Clock,
   AlertCircle,
   Building2,
-  CreditCard,
   Wallet,
   Receipt,
 } from "lucide-react"
@@ -52,8 +50,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   Cell,
@@ -141,7 +137,7 @@ function getAccountTypeBadge(type: string) {
   return <Badge variant="secondary" className={`${colors[type]} border-0 text-[10px]`}>{type}</Badge>
 }
 
-export function FinanceModule() {
+export default function FinancePage() {
   const [period, setPeriod] = useState("this-month")
 
   return (
@@ -218,7 +214,6 @@ export function FinanceModule() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Revenue vs Expenses Chart */}
-            {/* Revenue vs Expenses Chart */}
             <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
@@ -245,13 +240,13 @@ export function FinanceModule() {
                           <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.3}/>
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
+                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
-                        labelStyle={{ color: "var(--muted-foreground)" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
+                        labelStyle={{ color: "hsl(var(--muted-foreground))" }}
                         formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
-                        cursor={{ fill: "var(--muted)" }}
+                        cursor={{ fill: "hsl(var(--muted))" }}
                       />
                       <Bar dataKey="revenue" fill="url(#colorRevenue)" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="expenses" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
@@ -261,7 +256,6 @@ export function FinanceModule() {
               </CardContent>
             </Card>
 
-            {/* Expense Breakdown */}
             {/* Expense Breakdown */}
             <Card className="bg-card border-border">
               <CardHeader className="pb-2">
@@ -285,7 +279,7 @@ export function FinanceModule() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
                         formatter={(value: number) => [`${value}%`, ""]}
                       />
                     </RePieChart>

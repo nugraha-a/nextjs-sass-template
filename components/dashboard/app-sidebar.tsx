@@ -1,32 +1,17 @@
 "use client"
 
-import React from "react"
-
-import { useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 import {
-  LayoutDashboard,
-  Users,
-  Building2,
-  Settings,
-  HelpCircle,
-  LogOut,
   ChevronsUpDown,
   Sparkles,
-  Shield,
-  Workflow,
-  Bell,
-  FileText,
-  Blocks,
-  DollarSign,
-  UserCog,
-  Package,
-  Briefcase,
   ChevronRight,
-  Cog,
-  Database,
   Globe,
   Palette,
   Key,
+  Settings,
+  LogOut,
 } from "lucide-react"
 
 import {
@@ -61,151 +46,80 @@ import {
 } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useThemeSettings } from "@/contexts/theme-settings-context"
 
-interface NavItem {
-  title: string
-  icon: React.ComponentType<{ className?: string }>
-  href?: string
-  isActive?: boolean
-  badge?: string
-  items?: { title: string; href: string; isActive?: boolean }[]
+import {
+  kernelModules,
+  businessModules,
+  supportItems,
+  type NavItem,
+  type NavSubItem,
+} from "@/lib/nav-config"
+
+function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActive: boolean }) {
+  const ref = useRef<HTMLAnchorElement>(null)
+
+  useEffect(() => {
+    if (isActive && ref.current) {
+      // Delay slightly to allow Collapsible to expand
+      const timer = setTimeout(() => {
+        ref.current?.scrollIntoView({ block: "center", behavior: "smooth" })
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+  }, [isActive])
+
+  return (
+    <SidebarMenuSubItem>
+      <SidebarMenuSubButton
+        asChild
+        isActive={isActive}
+        className="text-muted-foreground hover:text-foreground data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium text-[12px]"
+      >
+        <Link ref={ref} href={subItem.href}>{subItem.title}</Link>
+      </SidebarMenuSubButton>
+    </SidebarMenuSubItem>
+  )
 }
 
-const kernelModules: NavItem[] = [
-  { 
-    title: "Overview", 
-    icon: LayoutDashboard, 
-    href: "#overview", 
-    isActive: true 
-  },
-  {
-    title: "Identity & Access",
-    icon: Shield,
-    items: [
-      { title: "Users", href: "#iam/users" },
-      { title: "Roles & Permissions", href: "#iam/roles" },
-      { title: "Access Policies", href: "#iam/policies" },
-      { title: "Audit Log", href: "#iam/audit" },
-    ],
-  },
-  {
-    title: "Tenant Management",
-    icon: Building2,
-    items: [
-      { title: "Organizations", href: "#tenants/orgs" },
-      { title: "Subscriptions", href: "#tenants/subscriptions" },
-      { title: "Billing", href: "#tenants/billing" },
-    ],
-  },
-  {
-    title: "Configuration",
-    icon: Cog,
-    items: [
-      { title: "General", href: "#config/general" },
-      { title: "Terminology", href: "#config/terminology" },
-      { title: "Localization", href: "#config/localization" },
-      { title: "Feature Flags", href: "#config/features" },
-      { title: "Branding", href: "#config/branding" },
-    ],
-  },
-  {
-    title: "Workflow Engine",
-    icon: Workflow,
-    items: [
-      { title: "Designer", href: "#workflow/designer" },
-      { title: "Rules", href: "#workflow/rules" },
-      { title: "Instances", href: "#workflow/instances" },
-      { title: "Templates", href: "#workflow/templates" },
-    ],
-  },
-  { 
-    title: "Notifications", 
-    icon: Bell, 
-    href: "#notifications",
-    badge: "12"
-  },
-  { 
-    title: "Documents", 
-    icon: FileText, 
-    href: "#documents" 
-  },
-  { 
-    title: "Integrations", 
-    icon: Blocks, 
-    href: "#integrations" 
-  },
-]
-
-const businessModules: NavItem[] = [
-  {
-    title: "Finance",
-    icon: DollarSign,
-    items: [
-      { title: "General Ledger", href: "#finance/gl" },
-      { title: "Accounts Payable", href: "#finance/ap" },
-      { title: "Accounts Receivable", href: "#finance/ar" },
-      { title: "Budgeting", href: "#finance/budget" },
-      { title: "Fixed Assets", href: "#finance/assets" },
-      { title: "Reports", href: "#finance/reports" },
-    ],
-  },
-  {
-    title: "Human Capital",
-    icon: UserCog,
-    items: [
-      { title: "Employee Directory", href: "#hcm/employees" },
-      { title: "Attendance", href: "#hcm/attendance" },
-      { title: "Payroll", href: "#hcm/payroll" },
-      { title: "Performance", href: "#hcm/performance" },
-      { title: "Recruitment", href: "#hcm/recruitment" },
-    ],
-  },
-  {
-    title: "Supply Chain",
-    icon: Package,
-    items: [
-      { title: "Purchase Orders", href: "#scm/po" },
-      { title: "Inventory", href: "#scm/inventory" },
-      { title: "Vendors", href: "#scm/vendors" },
-      { title: "Goods Receipt", href: "#scm/gr" },
-    ],
-  },
-  {
-    title: "Programs",
-    icon: Briefcase,
-    items: [
-      { title: "Projects", href: "#programs/projects" },
-      { title: "Donations", href: "#programs/donations" },
-      { title: "Fund Tracking", href: "#programs/funds" },
-      { title: "Impact Reports", href: "#programs/impact" },
-    ],
-  },
-]
-
-const supportItems: NavItem[] = [
-  { title: "Settings", icon: Settings, href: "#settings" },
-  { title: "Help & Docs", icon: HelpCircle, href: "#help" },
-]
-
-import { cn } from "@/lib/utils"
-
-// ... (imports remain)
-
-function NavItemWithSub({ item }: { item: NavItem }) {
+function NavItemWithSub({ 
+  item, 
+  openGroups, 
+  onToggle 
+}: { 
+  item: NavItem; 
+  openGroups: string[]; 
+  onToggle: (title: string, open: boolean) => void; 
+}) {
+  const pathname = usePathname()
   const { state } = useSidebar()
-  const [isOpen, setIsOpen] = useState(item.isActive || false)
   const isCollapsed = state === "collapsed"
+  
+  // Determine if this item or any of its children are active
+  const isActive = item.href 
+    ? pathname === item.href 
+    : item.items?.some(sub => pathname.startsWith(sub.href))
+
+  const isOpen = openGroups.includes(item.title)
+  const leafRef = useRef<HTMLAnchorElement>(null)
+
+  // Scroll active leaf item into view
+  useEffect(() => {
+    if (isActive && !item.items && leafRef.current) {
+        leafRef.current.scrollIntoView({ block: "center", behavior: "smooth" })
+    }
+  }, [isActive, item.items])
 
   if (!item.items) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton
           asChild
-          isActive={item.isActive}
+          isActive={isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
         >
-          <a href={item.href} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
+          <Link ref={leafRef} href={item.href || "#"} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
               <item.icon className="size-4 shrink-0" />
               <span className="text-[13px] group-data-[collapsible=icon]:hidden">{item.title}</span>
@@ -215,7 +129,7 @@ function NavItemWithSub({ item }: { item: NavItem }) {
                 {item.badge}
               </Badge>
             )}
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
     )
@@ -228,8 +142,8 @@ function NavItemWithSub({ item }: { item: NavItem }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               tooltip={item.title}
-              isActive={item.isActive}
-              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground"
+              isActive={isActive}
+              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-medium group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground"
             >
               <item.icon className="size-4 shrink-0" />
               <span className="sr-only">{item.title}</span>
@@ -245,11 +159,13 @@ function NavItemWithSub({ item }: { item: NavItem }) {
               {item.title}
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-border" />
-            {item.items.map((subItem) => (
-              <DropdownMenuItem key={subItem.title} asChild className="text-[13px] text-muted-foreground focus:text-foreground focus:bg-accent/50 cursor-pointer py-2 px-2 transition-colors duration-200">
-                <a href={subItem.href}>{subItem.title}</a>
+            {item.items.map((subItem) => {
+              const isSubActive = pathname === subItem.href
+              return (
+              <DropdownMenuItem key={subItem.title} asChild className={`text-[13px] cursor-pointer py-2 px-2 transition-colors duration-200 ${isSubActive ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground focus:text-foreground focus:bg-accent/50"}`}>
+                <Link href={subItem.href}>{subItem.title}</Link>
               </DropdownMenuItem>
-            ))}
+            )})}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
@@ -257,7 +173,11 @@ function NavItemWithSub({ item }: { item: NavItem }) {
   }
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible">
+    <Collapsible 
+      open={isOpen} 
+      onOpenChange={(open) => onToggle(item.title, open)} 
+      className="group/collapsible"
+    >
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
@@ -271,17 +191,11 @@ function NavItemWithSub({ item }: { item: NavItem }) {
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {item.items.map((subItem) => (
-              <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  asChild
-                  isActive={subItem.isActive}
-                  className="text-muted-foreground hover:text-foreground data-[active=true]:text-sidebar-primary data-[active=true]:font-medium text-[12px]"
-                >
-                  <a href={subItem.href}>{subItem.title}</a>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
+            {item.items.map((subItem) => {
+              const isSubActive = pathname === subItem.href
+              return (
+                <SidebarSubItemLink key={subItem.title} subItem={subItem} isActive={isSubActive} />
+            )})}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>
@@ -294,8 +208,79 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
+  const pathname = usePathname()
+  const { sidebarMode, setSidebarMode } = useThemeSettings()
+  const { open, setOpen, isMobile } = useSidebar()
+  const [openGroups, setOpenGroups] = useState<string[]>([])
+
+  // Helper to find the active group based on current path
+  const getActiveGroupTitle = () => {
+    const allGroups = [...kernelModules, ...businessModules, ...supportItems]
+    return allGroups.find(g => 
+       g.items?.some(i => pathname === i.href || pathname.startsWith(i.href + '/'))
+    )?.title
+  }
+
+  useEffect(() => {
+    const activeTitle = getActiveGroupTitle()
+    if (activeTitle) {
+      setOpenGroups([activeTitle])
+    } else {
+      setOpenGroups([])
+    }
+  }, [pathname])
+
+  const prevSidebarModeRef = useRef(sidebarMode)
+  const prevOpenRef = useRef(open)
+
+  // Sync Theme Mode -> Sidebar Open State
+  useEffect(() => {
+    if (prevSidebarModeRef.current !== sidebarMode) {
+      if (sidebarMode === "compact") {
+        setOpen(false)
+      } else if (sidebarMode === "normal") {
+        setOpen(true)
+      }
+      prevSidebarModeRef.current = sidebarMode
+    }
+  }, [sidebarMode, setOpen])
+
+  // Sync Sidebar Open State -> Theme Mode (Harmony)
+  useEffect(() => {
+    if (isMobile || sidebarMode === "offcanvas") return
+
+    if (prevOpenRef.current !== open) {
+      if (open) {
+        setSidebarMode("normal")
+      } else {
+        setSidebarMode("compact")
+      }
+      prevOpenRef.current = open
+    }
+  }, [open, setSidebarMode, isMobile, sidebarMode])
+
+  const effectiveCollapsible = sidebarMode === "offcanvas" ? "offcanvas" : collapsible
+
+  const handleGroupToggle = (title: string, open: boolean) => {
+    setOpenGroups(prev => {
+      if (open) {
+        // When opening a group, keep the active group open (if it exists), 
+        // but close others. Effectively allowing [Active, NewGroup] at most.
+        const activeTitle = getActiveGroupTitle()
+        const nextGroups = activeTitle ? [activeTitle] : []
+        if (title !== activeTitle) {
+          nextGroups.push(title)
+        }
+        return Array.from(new Set(nextGroups))
+      } else {
+        // When closing, just remove the group
+        return prev.filter(t => t !== title)
+      }
+    })
+  }
+
   return (
-    <Sidebar collapsible={collapsible} className="border-r border-border bg-sidebar">
+    <Sidebar collapsible={effectiveCollapsible} className="border-r border-border bg-sidebar">
       <SidebarHeader className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -354,7 +339,12 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {kernelModules.map((item) => (
-                <NavItemWithSub key={item.title} item={item} />
+                <NavItemWithSub 
+                  key={item.title} 
+                  item={item} 
+                  openGroups={openGroups} 
+                  onToggle={handleGroupToggle} 
+                />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -369,7 +359,12 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {businessModules.map((item) => (
-                <NavItemWithSub key={item.title} item={item} />
+                <NavItemWithSub 
+                  key={item.title} 
+                  item={item} 
+                  openGroups={openGroups} 
+                  onToggle={handleGroupToggle} 
+                />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -384,7 +379,12 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {supportItems.map((item) => (
-                <NavItemWithSub key={item.title} item={item} />
+                <NavItemWithSub 
+                  key={item.title} 
+                  item={item} 
+                  openGroups={openGroups} 
+                  onToggle={handleGroupToggle} 
+                />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

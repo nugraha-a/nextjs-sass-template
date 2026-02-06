@@ -19,6 +19,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  CartesianGrid
 } from "recharts"
 
 const stats = [
@@ -124,7 +125,7 @@ const pendingApprovals = [
   },
 ]
 
-export function OverviewDashboard() {
+export default function DashboardPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Stats Grid */}
@@ -202,24 +203,24 @@ export function OverviewDashboard() {
                     dataKey="date"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
                     tickFormatter={(value) => `${value / 1000}k`}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "var(--color-popover)",
-                      border: "1px solid var(--color-border)",
+                      backgroundColor: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
                       borderRadius: "8px",
                       fontSize: "12px",
-                      color: "var(--color-popover-foreground)",
+                      color: "hsl(var(--popover-foreground))",
                     }}
-                    labelStyle={{ color: "var(--color-muted-foreground)" }}
-                    itemStyle={{ color: "var(--color-foreground)" }}
+                    labelStyle={{ color: "hsl(var(--muted-foreground))" }}
+                    itemStyle={{ color: "hsl(var(--foreground))" }}
                   />
                   <Area
                     type="monotone"

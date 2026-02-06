@@ -174,7 +174,7 @@ function getPlanBadge(plan: string) {
   )
 }
 
-export function TenantManagement() {
+export default function TenantsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
 

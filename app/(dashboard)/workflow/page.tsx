@@ -199,7 +199,7 @@ function WorkflowCanvas() {
   )
 }
 
-export function WorkflowDesigner() {
+export default function WorkflowPage() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<number | null>(1)
 
   return (

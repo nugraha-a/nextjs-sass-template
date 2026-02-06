@@ -5,7 +5,6 @@ import {
   Shield,
   Users,
   Key,
-  Lock,
   Search,
   Plus,
   MoreHorizontal,
@@ -107,7 +106,7 @@ function getStatusBadge(status: string) {
   }
 }
 
-export function IAMDashboard() {
+export default function IAMPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedRole, setSelectedRole] = useState<number | null>(3)
 

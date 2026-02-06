@@ -55,7 +55,7 @@ const localeOptions = {
   fiscalYears: ["January - December", "April - March", "July - June", "October - September"],
 }
 
-export function ConfigurationEngine() {
+export default function ConfigPage() {
   const [terminology, setTerminology] = useState(
     Object.fromEntries(terminologyConfig.map((t) => [t.key, t.value]))
   )

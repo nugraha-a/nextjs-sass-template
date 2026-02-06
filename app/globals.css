@@ -52,7 +52,7 @@ html[data-font-size="large"] {
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.95 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.205 0 0);
@@ -186,6 +186,7 @@ html.dark[data-color-scheme="neutral"] {
   --accent: oklch(0.95 0.04 260);
   --secondary: oklch(0.97 0.02 260);
   --sidebar-accent: oklch(0.95 0.04 260);
+  --sidebar-accent-foreground: oklch(0.35 0.15 260); /* Deep Royal Blue Text */
   
   /* Corporate Chart Colors (High Contrast & Professional) */
   --chart-1: oklch(0.45 0.15 260); /* Navy Blue (Primary) */
@@ -196,15 +197,16 @@ html.dark[data-color-scheme="neutral"] {
 }
 html.dark[data-color-scheme="blue"] {
   /* Dark Mode: Slightly lighter Navy for visibility */
-  --primary: oklch(0.6 0.15 260);
+  --primary: oklch(0.70 0.15 260);
   --primary-foreground: oklch(1 0 0);
-  --ring: oklch(0.6 0.15 260);
+  --ring: oklch(0.70 0.15 260);
 
   /* Tinted UI Colors (Dark) */
-  --muted: oklch(0.20 0.04 260);
-  --accent: oklch(0.25 0.06 260);
-  --secondary: oklch(0.20 0.04 260);
-  --sidebar-accent: oklch(0.25 0.06 260);
+  --muted: oklch(0.18 0.04 260);
+  --accent: oklch(0.20 0.06 260);
+  --secondary: oklch(0.18 0.04 260);
+  --sidebar-accent: oklch(0.18 0.06 260);
+  --sidebar-accent-foreground: oklch(0.85 0.10 260); /* Light Blue Text */
 
   /* Corporate Chart Colors (Dark Mode) */
   --chart-1: oklch(0.6 0.15 260); /* Royal Blue */
@@ -237,14 +239,15 @@ html.dark[data-color-scheme="blue"] {
 }
 html.dark[data-color-scheme="green"] {
   /* Dark Mode: Vibrant Emerald */
-  --primary: oklch(0.60 0.15 145);
+  --primary: oklch(0.70 0.15 145);
   --primary-foreground: oklch(0.1 0.02 145);
 
   /* Tinted UI Colors (Dark) */
-  --muted: oklch(0.20 0.04 145);
-  --accent: oklch(0.25 0.06 145);
-  --secondary: oklch(0.20 0.04 145);
-  --sidebar-accent: oklch(0.25 0.06 145);
+  --muted: oklch(0.18 0.04 145);
+  --accent: oklch(0.20 0.06 145);
+  --secondary: oklch(0.18 0.04 145);
+  --sidebar-accent: oklch(0.18 0.06 145);
+  --sidebar-accent-foreground: oklch(0.85 0.10 145); /* Light Emerald Text */
 
   /* Corporate Chart Colors (Dark Mode) */
   --chart-1: oklch(0.60 0.15 145); /* Emerald */
@@ -276,14 +279,15 @@ html.dark[data-color-scheme="green"] {
   --chart-5: oklch(0.65 0.18 85);  /* Gold (Highlight) */
 }
 html.dark[data-color-scheme="orange"] {
-  --primary: oklch(0.65 0.15 50);
+  --primary: oklch(0.70 0.15 50);
   --primary-foreground: oklch(0.1 0.02 50);
 
   /* Tinted UI Colors (Dark) */
-  --muted: oklch(0.20 0.03 50);
-  --accent: oklch(0.25 0.05 50);
-  --secondary: oklch(0.20 0.03 50);
-  --sidebar-accent: oklch(0.25 0.05 50);
+  --muted: oklch(0.18 0.03 50);
+  --accent: oklch(0.20 0.05 50);
+  --secondary: oklch(0.18 0.03 50);
+  --sidebar-accent: oklch(0.18 0.05 50);
+  --sidebar-accent-foreground: oklch(0.90 0.05 50); /* Light Terracotta Text */
 
   /* Corporate Chart Colors (Dark Mode) */
   --chart-1: oklch(0.65 0.15 50); /* Terracotta */
@@ -315,14 +319,15 @@ html.dark[data-color-scheme="orange"] {
   --chart-5: oklch(0.65 0.10 260); /* Slate Blue (Neutral) */
 }
 html.dark[data-color-scheme="rose"] {
-  --primary: oklch(0.60 0.15 15);
+  --primary: oklch(0.70 0.15 15);
   --primary-foreground: oklch(1 0 0);
   
   /* Tinted UI Colors (Dark) */
-  --muted: oklch(0.20 0.03 15);
-  --accent: oklch(0.25 0.05 15);
-  --secondary: oklch(0.20 0.03 15);
-  --sidebar-accent: oklch(0.25 0.05 15);
+  --muted: oklch(0.18 0.03 15);
+  --accent: oklch(0.20 0.05 15);
+  --secondary: oklch(0.18 0.03 15);
+  --sidebar-accent: oklch(0.18 0.05 15);
+  --sidebar-accent-foreground: oklch(0.90 0.05 15); /* Light Rose Text */
 
   /* Corporate Chart Colors (Dark Mode) */
   --chart-1: oklch(0.60 0.15 15); /* Burgundy */
@@ -440,6 +445,18 @@ html[data-font-family="inter"] body {
 
 html[data-font-family="system"] body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html[data-font-family="geist"] body {
+  font-family: var(--font-geist-sans), 'Geist', sans-serif;
+}
+
+html[data-font-family="open-sans"] body {
+  font-family: var(--font-open-sans), 'Open Sans', sans-serif;
+}
+
+html[data-font-family="jakarta"] body {
+  font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Content mode */
