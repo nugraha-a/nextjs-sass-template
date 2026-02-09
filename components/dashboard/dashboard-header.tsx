@@ -90,19 +90,21 @@ function getBreadcrumbs(pathname: string) {
 }
 
 export function DashboardHeader() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile } = useSidebar()
   const { sidebarMode, setSidebarMode } = useThemeSettings()
   const pathname = usePathname()
   const breadcrumbs = getBreadcrumbs(pathname)
   const [searchOpen, setSearchOpen] = useState(false)
 
   const handleSidebarToggle = () => {
-    if (sidebarMode === "offcanvas") {
+    // Mobile always uses toggleSidebar for offcanvas
+    // Desktop offcanvas mode also uses toggleSidebar
+    if (isMobile || sidebarMode === "offcanvas") {
       toggleSidebar()
       return
     }
     
-    // Toggle between normal and compact
+    // Desktop normal/compact toggle
     setSidebarMode(sidebarMode === "normal" ? "compact" : "normal")
   }
 

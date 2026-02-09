@@ -12,7 +12,10 @@ import {
   Key,
   Settings,
   LogOut,
+  PanelLeftIcon,
 } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
 
@@ -246,7 +249,7 @@ interface AppSidebarProps {
 export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   const pathname = usePathname()
   const { sidebarMode, setSidebarMode } = useThemeSettings()
-  const { open, setOpen, isMobile } = useSidebar()
+  const { open, setOpen, isMobile, setOpenMobile } = useSidebar()
   const [openGroups, setOpenGroups] = useState<string[]>([])
 
   // Helper to find the active group based on current path
@@ -268,9 +271,41 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
 
   const prevSidebarModeRef = useRef(sidebarMode)
   const prevOpenRef = useRef(open)
+  const prevIsMobileRef = useRef(isMobile)
+  const lastDesktopModeRef = useRef<"normal" | "compact" | "offcanvas">(sidebarMode)
 
-  // Sync Theme Mode -> Sidebar Open State
+
+  // Preserve desktop mode when switching to/from mobile
   useEffect(() => {
+    // Detect transition FROM desktop TO mobile - store mode before switching
+    if (!prevIsMobileRef.current && isMobile) {
+      // We're transitioning TO mobile, store current desktop mode
+      if (sidebarMode !== "offcanvas") {
+        lastDesktopModeRef.current = sidebarMode
+      }
+    }
+    
+    // Detect transition FROM mobile TO desktop - restore mode
+    if (prevIsMobileRef.current && !isMobile) {
+      // We're transitioning TO desktop, restore last desktop mode
+      if (lastDesktopModeRef.current) {
+        setSidebarMode(lastDesktopModeRef.current)
+      }
+    }
+    
+    // Update stored desktop mode whenever it changes on desktop
+    if (!isMobile && sidebarMode !== "offcanvas") {
+      lastDesktopModeRef.current = sidebarMode
+    }
+    
+    prevIsMobileRef.current = isMobile
+  }, [isMobile, sidebarMode, setSidebarMode])
+
+  // Sync Theme Mode -> Sidebar Open State (Desktop/Tablet only)
+  useEffect(() => {
+    // Skip sync on mobile - mobile always uses offcanvas with openMobile state
+    if (isMobile) return
+
     if (prevSidebarModeRef.current !== sidebarMode) {
       if (sidebarMode === "compact") {
         setOpen(false)
@@ -279,10 +314,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
       }
       prevSidebarModeRef.current = sidebarMode
     }
-  }, [sidebarMode, setOpen])
+  }, [sidebarMode, setOpen, isMobile])
 
-  // Sync Sidebar Open State -> Theme Mode (Harmony)
+  // Sync Sidebar Open State -> Theme Mode (Harmony - Desktop/Tablet only)
   useEffect(() => {
+    // Skip sync on mobile and offcanvas mode
     if (isMobile || sidebarMode === "offcanvas") return
 
     if (prevOpenRef.current !== open) {
@@ -295,7 +331,9 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
     }
   }, [open, setSidebarMode, isMobile, sidebarMode])
 
-  const effectiveCollapsible = sidebarMode === "offcanvas" ? "offcanvas" : collapsible
+  // Mobile: always use offcanvas (Sheet overlay)
+  // Desktop/Tablet: respect sidebarMode setting
+  const effectiveCollapsible = isMobile ? "offcanvas" : (sidebarMode === "offcanvas" ? "offcanvas" : collapsible)
 
   const handleGroupToggle = (title: string, open: boolean) => {
     setOpenGroups(prev => {
@@ -317,7 +355,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
 
   return (
     <Sidebar collapsible={effectiveCollapsible} className="border-r border-border bg-sidebar">
-      <SidebarHeader className="p-2">
+      <SidebarHeader className="p-2 relative">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -363,6 +401,17 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
+        {isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setOpenMobile(false)}
+            className="absolute top-1/2 -translate-y-1/2 right-[-2rem] flex size-8 items-center justify-center rounded-r-md border border-l-0 border-sidebar-border bg-sidebar text-sidebar-foreground shadow-xs hover:bg-sidebar focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none z-50 rounded-l-none"
+          >
+            <PanelLeftIcon className="size-4" />
+            <span className="sr-only">Close Sidebar</span>
+          </Button>
+        )}
       </SidebarHeader>
 
       <SidebarSeparator />
