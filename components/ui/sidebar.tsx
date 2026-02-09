@@ -221,7 +221,7 @@ function Sidebar({
       <div
         data-slot="sidebar-gap"
         className={cn(
-          'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+          'relative w-(--sidebar-width) bg-transparent transition-[width] duration-300 ease-in-out',
           'max-md:!w-0',
           'group-data-[collapsible=offcanvas]:w-0',
           'group-data-[side=right]:rotate-180',
@@ -233,7 +233,7 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          'fixed inset-y-0 z-10 h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear',
+          'fixed inset-y-0 z-10 h-svh w-(--sidebar-width) transition-[left,right,width] duration-300 ease-in-out',
           // Hide completely on mobile - force off-screen and hide
           'max-md:!hidden max-md:!-translate-x-full max-md:!opacity-0',
           // Show on desktop
