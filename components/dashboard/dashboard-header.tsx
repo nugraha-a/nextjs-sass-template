@@ -7,7 +7,15 @@ import { ThemeSettingsPanel } from "@/components/dashboard/theme-settings-panel"
 import { useThemeSettings } from "@/contexts/theme-settings-context"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { useState } from "react"
+import React, { useState } from "react"
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { SearchCommand } from "@/components/dashboard/search-command"
 import { NotificationPopover } from "@/components/dashboard/notification-popover"
 
@@ -133,36 +141,34 @@ export function DashboardHeader() {
             <span className="sr-only">Toggle Sidebar</span>
           </Button>
         </div>
-
         {/* Breadcrumbs & Actions */}
         <div className="flex flex-1 items-center justify-between px-3 min-w-0">
-          <nav aria-label="breadcrumb">
-            <ol className="flex items-center gap-1.5 text-sm">
-              {breadcrumbs.map((crumb, index) => (
-                <li key={crumb.href + index} className="inline-flex items-center gap-1.5">
-                  {index > 0 && (
-                    <ChevronRight className="size-3.5 text-muted-foreground/50" aria-hidden="true" />
-                  )}
-                  {index < breadcrumbs.length - 1 ? (
-                    crumb.href === "#" ? (
-                      <span className="text-muted-foreground text-[13px]">{crumb.label}</span>
-                    ) : (
-                      <Link
-                        href={crumb.href}
-                        className="text-muted-foreground hover:text-foreground text-[13px] transition-colors duration-150"
-                      >
-                        {crumb.label}
-                      </Link>
-                    )
-                  ) : (
-                    <span className="text-foreground font-medium text-[13px]">
-                      {crumb.label}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <Breadcrumb>
+            <BreadcrumbList>
+              {breadcrumbs.map((crumb, index) => {
+                const isLast = index === breadcrumbs.length - 1
+                
+                return (
+                  <React.Fragment key={crumb.href + index}>
+                    <BreadcrumbItem>
+                      {isLast ? (
+                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                      ) : crumb.href === "#" ? (
+                        <span className="truncate inline-block max-w-[150px] sm:max-w-xs align-middle">
+                          {crumb.label}
+                        </span>
+                      ) : (
+                        <BreadcrumbLink href={crumb.href}>
+                          {crumb.label}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                    {!isLast && <BreadcrumbSeparator />}
+                  </React.Fragment>
+                )
+              })}
+            </BreadcrumbList>
+          </Breadcrumb>
 
           <div className="flex items-center gap-1">
             <Button
