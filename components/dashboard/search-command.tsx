@@ -33,7 +33,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface SearchCommandProps {
   open: boolean
-  setOpen: (open: boolean) => void
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function SearchCommand({ open, setOpen }: SearchCommandProps) {
@@ -52,7 +52,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
     <CommandDialog open={open} onOpenChange={setOpen}>
       <div className="relative">
         <CommandInput placeholder="Search" />
-        <button onClick={() => setOpen(false)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground">
+        <button onClick={() => setOpen(false)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground cursor-pointer">
            <X className="size-4" />
         </button>
       </div>

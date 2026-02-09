@@ -68,7 +68,7 @@ export function ThemeSettingsPanel() {
         <Button
           variant="ghost"
           size="icon"
-          className="size-8 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
+          className="size-8 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 cursor-pointer"
         >
           <Settings className="size-4" />
           <span className="sr-only">Theme Settings</span>
@@ -212,7 +212,7 @@ export function ThemeSettingsPanel() {
                   <span className="text-[9px] text-muted-foreground/50">{fontFamilies.find(f => f.value === fontFamily)?.label}</span>
                 </div>
                 <Select value={fontFamily} onValueChange={(value) => setFontFamily(value as FontFamily)}>
-                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
@@ -234,7 +234,7 @@ export function ThemeSettingsPanel() {
                   <span className="text-[9px] text-muted-foreground/50">{fontSizes.find(f => f.value === fontSize)?.label}</span>
                 </div>
                 <Select value={fontSize} onValueChange={(value) => setFontSize(value as FontSize)}>
-                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <SelectTrigger className="h-10 w-full text-xs bg-transparent border-input text-foreground focus:ring-ring hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
@@ -290,7 +290,7 @@ export function ThemeSettingsPanel() {
             variant="outline"
             size="sm"
             onClick={resetToDefaults}
-            className="w-full h-9 text-xs border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
+            className="w-full h-9 text-xs border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 cursor-pointer"
           >
             <RotateCcw className="size-3 mr-2" />
             Reset to Defaults
@@ -318,7 +318,7 @@ function SidebarModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px]",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -347,7 +347,7 @@ function ThemeModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px]",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -372,7 +372,7 @@ function ColorSchemeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2 px-1.5 rounded-md border transition-all duration-150 min-h-[52px]",
+        "flex flex-col items-center justify-center gap-1.5 py-2 px-1.5 rounded-md border transition-all duration-150 min-h-[52px] cursor-pointer",
         isSelected
           ? "border-primary bg-secondary"
           : "border-border hover:border-border/80 hover:bg-secondary/50"
@@ -403,7 +403,7 @@ function ContentModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px]",
+        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px] cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
