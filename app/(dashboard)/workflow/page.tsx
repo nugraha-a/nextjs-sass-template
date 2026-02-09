@@ -23,6 +23,7 @@ import {
   Eye,
   ChevronRight,
   AlertTriangle,
+  AlertCircle,
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -222,55 +223,55 @@ export default function WorkflowPage() {
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
                 <Workflow className="size-4 text-muted-foreground" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">12</p>
-                <p className="text-[11px] text-muted-foreground">Active Workflows</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">12</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Active Workflows</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-amber-500/10">
                 <Clock className="size-4 text-amber-400" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">47</p>
-                <p className="text-[11px] text-muted-foreground">Pending Approvals</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">47</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Pending Approvals</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center size-9 rounded-lg bg-emerald-500/10">
-                <Zap className="size-4 text-emerald-400" />
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center justify-center size-9 rounded-lg bg-blue-500/10">
+                <CheckCircle2 className="size-4 text-blue-400" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">502</p>
-                <p className="text-[11px] text-muted-foreground">Triggered Today</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">1,284</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Completed Runs</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-red-500/10">
-                <AlertTriangle className="size-4 text-red-400" />
+                <AlertCircle className="size-4 text-red-400" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">3</p>
-                <p className="text-[11px] text-muted-foreground">SLA Breaches</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">3</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Failed Runs (24h)</p>
             </div>
           </CardContent>
         </Card>
@@ -279,13 +280,13 @@ export default function WorkflowPage() {
       <Tabs defaultValue="designer" className="space-y-0">
         <div className="overflow-x-auto pb-1 -mb-1">
           <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
-            <TabsTrigger value="designer" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="designer" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <GitBranch className="size-3.5 mr-1.5" />Visual Designer
             </TabsTrigger>
-            <TabsTrigger value="rules" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="rules" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <FileCode className="size-3.5 mr-1.5" />Rule Engine
             </TabsTrigger>
-            <TabsTrigger value="instances" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="instances" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <Play className="size-3.5 mr-1.5" />Active Instances
             </TabsTrigger>
           </TabsList>
@@ -296,38 +297,61 @@ export default function WorkflowPage() {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Workflow List */}
             <Card className="bg-card border-border">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-card-foreground">Workflow Templates</CardTitle>
+              <CardHeader className="pb-4">
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Workflow Templates</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">
+                    Select a template to configure automation
+                  </CardDescription>
+                </div>
               </CardHeader>
-              <CardContent className="p-2">
-                <div className="space-y-1">
+              <CardContent className="px-6 pt-0 pb-2">
+                <div className="space-y-3">
                   {workflowTemplates.map((wf) => (
                     <button
                       key={wf.id}
                       type="button"
                       onClick={() => setSelectedWorkflow(wf.id)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
+                      className={`group w-full text-left p-3 rounded-xl transition-all border ${
                         selectedWorkflow === wf.id
-                          ? "bg-secondary border border-border"
-                          : "hover:bg-muted/50"
+                          ? "bg-primary/5 border-primary/20 ring-1 ring-primary/20"
+                          : "bg-muted/30 border-transparent hover:bg-muted/50 hover:border-border"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-[13px] font-medium text-foreground">{wf.name}</span>
-                        {wf.active ? (
-                          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-0 text-[9px]">
-                            Active
-                          </Badge>
-                        ) : (
-                          <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[9px]">
-                            Draft
-                          </Badge>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <div className={`flex items-center justify-center size-9 rounded-lg border ${
+                           selectedWorkflow === wf.id ? "bg-primary/10 border-primary/20 text-primary" : "bg-background border-border/50 text-muted-foreground group-hover:text-foreground"
+                        }`}>
+                           <GitBranch className="size-4" />
+                        </div>
+                        <div className="flex-1 min-w-0 space-y-0.5">
+                           <div className="flex items-center justify-between">
+                              <span className={`text-sm font-semibold tracking-tight ${selectedWorkflow === wf.id ? "text-primary" : "text-foreground"}`}>
+                                {wf.name}
+                              </span>
+                              {wf.active ? (
+                                <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[9px] h-4 px-1.5">
+                                  Active
+                                </Badge>
+                              ) : (
+                                <Badge variant="secondary" className="bg-muted text-muted-foreground border border-border/50 text-[9px] h-4 px-1.5">
+                                  Draft
+                                </Badge>
+                              )}
+                           </div>
+                           <p className="text-[11px] text-muted-foreground line-clamp-1">{wf.description}</p>
+                        </div>
                       </div>
-                      <p className="text-[11px] text-muted-foreground mt-1">{wf.description}</p>
-                      <div className="flex items-center gap-4 mt-2 text-[10px] text-muted-foreground">
-                        <span>{wf.nodes} nodes</span>
-                        <span>{wf.triggers} triggers</span>
+                      
+                      <div className="flex items-center gap-4 pl-12 mt-2">
+                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            <Circle className="size-3" />
+                            <span>{wf.nodes} nodes</span>
+                         </div>
+                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            <Zap className="size-3" />
+                            <span>{wf.triggers} runs</span>
+                         </div>
                       </div>
                     </button>
                   ))}
@@ -337,9 +361,9 @@ export default function WorkflowPage() {
 
             {/* Canvas */}
             <Card className="lg:col-span-2 bg-card border-border">
-              <CardHeader className="pb-2">
+            <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
+                  <div className="space-y-1.5">
                     <CardTitle className="text-sm font-medium text-card-foreground">
                       {workflowTemplates.find((w) => w.id === selectedWorkflow)?.name}
                     </CardTitle>
@@ -357,7 +381,7 @@ export default function WorkflowPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-4">
+              <CardContent className="p-6 pt-0">
                 <WorkflowCanvas />
               </CardContent>
             </Card>
@@ -367,7 +391,7 @@ export default function WorkflowPage() {
         {/* Rule Engine Tab */}
         <TabsContent value="rules" className="space-y-6">
           <Card className="bg-card border-border">
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <CardTitle className="text-sm font-medium text-card-foreground">Business Rules DSL</CardTitle>
@@ -385,7 +409,7 @@ export default function WorkflowPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-6 pt-0">
               <Textarea
                 value={ruleCode}
                 readOnly
@@ -399,7 +423,12 @@ export default function WorkflowPage() {
         <TabsContent value="instances" className="space-y-4">
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
-              <CardTitle className="text-sm font-medium text-card-foreground">Active Workflow Instances</CardTitle>
+              <div>
+                <CardTitle className="text-sm font-medium text-card-foreground">Active Workflow Instances</CardTitle>
+                <CardDescription className="text-[11px] text-muted-foreground">
+                  Monitor currently running processes
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent className="p-0">
               <Table>

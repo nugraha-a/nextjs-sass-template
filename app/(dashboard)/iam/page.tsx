@@ -19,6 +19,8 @@ import {
   ShieldCheck,
   ShieldAlert,
   History,
+  Check,
+  ChevronRight,
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -126,55 +128,55 @@ export default function IAMPage() {
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
                 <Users className="size-4 text-muted-foreground" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">245</p>
-                <p className="text-[11px] text-muted-foreground">Total Users</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">245</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Total Users</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
                 <Shield className="size-4 text-muted-foreground" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">12</p>
-                <p className="text-[11px] text-muted-foreground">Roles Defined</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">12</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Roles Defined</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-emerald-500/10">
                 <ShieldCheck className="size-4 text-emerald-400" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">89%</p>
-                <p className="text-[11px] text-muted-foreground">MFA Enabled</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">89%</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">MFA Enabled</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+        <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-center size-9 rounded-lg bg-red-500/10">
                 <ShieldAlert className="size-4 text-red-400" />
               </div>
-              <div>
-                <p className="text-xl font-semibold text-card-foreground">3</p>
-                <p className="text-[11px] text-muted-foreground">Failed Logins (24h)</p>
-              </div>
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-semibold text-card-foreground tracking-tight">3</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Failed Logins (24h)</p>
             </div>
           </CardContent>
         </Card>
@@ -183,13 +185,13 @@ export default function IAMPage() {
       <Tabs defaultValue="users" className="space-y-0">
         <div className="overflow-x-auto pb-1 -mb-1">
           <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
-            <TabsTrigger value="users" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="users" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <Users className="size-3.5 mr-1.5" />Users
             </TabsTrigger>
-            <TabsTrigger value="roles" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="roles" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <Shield className="size-3.5 mr-1.5" />Roles & Permissions
             </TabsTrigger>
-            <TabsTrigger value="audit" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="audit" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <History className="size-3.5 mr-1.5" />Audit Log
             </TabsTrigger>
           </TabsList>
@@ -200,8 +202,11 @@ export default function IAMPage() {
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-sm font-medium text-card-foreground">User Directory</CardTitle>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground">User Directory</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">Manage user access and accounts</CardDescription>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                     <Input
@@ -290,40 +295,65 @@ export default function IAMPage() {
             <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-card-foreground">Roles</CardTitle>
+                  <div>
+                    <CardTitle className="text-sm font-medium text-card-foreground">Roles</CardTitle>
+                    <CardDescription className="text-[11px] text-muted-foreground">
+                      Manage system roles and access levels
+                    </CardDescription>
+                  </div>
                   <Button size="sm" variant="ghost" className="h-7 text-muted-foreground hover:text-foreground hover:bg-muted">
                     <Plus className="size-3.5 mr-1" />Add
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-2">
+              <CardContent className="px-6 pt-0 pb-2">
                 <div className="space-y-1">
                   {roles.map((role) => (
                     <button
                       key={role.id}
                       type="button"
                       onClick={() => setSelectedRole(role.id)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
+                      className={`group w-full text-left p-3 rounded-xl transition-all border ${
                         selectedRole === role.id
-                          ? "bg-secondary border border-border"
-                          : "hover:bg-muted/50"
+                          ? "bg-primary/5 border-primary/20 ring-1 ring-primary/20"
+                          : "bg-muted/30 border-transparent hover:bg-muted/50 hover:border-border"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Shield className="size-4 text-muted-foreground" />
-                          <span className="text-[13px] font-medium text-foreground">{role.name}</span>
-                          {role.builtIn && (
-                            <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[9px]">
-                              Built-in
-                            </Badge>
-                          )}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex items-center justify-center size-8 rounded-lg ${
+                            selectedRole === role.id ? "bg-primary/10 text-primary" : "bg-background border border-border/50 text-muted-foreground group-hover:text-foreground"
+                          }`}>
+                             <Shield className="size-4" />
+                          </div>
+                          <div>
+                             <div className="flex items-center gap-2">
+                                <span className={`text-sm font-semibold tracking-tight ${selectedRole === role.id ? "text-primary" : "text-foreground"}`}>
+                                  {role.name}
+                                </span>
+                                {role.builtIn && (
+                                  <Badge variant="secondary" className="bg-background text-muted-foreground border border-border/50 text-[9px] h-4 px-1">
+                                    System
+                                  </Badge>
+                                )}
+                             </div>
+                             <p className="text-[11px] text-muted-foreground line-clamp-1">{role.description}</p>
+                          </div>
                         </div>
                       </div>
-                      <p className="text-[11px] text-muted-foreground mt-1 ml-6">{role.description}</p>
-                      <div className="flex items-center gap-4 mt-2 ml-6">
-                        <span className="text-[10px] text-muted-foreground">{role.users} users</span>
-                        <span className="text-[10px] text-muted-foreground">{role.permissions} permissions</span>
+                      
+                      <div className="flex items-center gap-4 pl-11">
+                        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                          <Users className="size-3" />
+                          <span>{role.users} users</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                          <Check className="size-3" />
+                          <span>{role.permissions} perms</span>
+                        </div>
+                        <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                           <ChevronRight className="size-3.5 text-muted-foreground" />
+                        </div>
                       </div>
                     </button>
                   ))}
@@ -333,7 +363,7 @@ export default function IAMPage() {
 
             {/* Permissions Matrix */}
             <Card className="lg:col-span-3 bg-card border-border">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-sm font-medium text-card-foreground">
@@ -348,7 +378,7 @@ export default function IAMPage() {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-4">
+              <CardContent className="p-6 pt-0">
                 <div className="space-y-6">
                   {permissions.map((group) => (
                     <div key={group.module}>
@@ -387,17 +417,20 @@ export default function IAMPage() {
         <TabsContent value="audit" className="space-y-4">
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-card-foreground">Security Audit Log</CardTitle>
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Security Audit Log</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">Track all system events and user actions</CardDescription>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search logs..."
-                      className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
+                      className="h-8 w-full sm:w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
-                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
+                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto">
                     Export
                   </Button>
                 </div>

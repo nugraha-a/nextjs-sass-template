@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
@@ -45,14 +45,14 @@ const chartConfig = {
 export function RevenueChart() {
   return (
     <Card className="border border-zinc-800/50 bg-zinc-900/50">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-sm font-medium tracking-tight text-zinc-100">
             Revenue Analytics
           </CardTitle>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <CardDescription className="text-xs text-zinc-500 mt-0.5">
             Monthly revenue and order trends
-          </p>
+          </CardDescription>
         </div>
         <Select defaultValue="year">
           <SelectTrigger className="w-28 h-8 text-xs border-zinc-800 bg-zinc-900 text-zinc-400 focus:ring-zinc-700">

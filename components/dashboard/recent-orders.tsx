@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Search, Filter, MoreHorizontal } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -98,9 +98,9 @@ export function RecentOrders() {
             <CardTitle className="text-sm font-medium tracking-tight text-zinc-100">
               Recent Orders
             </CardTitle>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <CardDescription className="text-xs text-zinc-500 mt-0.5">
               {filteredOrders.length} orders found
-            </p>
+            </CardDescription>
           </div>
           <Button
             variant="outline"

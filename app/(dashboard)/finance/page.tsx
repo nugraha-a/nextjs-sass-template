@@ -2,25 +2,27 @@
 
 import { useState } from "react"
 import {
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
-  ArrowUpRight,
+  AlertCircle,
   ArrowDownRight,
-  FileText,
-  PieChart,
+  ArrowUpRight,
   BarChart3,
-  Search,
-  Plus,
-  MoreHorizontal,
-  Download,
-  Upload,
+  Building2,
   CheckCircle2,
   Clock,
-  AlertCircle,
-  Building2,
-  Wallet,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  PieChart,
+  Plus,
   Receipt,
+  Search,
+  TrendingDown,
+  TrendingUp,
+  Upload,
+  Wallet,
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -174,8 +176,8 @@ export default function FinancePage() {
       {/* Financial Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {financialStats.map((stat) => (
-          <Card key={stat.label} className="bg-card border-border">
-            <CardContent className="p-4">
+          <Card key={stat.label} className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
                   <stat.icon className="size-4 text-muted-foreground" />
@@ -186,7 +188,7 @@ export default function FinancePage() {
                 </span>
               </div>
               <div className="mt-3">
-                <p className="text-xl font-semibold text-card-foreground tracking-tight">{stat.value}</p>
+                <p className="text-2xl font-semibold text-card-foreground tracking-tight">{stat.value}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
               </div>
             </CardContent>
@@ -197,16 +199,16 @@ export default function FinancePage() {
       <Tabs defaultValue="overview" className="space-y-0">
         <div className="overflow-x-auto pb-1 -mb-1">
           <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
-            <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="overview" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <BarChart3 className="size-3.5 mr-1.5" />Overview
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="transactions" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <Receipt className="size-3.5 mr-1.5" />Transactions
             </TabsTrigger>
-            <TabsTrigger value="budget" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="budget" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <PieChart className="size-3.5 mr-1.5" />Budget
             </TabsTrigger>
-            <TabsTrigger value="accounts" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+            <TabsTrigger value="accounts" className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
               <FileText className="size-3.5 mr-1.5" />Chart of Accounts
             </TabsTrigger>
           </TabsList>
@@ -217,9 +219,12 @@ export default function FinancePage() {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Revenue vs Expenses Chart */}
             <Card className="lg:col-span-2 bg-card border-border">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-card-foreground">Revenue vs Expenses</CardTitle>
+              <CardHeader className="pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-sm font-medium text-card-foreground">Revenue vs Expenses</CardTitle>
+                    <CardDescription className="text-[11px] text-muted-foreground">Comparative analysis of financial performance</CardDescription>
+                  </div>
                   <div className="flex items-center gap-4 text-[11px]">
                     <div className="flex items-center gap-1.5">
                       <div className="size-2 rounded-full bg-primary" />
@@ -260,7 +265,7 @@ export default function FinancePage() {
 
             {/* Expense Breakdown */}
             <Card className="bg-card border-border">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-4">
                 <CardTitle className="text-sm font-medium text-card-foreground">Expense Breakdown</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -308,7 +313,10 @@ export default function FinancePage() {
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <CardTitle className="text-sm font-medium text-card-foreground">Recent Transactions</CardTitle>
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Recent Transactions</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">Latest financial movements and status</CardDescription>
+                </div>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -323,47 +331,60 @@ export default function FinancePage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border hover:bg-transparent">
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">Transaction ID</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Type</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Description</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Amount</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Status</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Date</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentTransactions.map((txn) => (
-                    <TableRow key={txn.id} className="border-border hover:bg-muted/50">
-                      <TableCell className="py-3 pl-6 text-[12px] text-muted-foreground font-mono">{txn.id}</TableCell>
-                      <TableCell className="py-3">
-                        <Badge variant="secondary" className="bg-secondary text-secondary-foreground border-0 text-[10px]">{txn.type}</Badge>
-                      </TableCell>
-                      <TableCell className="py-3 text-[13px] text-foreground">{txn.description}</TableCell>
-                      <TableCell className="py-3">
-                        <span className={`text-[13px] font-medium ${txn.amount > 0 ? "text-emerald-500" : "text-card-foreground"}`}>
-                          {txn.amount > 0 ? "+" : ""}{txn.amount.toLocaleString("en-US", { style: "currency", currency: "USD" })}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-3">{getStatusBadge(txn.status)}</TableCell>
-                      <TableCell className="py-3 text-[13px] text-muted-foreground">{txn.date}</TableCell>
-                      <TableCell className="py-3 pr-6 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-7 text-muted-foreground hover:text-foreground hover:bg-muted">
-                              <MoreHorizontal className="size-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <CardContent className="pt-0">
+              <div className="space-y-3">
+                {recentTransactions.map((txn) => (
+                  <div
+                    key={txn.id}
+                    className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-border transition-all gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`flex items-center justify-center size-9 rounded-full border ${
+                        txn.type === "Income" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" :
+                        txn.type === "Expense" ? "bg-red-500/10 border-red-500/20 text-red-500" :
+                        "bg-blue-500/10 border-blue-500/20 text-blue-500"
+                      }`}>
+                         {txn.type === "Income" ? <TrendingUp className="size-4" /> :
+                          txn.type === "Expense" ? <TrendingDown className="size-4" /> :
+                          <DollarSign className="size-4" />}
+                      </div>
+                      <div className="space-y-0.5">
+                         <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold tracking-tight text-card-foreground">
+                              {txn.description}
+                            </p>
+                            <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 h-4 font-normal capitalize border-0 ${
+                              txn.status === "Completed" ? "bg-emerald-500/10 text-emerald-500" :
+                              txn.status === "Pending" ? "bg-amber-500/10 text-amber-500" :
+                              "bg-red-500/10 text-red-500"
+                            }`}>
+                              {txn.status}
+                            </Badge>
+                         </div>
+                         <p className="text-xs text-muted-foreground font-mono">
+                           {txn.id} • {txn.date}
+                         </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end gap-6 pl-12 sm:pl-0">
+                      <span className={`text-sm font-mono font-medium tabular-nums ${
+                        txn.type === "Income" ? "text-emerald-500" : "text-foreground"
+                      }`}>
+                        {txn.type === "Income" ? "+" : "-"}{txn.amount}
+                      </span>
+                      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                          <Eye className="size-3.5" />
+                        </Button>
+                         <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                          <Download className="size-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -372,12 +393,12 @@ export default function FinancePage() {
         <TabsContent value="budget" className="space-y-4">
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <CardTitle className="text-sm font-medium text-card-foreground">Budget Allocation</CardTitle>
                   <CardDescription className="text-[12px] text-muted-foreground">Track spending against allocated budgets</CardDescription>
                 </div>
-                <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
+                <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto">
                   <Upload className="size-3.5 mr-1.5" />Import Budget
                 </Button>
               </div>
@@ -423,7 +444,10 @@ export default function FinancePage() {
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-card-foreground">Chart of Accounts</CardTitle>
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground">Chart of Accounts</CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">Master list of all organizational accounts</CardDescription>
+                </div>
                 <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="size-3.5 mr-1.5" />Add Account
                 </Button>

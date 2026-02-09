@@ -101,33 +101,33 @@ export default function ConfigPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="terminology" className="space-y-2">
+      <Tabs defaultValue="terminology" className="space-y-0">
         <div className="overflow-x-auto pb-1 -mb-1">
           <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
             <TabsTrigger
               value="terminology"
-              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+              className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
             >
               <Tags className="size-3.5 mr-1.5" />
               Terminology
             </TabsTrigger>
             <TabsTrigger
               value="localization"
-              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+              className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
             >
               <Globe className="size-3.5 mr-1.5" />
               Localization
             </TabsTrigger>
             <TabsTrigger
               value="features"
-              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+              className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
             >
               <ToggleLeft className="size-3.5 mr-1.5" />
               Feature Flags
             </TabsTrigger>
             <TabsTrigger
               value="branding"
-              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+              className="rounded-t-md border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
             >
               <Palette className="size-3.5 mr-1.5" />
               Branding
@@ -138,7 +138,7 @@ export default function ConfigPage() {
         {/* Terminology Tab */}
         <TabsContent value="terminology" className="space-y-6">
           <Card className="bg-card border-border">
-            <CardHeader>
+            <CardHeader className="pb-4">
               <CardTitle className="text-sm font-medium text-card-foreground">
                 Organization Terminology
               </CardTitle>
@@ -181,19 +181,19 @@ export default function ConfigPage() {
               <div className="space-y-2">
                 <Label className="text-[12px] text-muted-foreground">Custom Terms</Label>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
                     <Input
                       placeholder="Term key (e.g., project)"
-                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
+                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground w-full sm:w-auto sm:flex-1"
                     />
                     <Input
                       placeholder="Display label"
-                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
+                      className="h-9 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground w-full sm:w-auto sm:flex-1"
                     />
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-9 border-border bg-transparent text-muted-foreground hover:text-foreground"
+                      className="h-9 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto"
                     >
                       Add
                     </Button>
@@ -208,11 +208,16 @@ export default function ConfigPage() {
         <TabsContent value="localization" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-sm font-medium text-card-foreground flex items-center gap-2">
-                  <Globe className="size-4" />
-                  Language & Region
-                </CardTitle>
+              <CardHeader className="pb-4">
+                <div>
+                  <CardTitle className="text-sm font-medium text-card-foreground flex items-center gap-2">
+                    <Globe className="size-4" />
+                    Language & Region
+                  </CardTitle>
+                  <CardDescription className="text-[11px] text-muted-foreground">
+                    Set your preferred language, timezone, and regional formats
+                  </CardDescription>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -287,7 +292,7 @@ export default function ConfigPage() {
             </Card>
 
             <Card className="bg-card border-border">
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle className="text-sm font-medium text-card-foreground flex items-center gap-2">
                   <DollarSign className="size-4" />
                   Financial Settings
@@ -365,34 +370,33 @@ export default function ConfigPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
-                {featureFlags.map((feature) => (
+                {featureFlags.map((flag) => (
                   <div
-                    key={feature.key}
-                    className="flex items-center justify-between py-3 border-b border-border last:border-0"
+                    key={flag.key}
+                    className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-transparent hover:border-border transition-all"
                   >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-medium text-foreground">
-                          {feature.label}
-                        </span>
-                        {features[feature.key] ? (
-                          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-0 text-[10px]">
-                            Enabled
-                          </Badge>
-                        ) : (
-                          <Badge variant="secondary" className="bg-muted text-muted-foreground border-0 text-[10px]">
-                            Disabled
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-[12px] text-muted-foreground">{feature.description}</p>
+                    <div className="flex items-center gap-3">
+                       <div className={`flex items-center justify-center size-9 rounded-lg ${
+                         features[flag.key] ? "bg-primary/10 text-primary" : "bg-background border border-border/50 text-muted-foreground"
+                       }`}>
+                          {features[flag.key] ? <ToggleLeft className="size-5 rotate-180" /> : <ToggleLeft className="size-5 text-muted-foreground/50" />}
+                       </div>
+                       <div className="space-y-0.5">
+                          <Label htmlFor={flag.key} className="text-sm font-medium text-foreground cursor-pointer">
+                            {flag.label}
+                          </Label>
+                          <p className="text-[11px] text-muted-foreground line-clamp-1">
+                            {flag.description}
+                          </p>
+                       </div>
                     </div>
                     <Switch
-                      checked={features[feature.key]}
+                      id={flag.key}
+                      checked={features[flag.key]}
                       onCheckedChange={(checked) =>
-                        setFeatures((prev) => ({ ...prev, [feature.key]: checked }))
+                        setFeatures((prev) => ({ ...prev, [flag.key]: checked }))
                       }
-                      className="data-[state=checked]:bg-zinc-100"
+                      className="data-[state=checked]:bg-primary"
                     />
                   </div>
                 ))}

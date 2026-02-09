@@ -17,8 +17,9 @@ import {
   Settings,
   Trash2,
   Eye,
+  Edit2,
 } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -192,9 +193,6 @@ export default function TenantsPage() {
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Tenant Management
           </h1>
-          <p className="text-[13px] text-muted-foreground mt-1">
-            Manage organizations, subscriptions, and billing across the platform
-          </p>
         </div>
         <Button
           size="sm"
@@ -205,11 +203,10 @@ export default function TenantsPage() {
         </Button>
       </div>
 
-      {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="bg-card border-border">
-            <CardContent className="p-4">
+          <Card key={stat.label} className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-center size-9 rounded-lg bg-secondary">
                   <stat.icon className="size-4 text-muted-foreground" />
@@ -225,13 +222,17 @@ export default function TenantsPage() {
         ))}
       </div>
 
-      {/* Tenants Table */}
       <Card className="bg-card border-border">
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <CardTitle className="text-sm font-medium text-card-foreground">
-              All Tenants
-            </CardTitle>
+            <div>
+              <CardTitle className="text-sm font-medium text-card-foreground">
+                All Tenants
+              </CardTitle>
+              <CardDescription className="text-[11px] text-muted-foreground">
+                Directory of all registered organizations
+              </CardDescription>
+            </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -265,104 +266,73 @@ export default function TenantsPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">
-                  Organization
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
-                  Plan
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
-                  Status
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
-                  Users
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
-                  MRR
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">
-                  Created
-                </TableHead>
-                <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTenants.map((tenant) => (
-                <TableRow key={tenant.id} className="border-border hover:bg-muted/50">
-                  <TableCell className="py-3 pl-6">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-8 rounded-md">
-                        <AvatarFallback className="rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium">
-                          {tenant.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-[13px] font-medium text-foreground">{tenant.name}</p>
-                        <p className="text-[11px] text-muted-foreground">{tenant.industry}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-3">{getPlanBadge(tenant.plan)}</TableCell>
-                  <TableCell className="py-3">{getStatusBadge(tenant.status)}</TableCell>
-                  <TableCell className="py-3">
-                    <div className="flex items-center gap-1.5">
-                      <Users className="size-3.5 text-muted-foreground" />
-                      <span className="text-[13px] text-muted-foreground">{tenant.users}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-3">
-                    <span className="text-[13px] text-foreground font-medium">
-                      ${tenant.mrr.toLocaleString('en-US')}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-3">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="size-3.5 text-muted-foreground" />
-                      <span className="text-[13px] text-muted-foreground">{tenant.createdAt}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-3 pr-6 text-right">
+        <CardContent className="pt-0">
+          <div className="space-y-3">
+            {filteredTenants.map((tenant) => (
+              <div
+                key={tenant.id}
+                className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/50 border border-transparent hover:border-border transition-all gap-4"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center size-10 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                     <Building2 className="size-5" />
+                  </div>
+                  <div className="space-y-0.5">
+                     <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold tracking-tight text-card-foreground">
+                          {tenant.name}
+                        </p>
+                        <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 h-4 font-normal capitalize border-0 ${
+                          tenant.status === "active" ? "bg-emerald-500/10 text-emerald-500" :
+                          tenant.status === "trial" ? "bg-blue-500/10 text-blue-500" :
+                          "bg-red-500/10 text-red-500"
+                        }`}>
+                          {tenant.status}
+                        </Badge>
+                     </div>
+                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span>{tenant.plan} Plan</span>
+                        <span>•</span>
+                        <span>{tenant.users} Users</span>
+                        <span>•</span>
+                        <span className="font-mono">{tenant.mrr}</span>
+                     </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between sm:justify-end gap-6 pl-14 sm:pl-0">
+                  <div className="flex flex-col items-end gap-0.5">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Joined</span>
+                    <span className="text-xs font-medium text-foreground">{tenant.createdAt}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-7 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        >
+                        <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-foreground">
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-popover border-border w-44">
-                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
-                          <Eye className="size-3.5 mr-2" />
+                      <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem className="text-[13px]">
+                          <Eye className="mr-2 size-3.5" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
-                          <Settings className="size-3.5 mr-2" />
-                          Manage
+                        <DropdownMenuItem className="text-[13px]">
+                          <Edit2 className="mr-2 size-3.5" />
+                          Edit Tenant
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">
-                          <ArrowUpRight className="size-3.5 mr-2" />
-                          Login as Tenant
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-border" />
-                        <DropdownMenuItem className="text-[13px] text-destructive focus:bg-destructive/10 focus:text-destructive">
-                          <Trash2 className="size-3.5 mr-2" />
-                          Suspend
+                        <DropdownMenuItem className="text-[13px] text-red-500 focus:text-red-500">
+                          <Trash2 className="mr-2 size-3.5" />
+                          Suspend Tenant
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>

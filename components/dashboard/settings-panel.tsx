@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -24,13 +24,13 @@ export function SettingsPanel() {
 
   return (
     <Card className="border border-zinc-800/50 bg-zinc-900/50">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-4">
         <CardTitle className="text-sm font-medium tracking-tight text-zinc-100">
           Settings
         </CardTitle>
-        <p className="text-xs text-zinc-500 mt-0.5">
+        <CardDescription className="text-xs text-zinc-500 mt-0.5">
           Manage your account settings and preferences
-        </p>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="profile" className="w-full">

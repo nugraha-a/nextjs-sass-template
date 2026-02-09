@@ -37,7 +37,7 @@ interface StatCardProps {
 function StatCard({ title, value, change, trend, icon: Icon, sparklineData }: StatCardProps) {
   return (
     <Card className="border border-zinc-800/50 bg-zinc-900/50 hover:bg-zinc-900 transition-colors duration-150">
-      <CardContent className="p-4">
+      <CardContent className="p-6">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[13px] font-medium text-zinc-500">{title}</span>
           <div className="flex size-7 items-center justify-center rounded-md bg-zinc-800/50">
