@@ -143,7 +143,7 @@ export default function FinancePage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Finance & Accounting
@@ -152,9 +152,9 @@ export default function FinancePage() {
             General ledger, accounts payable/receivable, budgeting, and financial reporting
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
           <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="h-8 w-36 bg-background border-input text-[13px] text-muted-foreground">
+            <SelectTrigger className="h-8 w-full sm:w-36 bg-background border-input text-[13px] text-muted-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-popover border-border">
@@ -164,7 +164,7 @@ export default function FinancePage() {
               <SelectItem value="this-year" className="text-[13px] text-foreground focus:bg-accent focus:text-accent-foreground">This Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
             <Plus className="size-3.5 mr-1.5" />
             New Entry
           </Button>
@@ -194,21 +194,23 @@ export default function FinancePage() {
         ))}
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-muted border border-border p-1 h-10">
-          <TabsTrigger value="overview" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <BarChart3 className="size-3.5 mr-1.5" />Overview
-          </TabsTrigger>
-          <TabsTrigger value="transactions" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <Receipt className="size-3.5 mr-1.5" />Transactions
-          </TabsTrigger>
-          <TabsTrigger value="budget" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <PieChart className="size-3.5 mr-1.5" />Budget
-          </TabsTrigger>
-          <TabsTrigger value="accounts" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <FileText className="size-3.5 mr-1.5" />Chart of Accounts
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="overview" className="space-y-0">
+        <div className="overflow-x-auto pb-1 -mb-1">
+          <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
+            <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <BarChart3 className="size-3.5 mr-1.5" />Overview
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <Receipt className="size-3.5 mr-1.5" />Transactions
+            </TabsTrigger>
+            <TabsTrigger value="budget" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <PieChart className="size-3.5 mr-1.5" />Budget
+            </TabsTrigger>
+            <TabsTrigger value="accounts" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <FileText className="size-3.5 mr-1.5" />Chart of Accounts
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
@@ -305,17 +307,17 @@ export default function FinancePage() {
         <TabsContent value="transactions" className="space-y-4">
           <Card className="bg-card border-border">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <CardTitle className="text-sm font-medium text-card-foreground">Recent Transactions</CardTitle>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search transactions..."
-                      className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
+                      className="h-8 w-full sm:w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
-                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground">
+                  <Button size="sm" variant="outline" className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto">
                     <Download className="size-3.5 mr-1.5" />Export
                   </Button>
                 </div>

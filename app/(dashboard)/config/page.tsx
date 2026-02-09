@@ -73,7 +73,7 @@ export default function ConfigPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Configuration Engine
@@ -82,18 +82,18 @@ export default function ConfigPage() {
             Customize terminology, localization, and feature toggles without code changes
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
           <Button
             variant="outline"
             size="sm"
-            className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent"
+            className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent w-full sm:w-auto"
           >
             <RotateCcw className="size-3.5 mr-1.5" />
             Reset
           </Button>
           <Button
             size="sm"
-            className="h-8 bg-primary text-primary-foreground hover:bg-primary/90"
+            className="h-8 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
           >
             <Save className="size-3.5 mr-1.5" />
             Save Changes
@@ -101,37 +101,39 @@ export default function ConfigPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="terminology" className="space-y-6">
-        <TabsList className="bg-muted border border-border p-1 h-10">
-          <TabsTrigger
-            value="terminology"
-            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
-            <Tags className="size-3.5 mr-1.5" />
-            Terminology
-          </TabsTrigger>
-          <TabsTrigger
-            value="localization"
-            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
-            <Globe className="size-3.5 mr-1.5" />
-            Localization
-          </TabsTrigger>
-          <TabsTrigger
-            value="features"
-            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
-            <ToggleLeft className="size-3.5 mr-1.5" />
-            Feature Flags
-          </TabsTrigger>
-          <TabsTrigger
-            value="branding"
-            className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
-            <Palette className="size-3.5 mr-1.5" />
-            Branding
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="terminology" className="space-y-2">
+        <div className="overflow-x-auto pb-1 -mb-1">
+          <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
+            <TabsTrigger
+              value="terminology"
+              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+            >
+              <Tags className="size-3.5 mr-1.5" />
+              Terminology
+            </TabsTrigger>
+            <TabsTrigger
+              value="localization"
+              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+            >
+              <Globe className="size-3.5 mr-1.5" />
+              Localization
+            </TabsTrigger>
+            <TabsTrigger
+              value="features"
+              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+            >
+              <ToggleLeft className="size-3.5 mr-1.5" />
+              Feature Flags
+            </TabsTrigger>
+            <TabsTrigger
+              value="branding"
+              className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none"
+            >
+              <Palette className="size-3.5 mr-1.5" />
+              Branding
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Terminology Tab */}
         <TabsContent value="terminology" className="space-y-6">

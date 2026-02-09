@@ -283,11 +283,11 @@ export default function DashboardPage() {
       {/* Pending Approvals */}
       <Card className="bg-card border-border">
         <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-card-foreground">
               Pending Approvals
             </CardTitle>
-            <Badge variant="secondary" className="bg-secondary text-muted-foreground border-border text-[10px]">
+            <Badge variant="secondary" className="bg-secondary text-muted-foreground border-border text-[10px] whitespace-nowrap">
               {pendingApprovals.length} pending
             </Badge>
           </div>

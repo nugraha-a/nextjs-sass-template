@@ -205,7 +205,7 @@ export default function WorkflowPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Workflow Engine
@@ -214,7 +214,7 @@ export default function WorkflowPage() {
             Design, deploy, and monitor approval workflows and business rules
           </p>
         </div>
-        <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button size="sm" className="h-8 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
           <Plus className="size-3.5 mr-1.5" />
           New Workflow
         </Button>
@@ -276,18 +276,20 @@ export default function WorkflowPage() {
         </Card>
       </div>
 
-      <Tabs defaultValue="designer" className="space-y-6">
-        <TabsList className="bg-muted border border-border p-1 h-10">
-          <TabsTrigger value="designer" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <GitBranch className="size-3.5 mr-1.5" />Visual Designer
-          </TabsTrigger>
-          <TabsTrigger value="rules" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <FileCode className="size-3.5 mr-1.5" />Rule Engine
-          </TabsTrigger>
-          <TabsTrigger value="instances" className="text-[13px] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-            <Play className="size-3.5 mr-1.5" />Active Instances
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="designer" className="space-y-0">
+        <div className="overflow-x-auto pb-1 -mb-1">
+          <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
+            <TabsTrigger value="designer" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <GitBranch className="size-3.5 mr-1.5" />Visual Designer
+            </TabsTrigger>
+            <TabsTrigger value="rules" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <FileCode className="size-3.5 mr-1.5" />Rule Engine
+            </TabsTrigger>
+            <TabsTrigger value="instances" className="rounded-none border-b-2 border-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-[13px] flex-1 sm:flex-none">
+              <Play className="size-3.5 mr-1.5" />Active Instances
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Visual Designer Tab */}
         <TabsContent value="designer" className="space-y-6">
@@ -336,7 +338,7 @@ export default function WorkflowPage() {
             {/* Canvas */}
             <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
                     <CardTitle className="text-sm font-medium text-card-foreground">
                       {workflowTemplates.find((w) => w.id === selectedWorkflow)?.name}
@@ -345,11 +347,11 @@ export default function WorkflowPage() {
                       Drag and drop to modify the workflow
                     </CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
+                    <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto">
                       <Play className="size-3 mr-1" />Test
                     </Button>
-                    <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
                       Deploy
                     </Button>
                   </div>
@@ -366,18 +368,18 @@ export default function WorkflowPage() {
         <TabsContent value="rules" className="space-y-6">
           <Card className="bg-card border-border">
             <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <CardTitle className="text-sm font-medium text-card-foreground">Business Rules DSL</CardTitle>
                   <CardDescription className="text-[11px] text-muted-foreground">
                     Define declarative rules for workflow automation
                   </CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
+                  <Button size="sm" variant="outline" className="h-7 border-border bg-transparent text-muted-foreground hover:text-foreground w-full sm:w-auto">
                     Validate
                   </Button>
-                  <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Button size="sm" className="h-7 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
                     Save Rules
                   </Button>
                 </div>

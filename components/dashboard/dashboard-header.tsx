@@ -142,35 +142,38 @@ export function DashboardHeader() {
           </Button>
         </div>
         {/* Breadcrumbs & Actions */}
-        <div className="flex flex-1 items-center justify-between px-3 min-w-0">
-          <Breadcrumb>
-            <BreadcrumbList>
-              {breadcrumbs.map((crumb, index) => {
-                const isLast = index === breadcrumbs.length - 1
-                
-                return (
-                  <React.Fragment key={crumb.href + index}>
-                    <BreadcrumbItem>
-                      {isLast ? (
-                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                      ) : crumb.href === "#" ? (
-                        <span className="truncate inline-block max-w-[150px] sm:max-w-xs align-middle">
-                          {crumb.label}
-                        </span>
-                      ) : (
-                        <BreadcrumbLink href={crumb.href}>
-                          {crumb.label}
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                    {!isLast && <BreadcrumbSeparator />}
-                  </React.Fragment>
-                )
-              })}
-            </BreadcrumbList>
-          </Breadcrumb>
+        <div className="flex flex-1 items-center gap-4 px-6 min-w-0">
+          <div className="flex-1 min-w-0">
+            <Breadcrumb>
+              <BreadcrumbList>
+                {breadcrumbs.map((crumb, index) => {
+                  const isLast = index === breadcrumbs.length - 1
+                  
+                  return (
+                    <React.Fragment key={crumb.href + index}>
+                      <BreadcrumbItem className="shrink min-w-0">
+                        {isLast ? (
+                          <BreadcrumbPage className="truncate md:max-w-none font-medium">{crumb.label}</BreadcrumbPage>
+                        ) : crumb.href === "#" ? (
+                          <span className="truncate inline-block max-w-[120px] sm:max-w-none align-middle text-muted-foreground/80">
+                            {crumb.label}
+                          </span>
+                        ) : (
+                          <BreadcrumbLink href={crumb.href} className="truncate inline-block max-w-[120px] sm:max-w-none align-middle">
+                            {crumb.label}
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!isLast && <BreadcrumbSeparator className="hidden sm:block" />}
+                      {!isLast && <BreadcrumbSeparator className="sm:hidden" />}
+                    </React.Fragment>
+                  )
+                })}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Button
               variant="ghost"
               className="hidden md:flex h-8 px-3 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 gap-2 text-[13px]"

@@ -187,7 +187,7 @@ export default function TenantsPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Tenant Management
@@ -198,7 +198,7 @@ export default function TenantsPage() {
         </div>
         <Button
           size="sm"
-          className="h-8 bg-primary text-primary-foreground hover:bg-primary/90"
+          className="h-8 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
         >
           <Plus className="size-3.5 mr-1.5" />
           Add Tenant
@@ -228,22 +228,22 @@ export default function TenantsPage() {
       {/* Tenants Table */}
       <Card className="bg-card border-border">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <CardTitle className="text-sm font-medium text-card-foreground">
               All Tenants
             </CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                 <Input
                   placeholder="Search tenants..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-8 w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
+                  className="h-8 w-full sm:w-64 pl-8 bg-background border-input text-[13px] text-foreground placeholder:text-muted-foreground"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-8 w-32 bg-background border-input text-[13px] text-muted-foreground">
+                <SelectTrigger className="h-8 w-full sm:w-32 bg-background border-input text-[13px] text-muted-foreground">
                   <Filter className="size-3.5 mr-1.5" />
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
