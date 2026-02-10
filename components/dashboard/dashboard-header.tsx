@@ -142,7 +142,7 @@ export function DashboardHeader() {
           </Button>
         </div>
         {/* Breadcrumbs & Actions */}
-        <div className="flex flex-1 items-center gap-4 px-6 min-w-0">
+        <div className="flex flex-1 items-center gap-4 pl-6 pr-2 min-w-0">
           <div className="flex-1 min-w-0">
             <Breadcrumb>
               <BreadcrumbList>

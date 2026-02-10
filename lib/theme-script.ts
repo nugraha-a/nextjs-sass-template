@@ -22,6 +22,8 @@ export const themeScript = `
       }
       if (settings.sidebarMode) root.setAttribute('data-sidebar-mode', settings.sidebarMode);
       if (settings.contentMode) root.setAttribute('data-content-mode', settings.contentMode);
+      if (settings.contentView) root.setAttribute('data-content-view', settings.contentView);
+      if (settings.radius) root.style.setProperty('--radius', settings.radius + 'rem');
     }
   } catch (e) {
     console.error('Failed to apply theme settings', e);

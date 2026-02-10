@@ -79,7 +79,7 @@ function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActi
       <SidebarMenuSubButton
         asChild
         isActive={isActive}
-        className="text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold text-xs leading-normal transition-all duration-200"
+        className="text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold text-xs leading-normal transition-all duration-200"
       >
         <Link ref={ref} href={subItem.href}>{subItem.title}</Link>
       </SidebarMenuSubButton>
@@ -123,7 +123,7 @@ function NavItemWithSub({
           asChild
           isActive={isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
         >
           <Link ref={leafRef} href={item.href || "#"} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
@@ -149,7 +149,7 @@ function NavItemWithSub({
             <SidebarMenuButton
               tooltip={isDropdownOpen ? undefined : item.title}
               isActive={isActive}
-              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-primary/10 data-[state=open]:text-primary"
+          className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <item.icon className="size-4 shrink-0" />
               <span className="sr-only">{item.title}</span>
@@ -191,7 +191,7 @@ function NavItemWithSub({
                    {/* Clean Dot Indicator */}
                    <div className={cn(
                       "flex items-center justify-center size-3 shrink-0 transition-colors",
-                      isSubActive ? "text-primary" : "text-border group-hover:text-sidebar-foreground"
+                      isSubActive ? "text-sidebar-accent-foreground" : "text-border group-hover:text-sidebar-foreground"
                    )}>
                         <div className={cn(
                             "size-1.5 rounded-full bg-current shadow-sm", 
