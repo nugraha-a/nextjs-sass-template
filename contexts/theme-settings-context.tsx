@@ -5,6 +5,7 @@ import { useTheme } from "next-themes"
 
 export type SidebarMode = "normal" | "compact" | "offcanvas"
 export type ContentMode = "compact" | "full"
+export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
 export type ColorScheme = "zinc" | "slate" | "neutral" | "blue" | "green" | "orange" | "rose"
@@ -16,6 +17,8 @@ interface ThemeSettings {
   fontFamily: FontFamily
   fontSize: FontSize
   contentMode: ContentMode
+  contentView: ContentView
+  radius: number
 }
 
 interface ThemeSettingsContextType extends ThemeSettings {
@@ -25,6 +28,8 @@ interface ThemeSettingsContextType extends ThemeSettings {
   setFontFamily: (family: FontFamily) => void
   setFontSize: (size: FontSize) => void
   setContentMode: (mode: ContentMode) => void
+  setContentView: (view: ContentView) => void
+  setRadius: (radius: number) => void
   resetToDefaults: () => void
 }
 
@@ -35,6 +40,8 @@ const defaultSettings: ThemeSettings = {
   fontFamily: "inter",
   fontSize: "medium",
   contentMode: "full",
+  contentView: "carded",
+  radius: 0.5,
 }
 
 const ThemeSettingsContext = createContext<ThemeSettingsContextType | null>(null)
@@ -98,6 +105,12 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     
     // Apply content mode
     root.setAttribute("data-content-mode", settings.contentMode)
+
+    // Apply content view (carded/boxed)
+    root.setAttribute("data-content-view", settings.contentView)
+
+    // Apply border radius CSS variable
+    root.style.setProperty("--radius", `${settings.radius}rem`)
     
   }, [mounted, settings])
 
@@ -150,6 +163,22 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     })
   }, [saveSettings])
 
+  const setContentView = useCallback((view: ContentView) => {
+    setSettings(prev => {
+      const newSettings = { ...prev, contentView: view }
+      saveSettings(newSettings)
+      return newSettings
+    })
+  }, [saveSettings])
+
+  const setRadius = useCallback((radius: number) => {
+    setSettings(prev => {
+      const newSettings = { ...prev, radius }
+      saveSettings(newSettings)
+      return newSettings
+    })
+  }, [saveSettings])
+
   const resetToDefaults = useCallback(() => {
     setSettings(defaultSettings)
     setTheme(defaultSettings.themeMode)
@@ -173,6 +202,8 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
         setFontFamily,
         setFontSize,
         setContentMode,
+        setContentView,
+        setRadius,
         resetToDefaults,
       }}
     >

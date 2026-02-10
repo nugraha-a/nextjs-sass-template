@@ -48,7 +48,7 @@ html[data-font-size="large"] {
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -471,3 +471,135 @@ html[data-font-family="jakarta"] body {
 [data-content-mode="full"] .content-container {
   max-width: 100%;
 }
+
+/* ============================================
+   Boxed Mode: Connected Grid (Border-based)
+   
+   Creates a precise, edge-to-edge connected grid.
+   Each section gets border-bottom. Grid cells get
+   border-right + border-bottom. Outer container clips
+   with border-radius. NO gaps, NO spacing between boxes.
+   
+   Handles all page patterns:
+   - Stats grids (md:grid-cols-2/4, lg:grid-cols-4)
+   - Tabs with nested TabsContent
+   - Direct Cards without grids  
+   - Grid cells with col-span
+   - Responsive grid variants
+   ============================================ */
+
+/* --- BOXED DIVIDER TOKEN — single source of truth --- */
+[data-content-view="boxed"] {
+  --boxed-divider: color-mix(in oklch, var(--border) 60%, transparent);
+}
+
+/* --- 0. HEADER — Match boxed dividers --- */
+[data-content-view="boxed"] header.border-b,
+[data-content-view="boxed"] header .border-b {
+  border-color: var(--boxed-divider) !important;
+}
+[data-content-view="boxed"] header .border-r {
+  border-color: var(--boxed-divider) !important;
+}
+
+/* --- 1. OUTER CONTAINER --- */
+[data-content-view="boxed"] .content-container > div {
+  padding: 0 !important;
+  margin: 0;
+  border: 1px solid var(--boxed-divider);
+  border-radius: 0;
+  overflow: hidden;
+  background-color: var(--card);
+}
+
+/* --- 2. KILL ALL VERTICAL SPACING --- */
+[data-content-view="boxed"] .content-container > div > * + *,
+[data-content-view="boxed"] .content-container [role="tabpanel"] > * + * {
+  margin-top: 0 !important;
+}
+
+/* --- 3. ROWS — Each direct child gets a bottom divider --- */
+[data-content-view="boxed"] .content-container > div > *:not([data-slot="tabs"]) {
+  background-color: var(--card);
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--boxed-divider);
+}
+
+[data-content-view="boxed"] .content-container > div > *:last-child {
+  border-bottom: none;
+}
+
+/* --- 4. NON-GRID SECTIONS GET PADDING --- */
+[data-content-view="boxed"] .content-container > div > div:not(.grid):not([data-slot="tabs"]) {
+  padding: 1rem 1.5rem;
+}
+
+/* --- 5. TOP-LEVEL GRIDS — 1px gap dividers --- */
+[data-content-view="boxed"] .content-container > div > .grid,
+[data-content-view="boxed"] .content-container [role="tabpanel"] > .grid {
+  gap: 1px !important;
+  background-color: var(--boxed-divider) !important;
+}
+
+/* --- 6. TOP-LEVEL GRID CELLS --- */
+[data-content-view="boxed"] .content-container > div > .grid > *,
+[data-content-view="boxed"] .content-container [role="tabpanel"] > .grid > * {
+  background-color: var(--card) !important;
+}
+
+/* --- 10. CARDS — Flat, no own decoration --- */
+[data-content-view="boxed"] .content-container [data-slot="card"],
+[data-content-view="boxed"] .content-container .card,
+[data-content-view="boxed"] .content-container .bg-card {
+  border-radius: 0 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background-color: var(--card) !important;
+}
+
+[data-content-view="boxed"] .content-container [data-slot="card"]:hover,
+[data-content-view="boxed"] .content-container .card:hover {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background-color: var(--card) !important;
+  transform: none !important;
+}
+
+/* --- 11. TABS — Flush inside the boxed frame --- */
+[data-content-view="boxed"] .content-container [data-slot="tabs"] {
+  background-color: var(--card) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Tab bar wrapper — full-width border */
+[data-content-view="boxed"] .content-container [data-slot="tabs"] > div:has([role="tablist"]) {
+  padding: 0 1.5rem !important;
+  margin: 0 !important;
+  background-color: var(--card) !important;
+  border-bottom: 1px solid var(--boxed-divider) !important;
+}
+
+/* Tab list — kill its own border so only wrapper's shows */
+[data-content-view="boxed"] .content-container [role="tablist"] {
+  background-color: transparent !important;
+  border-bottom: none !important;
+}
+
+/* Tab panels — flush */
+[data-content-view="boxed"] .content-container [role="tabpanel"] {
+  background-color: var(--card) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Tab panel children — dividers between stacked sections */
+[data-content-view="boxed"] .content-container [role="tabpanel"] > * {
+  border-bottom: 1px solid var(--boxed-divider) !important;
+}
+[data-content-view="boxed"] .content-container [role="tabpanel"] > *:last-child {
+  border-bottom: none !important;
+}
+

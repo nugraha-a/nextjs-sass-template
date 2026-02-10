@@ -362,7 +362,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors duration-150"
+                  className="data-[state=open]:bg-sidebar-primary/10 data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-primary/5 transition-colors duration-150"
                 >
                   <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
                     <Sparkles className="size-4" />
@@ -483,7 +483,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors duration-150"
+                  className="data-[state=open]:bg-sidebar-primary/10 data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-primary/5 transition-colors duration-150"
                 >
                   <Avatar className="size-8 rounded-md shrink-0">
                     <AvatarFallback className="rounded-md bg-secondary text-muted-foreground text-xs font-medium">

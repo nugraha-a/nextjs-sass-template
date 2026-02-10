@@ -247,13 +247,13 @@ export default function FinancePage() {
                           <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.3}/>
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
+                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} tickFormatter={(v) => `$${v / 1000}k`} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
-                        labelStyle={{ color: "hsl(var(--muted-foreground))" }}
+                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
+                        labelStyle={{ color: "var(--muted-foreground)" }}
                         formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
-                        cursor={{ fill: "hsl(var(--muted))" }}
+                        cursor={{ fill: "var(--muted)" }}
                       />
                       <Bar dataKey="revenue" fill="url(#colorRevenue)" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="expenses" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
@@ -286,7 +286,7 @@ export default function FinancePage() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px", color: "hsl(var(--popover-foreground))" }}
+                        contentStyle={{ backgroundColor: "var(--popover)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "12px", color: "var(--popover-foreground)" }}
                         formatter={(value: number) => [`${value}%`, ""]}
                       />
                     </RePieChart>

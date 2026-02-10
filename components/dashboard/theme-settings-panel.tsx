@@ -1,6 +1,6 @@
 "use client"
 
-import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2 } from "lucide-react"
+import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, type SidebarMode, type ContentMode } from "@/contexts/theme-settings-context"
+import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, type SidebarMode, type ContentMode, type ContentView } from "@/contexts/theme-settings-context"
 import { cn } from "@/lib/utils"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
@@ -53,12 +53,16 @@ export function ThemeSettingsPanel() {
     fontFamily,
     fontSize,
     contentMode,
+    contentView,
+    radius,
     setSidebarMode,
     setThemeMode,
     setColorScheme,
     setFontFamily,
     setFontSize,
     setContentMode,
+    setContentView,
+    setRadius,
     resetToDefaults,
   } = useThemeSettings()
 
@@ -285,6 +289,65 @@ export function ThemeSettingsPanel() {
 
           <Separator className="bg-border" />
 
+          {/* Layout & Spacing */}
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="size-4 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
+                Layout & Spacing
+              </Label>
+            </div>
+
+            {/* Content View Toggle */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Content View</Label>
+                <span className="text-[9px] text-muted-foreground/50">{contentView === 'carded' ? 'Carded' : 'Boxed'}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <ContentViewButton
+                  view="carded"
+                  currentView={contentView}
+                  onClick={() => setContentView("carded")}
+                  label="Carded"
+                  description="Floating cards"
+                />
+                <ContentViewButton
+                  view="boxed"
+                  currentView={contentView}
+                  onClick={() => setContentView("boxed")}
+                  label="Boxed"
+                  description="Connected grid"
+                />
+              </div>
+            </div>
+
+            {/* Border Radius Slider */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Border Radius</Label>
+                <span className="text-[9px] text-muted-foreground/50">{radius.toFixed(1)} rem</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value={radius}
+                  onChange={(e) => setRadius(parseFloat(e.target.value))}
+                  className="w-full h-1.5 bg-border rounded-full appearance-none cursor-pointer accent-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:cursor-pointer"
+                />
+              </div>
+              <div className="flex justify-between text-[9px] text-muted-foreground/40">
+                <span>Sharp</span>
+                <span>Rounded</span>
+              </div>
+            </div>
+          </div>
+
+          <Separator className="bg-border" />
+
           {/* Reset */}
           <Button
             variant="outline"
@@ -410,6 +473,49 @@ function ContentModeButton({
       )}
     >
       {icon}
+      <span className="text-[10px] font-medium">{label}</span>
+      <span className="text-[9px] text-muted-foreground/70">{description}</span>
+    </button>
+  )
+}
+
+function ContentViewButton({
+  view,
+  currentView,
+  onClick,
+  label,
+  description,
+}: {
+  view: ContentView
+  currentView: ContentView
+  onClick: () => void
+  label: string
+  description: string
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px] cursor-pointer",
+        currentView === view
+          ? "border-primary bg-secondary text-foreground"
+          : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
+      )}
+    >
+      {view === "carded" ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-current">
+          <rect x="2" y="2" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <rect x="13" y="2" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <rect x="2" y="13" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <rect x="13" y="13" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-current">
+          <rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+          <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        </svg>
+      )}
       <span className="text-[10px] font-medium">{label}</span>
       <span className="text-[9px] text-muted-foreground/70">{description}</span>
     </button>
