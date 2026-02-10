@@ -162,7 +162,7 @@ export default function TenantsPage() {
   })
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -257,6 +257,7 @@ export default function TenantsPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
@@ -265,8 +266,8 @@ export default function TenantsPage() {
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Status</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 text-right">Users</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 text-right">MRR</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Industry</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Joined</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 hidden lg:table-cell">Industry</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 hidden md:table-cell">Joined</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -297,10 +298,10 @@ export default function TenantsPage() {
                           {tenant.mrr > 0 ? formatCurrency(tenant.mrr) : "—"}
                         </span>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 hidden lg:table-cell">
                         <span className="text-[13px] text-muted-foreground">{tenant.industry}</span>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 hidden md:table-cell">
                         <span className="text-[13px] text-muted-foreground">{tenant.createdAt}</span>
                       </TableCell>
                       <TableCell className="py-3 pr-6 text-right">
@@ -331,6 +332,7 @@ export default function TenantsPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -383,6 +385,7 @@ export default function TenantsPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
@@ -419,6 +422,7 @@ export default function TenantsPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -449,6 +453,7 @@ export default function TenantsPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
@@ -480,6 +485,7 @@ export default function TenantsPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

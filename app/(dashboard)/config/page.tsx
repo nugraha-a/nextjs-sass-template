@@ -125,7 +125,7 @@ export default function ConfigPage() {
   const enabledCount = Object.values(features).filter(Boolean).length
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -448,14 +448,14 @@ export default function ConfigPage() {
                 <div className="space-y-1.5">
                   <Label className="text-[13px] font-medium text-foreground">Number Format</Label>
                   <p className="text-[11px] text-muted-foreground">Preview based on your locale settings</p>
-                  <div className="flex items-center gap-3 mt-2 p-3 rounded-lg bg-muted/30 border border-border/50">
+                  <div className="flex flex-wrap items-center gap-3 mt-2 p-3 rounded-lg bg-muted/30 border border-border/50">
                     <div className="flex items-center gap-2">
                       <span className="text-[12px] text-muted-foreground">Number:</span>
                       <Badge variant="secondary" className="font-mono text-[12px] bg-background border-border">
                         1,234.56
                       </Badge>
                     </div>
-                    <Separator orientation="vertical" className="h-4" />
+                    <Separator orientation="vertical" className="h-4 hidden sm:block" />
                     <div className="flex items-center gap-2">
                       <span className="text-[12px] text-muted-foreground">Currency:</span>
                       <Badge variant="secondary" className="font-mono text-[12px] bg-background border-border">
@@ -591,7 +591,7 @@ export default function ConfigPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
-                <div className="grid gap-5 grid-cols-2">
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
                   <FormField label="Primary Color">
                     <div className="flex items-center gap-2">
                       <label className="size-10 rounded-lg bg-primary border border-border cursor-pointer shrink-0 hover:ring-2 hover:ring-primary/30 transition-all">

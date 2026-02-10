@@ -113,9 +113,9 @@ export default function IAMPage() {
   const [selectedRole, setSelectedRole] = useState<number | null>(3)
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
             Identity & Access Management
@@ -127,7 +127,7 @@ export default function IAMPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <Card className="bg-card border-border hover:border-primary/50 transition-colors duration-150">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -223,14 +223,15 @@ export default function IAMPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pl-6">User</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Role</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Status</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">MFA</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Last Login</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 hidden md:table-cell">MFA</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 hidden lg:table-cell">Last Login</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -256,14 +257,14 @@ export default function IAMPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="py-3">{getStatusBadge(user.status)}</TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 hidden md:table-cell">
                         {user.mfa ? (
                           <ShieldCheck className="size-4 text-emerald-400" />
                         ) : (
                           <ShieldAlert className="size-4 text-muted-foreground" />
                         )}
                       </TableCell>
-                      <TableCell className="py-3 text-[13px] text-muted-foreground">{user.lastLogin}</TableCell>
+                      <TableCell className="py-3 text-[13px] text-muted-foreground hidden lg:table-cell">{user.lastLogin}</TableCell>
                       <TableCell className="py-3 pr-6 text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -284,13 +285,14 @@ export default function IAMPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Roles & Permissions Tab */}
         <TabsContent value="roles" className="space-y-4">
-          <div className="grid gap-6 lg:grid-cols-5">
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-5">
             {/* Roles List */}
             <Card className="lg:col-span-2 bg-card border-border">
               <CardHeader className="pb-2">
@@ -437,6 +439,7 @@ export default function IAMPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
@@ -444,7 +447,7 @@ export default function IAMPage() {
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">User</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Action</TableHead>
                     <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10">Target</TableHead>
-                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6">IP Address</TableHead>
+                    <TableHead className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider h-10 pr-6 hidden md:table-cell">IP Address</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -465,11 +468,12 @@ export default function IAMPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="py-3 text-[13px] text-muted-foreground">{log.target}</TableCell>
-                      <TableCell className="py-3 pr-6 text-[12px] text-muted-foreground font-mono">{log.ip}</TableCell>
+                      <TableCell className="py-3 pr-6 text-[12px] text-muted-foreground font-mono hidden md:table-cell">{log.ip}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

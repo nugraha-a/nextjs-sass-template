@@ -143,7 +143,7 @@ export default function FinancePage() {
   const [period, setPeriod] = useState("this-month")
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -454,6 +454,7 @@ export default function FinancePage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
@@ -478,6 +479,7 @@ export default function FinancePage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
