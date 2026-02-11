@@ -90,9 +90,9 @@ export function NotificationPopover() {
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
-            <div className="absolute top-0.5 right-0.5 flex size-3.5 items-center justify-center">
+            <div className="absolute top-0.5 right-0.5 flex size-3 items-center justify-center">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-              <span className="relative inline-flex size-3.5 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white ring-2 ring-background">
+              <span className="relative inline-flex size-3 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-white ring-1 ring-background">
                 {unreadCount}
               </span>
             </div>
