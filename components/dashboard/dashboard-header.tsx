@@ -176,7 +176,7 @@ export function DashboardHeader() {
           <div className="flex items-center gap-1 flex-shrink-0">
             <Button
               variant="ghost"
-              className="hidden md:flex h-8 px-3 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 gap-2 text-[13px]"
+              className="hidden md:flex h-8 px-3 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 gap-2 text-sm leading-none items-center"
               onClick={() => setSearchOpen(true)}
             >
               <Search className="size-3.5" />
