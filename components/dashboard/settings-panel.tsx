@@ -94,7 +94,7 @@ export function SettingsPanel() {
               <Input
                 id="email"
                 type="email"
-                defaultValue="john@aurora.io"
+                defaultValue="john@email.com"
                 className="h-8 text-xs bg-zinc-900 border-zinc-800 text-zinc-100 focus:ring-1 focus:ring-zinc-700 transition-colors duration-150"
               />
             </div>
@@ -108,7 +108,7 @@ export function SettingsPanel() {
               <Textarea
                 id="bio"
                 placeholder="Tell us about yourself..."
-                defaultValue="Product designer at Aurora Inc. Passionate about creating beautiful interfaces."
+                defaultValue="Product designer at Acme Inc. Passionate about creating beautiful interfaces."
                 className="min-h-20 text-xs bg-zinc-900 border-zinc-800 text-zinc-100 focus:ring-1 focus:ring-zinc-700 transition-colors duration-150 resize-none"
               />
               <p className="text-[10px] text-zinc-600">

@@ -54,7 +54,7 @@ export function useThemeSettings() {
   return context
 }
 
-const STORAGE_KEY = "aurora-theme-settings"
+const STORAGE_KEY = "next-sass-theme-settings"
 
 export function ThemeSettingsProvider({ children }: { children: React.ReactNode }) {
   const { setTheme, theme } = useTheme()

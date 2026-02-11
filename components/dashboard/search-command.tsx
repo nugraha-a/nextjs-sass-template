@@ -103,8 +103,8 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
                <File className="size-4" />
             </div>
             <div className="flex flex-col">
-               <span className="text-sm font-medium">aurora_test17.zip</span>
-               <span className="text-xs text-muted-foreground">:: files / New folder / aurora /</span>
+               <span className="text-sm font-medium">acme_test17.zip</span>
+               <span className="text-xs text-muted-foreground">:: files / New folder / acme /</span>
             </div>
           </CommandItem>
           <CommandItem className="flex items-center gap-3 py-2 cursor-pointer" onSelect={() => setOpen(false)}>

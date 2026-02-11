@@ -544,7 +544,7 @@ export default function ConfigPage() {
               <CardContent className="space-y-5">
                 <FormField label="Organization Name" description="Displayed in the sidebar header and emails">
                   <Input
-                    defaultValue="Aurora Reforged"
+                    defaultValue="Nextjs SaaS Template"
                     className="h-10 bg-background border-input text-[13px] text-foreground"
                   />
                 </FormField>

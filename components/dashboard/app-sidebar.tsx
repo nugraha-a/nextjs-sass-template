@@ -369,10 +369,10 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold tracking-tight text-foreground">
-                      Aurora
+                      Acme Inc
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      Reforged
+                      Nextjs SaaS Template
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
@@ -386,7 +386,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
               >
                 <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
                   <Sparkles className="mr-2 size-4" />
-                  Aurora Reforged
+                  Acme Inc 
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border" />
                 <DropdownMenuItem className="text-muted-foreground focus:bg-accent focus:text-accent-foreground">

@@ -27,7 +27,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'Aurora Dashboard | Enterprise SaaS',
+  title: 'Nextjs SaaS Template',
   description: 'Enterprise-grade dashboard with Vercel-inspired design. Clean, minimalist, and powerful.',
   generator: 'v0.app',
   icons: {

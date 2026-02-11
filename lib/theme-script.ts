@@ -1,7 +1,7 @@
 export const themeScript = `
 (function() {
   try {
-    const storageKey = 'aurora-theme-settings';
+    const storageKey = 'next-sass-theme-settings';
     const stored = localStorage.getItem(storageKey);
     if (stored) {
       const settings = JSON.parse(stored);
