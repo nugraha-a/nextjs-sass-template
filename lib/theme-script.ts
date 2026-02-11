@@ -21,6 +21,7 @@ export const themeScript = `
         document.body.setAttribute('data-color-scheme', settings.colorScheme);
       }
       if (settings.sidebarMode) root.setAttribute('data-sidebar-mode', settings.sidebarMode);
+      if (settings.sidebarTheme) root.setAttribute('data-sidebar-theme', settings.sidebarTheme);
       if (settings.contentMode) root.setAttribute('data-content-mode', settings.contentMode);
       if (settings.contentView) root.setAttribute('data-content-view', settings.contentView);
       if (settings.radius) root.style.setProperty('--radius', settings.radius + 'rem');

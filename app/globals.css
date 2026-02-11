@@ -558,3 +558,499 @@ html[data-font-family="jakarta"] body {
   border-bottom: none !important;
 }
 
+/* ============================================
+   SIDEBAR THEMES
+   
+   Each theme has TWO variants:
+   - Light Mode (:root) — sidebar as "dark island" or accent
+   - Dark Mode (html.dark) — sidebar distinguished from dark content area
+   
+   Strict variable scoping: remap global vars 
+   inside [data-slot="sidebar"] so Shadcn 
+   components don't inherit wrong-mode variables.
+   ============================================ */
+
+/* ─────────────────────────────────────────────
+   DARK (Harmonized) — Light Mode ONLY
+   Deep dark sidebar as "dark island".
+   In Dark Mode this theme is a no-op: sidebar 
+   uses the default dark-mode variables.
+   ───────────────────────────────────────────── */
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: color-mix(in oklch, oklch(0.13 0 0) 95%, var(--primary) 5%);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-muted-foreground: oklch(0.65 0 0);
+  --sidebar-border: color-mix(in oklch, white 10%, transparent);
+  --sidebar-accent: color-mix(in oklch, var(--primary) 20%, oklch(0.20 0 0));
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: color-mix(in oklch, var(--primary), white 30%);
+
+  /* Remap global vars for nested Shadcn components */
+  --background: var(--sidebar);
+  --foreground: var(--sidebar-foreground);
+  --muted-foreground: var(--sidebar-muted-foreground);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: var(--sidebar-accent-foreground);
+  --card: var(--sidebar);
+  --card-foreground: var(--sidebar-foreground);
+  --popover: color-mix(in oklch, oklch(0.10 0 0) 95%, var(--primary) 5%);
+  --popover-foreground: var(--sidebar-foreground);
+  --secondary: oklch(0.18 0 0);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.18 0 0);
+  --ring: var(--sidebar-ring);
+
+  background-color: var(--sidebar) !important;
+  color: var(--sidebar-foreground);
+}
+
+/* Dark sidebar — active item (light mode only) */
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"] [data-active="true"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"] [data-active="true"] {
+  background-color: color-mix(in oklch, var(--primary), white 15%) !important;
+  color: oklch(0.985 0 0) !important;
+}
+
+/* Dark sidebar — separators (light mode only) */
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"] [data-slot="separator"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"] [data-slot="sidebar-separator"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"] [data-slot="separator"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"] [data-slot="sidebar-separator"] {
+  background-color: color-mix(in oklch, white 10%, transparent) !important;
+}
+
+/* Dark sidebar — sub-menu border (light mode only) */
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"] [data-slot="sidebar-menu-sub"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"] [data-slot="sidebar-menu-sub"] {
+  border-color: color-mix(in oklch, white 10%, transparent);
+}
+
+/* Dark sidebar — group labels (light mode only) */
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar"] [data-slot="sidebar-group-label"],
+:root:not(.dark)[data-sidebar-theme="dark"] [data-slot="sidebar-inner"] [data-slot="sidebar-group-label"] {
+  color: oklch(0.55 0 0);
+}
+
+/* ─────────────────────────────────────────────
+   DARK — Dark Mode: mirror default sidebar vars
+   Ensures sidebar theme "Dark" looks identical
+   to "Default" when the app is in dark mode.
+   ───────────────────────────────────────────── */
+html.dark[data-sidebar-theme="dark"] [data-slot="sidebar"],
+html.dark[data-sidebar-theme="dark"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-theme="dark"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  
+  background-color: var(--background) !important;
+  color: var(--foreground);
+}
+
+
+/* ─────────────────────────────────────────────
+   BRAND — Light Mode
+   Uses the deep light-mode primary color 
+   ───────────────────────────────────────────── */
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+:root[data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: var(--primary);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-muted-foreground: oklch(0.88 0 0);
+  --sidebar-border: color-mix(in oklch, white 18%, transparent);
+  --sidebar-accent: color-mix(in oklch, var(--primary), black 18%);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: var(--primary);
+  --sidebar-ring: oklch(0.985 0 0);
+
+  --background: var(--sidebar);
+  --foreground: oklch(0.985 0 0);
+  --muted-foreground: oklch(0.88 0 0);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: oklch(0.985 0 0);
+  --card: var(--sidebar);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: color-mix(in oklch, var(--primary), black 25%);
+  --popover-foreground: oklch(0.985 0 0);
+  --secondary: color-mix(in oklch, var(--primary), black 12%);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: color-mix(in oklch, var(--primary), black 12%);
+  --ring: oklch(0.985 0 0);
+
+  background-color: var(--primary) !important;
+  color: oklch(0.985 0 0);
+}
+
+/* ─────────────────────────────────────────────
+   BRAND — Dark Mode (per-color-scheme)
+   
+   Uses the SAME primary color as light mode to
+   maintain consistent brand identity across both
+   modes. The sidebar keeps its brand color; only
+   the surrounding content area changes.
+   ───────────────────────────────────────────── */
+
+/* Zinc — same as light-mode primary: oklch(0.205 0 0) */
+html.dark[data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.205 0 0);
+  --brand-fg: oklch(0.985 0 0);
+  --brand-muted: oklch(0.88 0 0);
+  --brand-border: color-mix(in oklch, white 18%, transparent);
+  --brand-accent-bg: oklch(0.16 0 0);
+  --brand-active-bg: oklch(0.14 0 0);
+  --brand-active-fg: oklch(0.985 0 0);
+
+  --sidebar: var(--brand-bg);
+  --sidebar-foreground: var(--brand-fg);
+  --sidebar-muted-foreground: var(--brand-muted);
+  --sidebar-border: var(--brand-border);
+  --sidebar-accent: var(--brand-accent-bg);
+  --sidebar-accent-foreground: var(--brand-fg);
+  --sidebar-primary: var(--brand-fg);
+  --sidebar-primary-foreground: var(--brand-bg);
+  --sidebar-ring: var(--brand-fg);
+
+  --sidebar-primary: var(--brand-fg);
+  --sidebar-primary-foreground: var(--brand-bg);
+  --sidebar-ring: var(--brand-fg);
+
+  /* Override Tailwind theme colors so bg-primary matches the sidebar brand color EXACTLY.
+     sidebar-primary uses White for hover effects. */
+  --color-primary: var(--brand-bg);
+  --color-primary-foreground: var(--brand-fg);
+  --color-sidebar-primary: var(--brand-fg);
+  --color-sidebar-primary-foreground: var(--brand-bg);
+
+  --background: var(--brand-bg);
+  --foreground: var(--brand-fg);
+  --muted-foreground: var(--brand-muted);
+  --border: var(--brand-border);
+  --input: var(--brand-border);
+  --accent: var(--brand-accent-bg);
+  --accent-foreground: var(--brand-fg);
+  --card: var(--brand-bg);
+  --card-foreground: var(--brand-fg);
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: var(--brand-fg);
+  --secondary: var(--brand-accent-bg);
+  --secondary-foreground: var(--brand-fg);
+  --muted: var(--brand-accent-bg);
+  --ring: var(--brand-fg);
+
+  background-color: var(--brand-bg) !important;
+  color: var(--brand-fg);
+}
+
+/* Slate — same as light-mode primary: oklch(0.35 0.08 240) */
+html.dark[data-color-scheme="slate"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="slate"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="slate"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.35 0.08 240);
+  --brand-accent-bg: oklch(0.28 0.07 240);
+  --brand-active-bg: oklch(0.24 0.06 240);
+}
+
+/* Neutral — same as light-mode primary: oklch(0.35 0.04 60) */
+html.dark[data-color-scheme="neutral"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="neutral"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="neutral"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.35 0.04 60);
+  --brand-accent-bg: oklch(0.28 0.04 60);
+  --brand-active-bg: oklch(0.24 0.03 60);
+}
+
+/* Blue — same as light-mode primary: oklch(0.45 0.15 260) */
+html.dark[data-color-scheme="blue"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="blue"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="blue"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.45 0.15 260);
+  --brand-accent-bg: oklch(0.37 0.13 260);
+  --brand-active-bg: oklch(0.32 0.11 260);
+}
+
+/* Green — same as light-mode primary: oklch(0.50 0.15 145) */
+html.dark[data-color-scheme="green"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="green"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="green"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.50 0.15 145);
+  --brand-accent-bg: oklch(0.41 0.13 145);
+  --brand-active-bg: oklch(0.35 0.11 145);
+}
+
+/* Orange — same as light-mode primary: oklch(0.55 0.15 50) */
+html.dark[data-color-scheme="orange"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="orange"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="orange"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.55 0.15 50);
+  --brand-accent-bg: oklch(0.45 0.13 50);
+  --brand-active-bg: oklch(0.39 0.11 50);
+}
+
+/* Rose — same as light-mode primary: oklch(0.45 0.15 15) */
+html.dark[data-color-scheme="rose"][data-sidebar-theme="brand"] [data-slot="sidebar"],
+html.dark[data-color-scheme="rose"][data-sidebar-theme="brand"] [data-slot="sidebar-inner"],
+html.dark[data-color-scheme="rose"][data-sidebar-theme="brand"] [data-mobile="true"][data-slot="sidebar"] {
+  --brand-bg: oklch(0.45 0.15 15);
+  --brand-accent-bg: oklch(0.37 0.13 15);
+  --brand-active-bg: oklch(0.32 0.11 15);
+}
+
+/* Brand — light mode active item */
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-active="true"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-active="true"] {
+  background-color: color-mix(in oklch, var(--primary), black 30%) !important;
+  color: oklch(0.985 0 0) !important;
+}
+
+/* Brand — dark mode active item (uses per-scheme --brand-active-bg) */
+html.dark[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-active="true"],
+html.dark[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-active="true"] {
+  background-color: var(--brand-active-bg, oklch(0.14 0 0)) !important;
+  color: var(--brand-active-fg, oklch(0.985 0 0)) !important;
+}
+
+
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-slot="separator"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-slot="sidebar-separator"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-slot="separator"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-slot="sidebar-separator"] {
+  background-color: color-mix(in oklch, white 15%, transparent) !important;
+}
+
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-slot="sidebar-menu-sub"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-slot="sidebar-menu-sub"] {
+  border-color: color-mix(in oklch, white 15%, transparent);
+}
+
+:root[data-sidebar-theme="brand"] [data-slot="sidebar"] [data-slot="sidebar-group-label"],
+:root[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-slot="sidebar-group-label"] {
+  color: oklch(0.82 0 0);
+}
+
+/* ─────────────────────────────────────────────
+   IMAGE — Light Mode
+   Dark overlay image, "dark island" effect
+   ───────────────────────────────────────────── */
+:root[data-sidebar-theme="image"] [data-slot="sidebar"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+:root[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: oklch(0.12 0.01 240);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-muted-foreground: oklch(0.68 0 0);
+  --sidebar-border: color-mix(in oklch, white 10%, transparent);
+  --sidebar-accent: rgba(255, 255, 255, 0.10);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: color-mix(in oklch, var(--primary), white 30%);
+
+  --background: var(--sidebar);
+  --foreground: var(--sidebar-foreground);
+  --muted-foreground: var(--sidebar-muted-foreground);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: var(--sidebar-accent-foreground);
+  --card: var(--sidebar);
+  --card-foreground: var(--sidebar-foreground);
+  --popover: oklch(0.10 0.01 240);
+  --popover-foreground: var(--sidebar-foreground);
+  --secondary: rgba(255, 255, 255, 0.07);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: rgba(255, 255, 255, 0.05);
+  --ring: var(--sidebar-ring);
+
+  background-image:
+    linear-gradient(to bottom, oklch(0.10 0.02 240 / 0.85), oklch(0.08 0.01 240 / 0.92)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='800' viewBox='0 0 400 800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23334155'/%3E%3Cstop offset='1' stop-color='%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='800'/%3E%3Ccircle cx='100' cy='200' r='120' fill='%231e293b' opacity='0.4'/%3E%3Ccircle cx='300' cy='500' r='80' fill='%23334155' opacity='0.3'/%3E%3Ccircle cx='50' cy='650' r='150' fill='%230f172a' opacity='0.5'/%3E%3C/svg%3E") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  color: var(--sidebar-foreground);
+}
+
+/* ─────────────────────────────────────────────
+   IMAGE — Dark Mode
+   Lighter overlay so sidebar is distinguishable 
+   from the dark content area
+   ───────────────────────────────────────────── */
+html.dark[data-sidebar-theme="image"] [data-slot="sidebar"],
+html.dark[data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: oklch(0.14 0.01 240);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-muted-foreground: oklch(0.65 0 0);
+  --sidebar-border: color-mix(in oklch, white 8%, transparent);
+  --sidebar-accent: rgba(255, 255, 255, 0.10);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: color-mix(in oklch, var(--primary), white 20%);
+
+  --background: var(--sidebar);
+  --foreground: var(--sidebar-foreground);
+  --muted-foreground: var(--sidebar-muted-foreground);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: var(--sidebar-accent-foreground);
+  --card: var(--sidebar);
+  --card-foreground: var(--sidebar-foreground);
+  --popover: oklch(0.12 0.01 240);
+  --popover-foreground: var(--sidebar-foreground);
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: rgba(255, 255, 255, 0.04);
+  --ring: var(--sidebar-ring);
+
+  background-image:
+    linear-gradient(to bottom, oklch(0.12 0.02 240 / 0.80), oklch(0.10 0.01 240 / 0.88)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='800' viewBox='0 0 400 800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23334155'/%3E%3Cstop offset='1' stop-color='%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='800'/%3E%3Ccircle cx='100' cy='200' r='120' fill='%231e293b' opacity='0.4'/%3E%3Ccircle cx='300' cy='500' r='80' fill='%23334155' opacity='0.3'/%3E%3Ccircle cx='50' cy='650' r='150' fill='%230f172a' opacity='0.5'/%3E%3C/svg%3E") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  color: var(--sidebar-foreground);
+}
+
+/* Image — shared active/separator/label rules */
+:root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-active="true"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-active="true"] {
+  background-color: color-mix(in oklch, var(--primary) 55%, oklch(0.15 0 0)) !important;
+  color: oklch(0.985 0 0) !important;
+  backdrop-filter: blur(4px);
+}
+
+:root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="separator"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-separator"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="separator"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-separator"] {
+  background-color: color-mix(in oklch, white 8%, transparent) !important;
+}
+
+:root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-menu-sub"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-menu-sub"] {
+  border-color: color-mix(in oklch, white 8%, transparent);
+}
+
+:root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-group-label"],
+:root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-group-label"] {
+  color: oklch(0.58 0 0);
+}
+
+/* ─────────────────────────────────────────────
+   AURORA — Light Mode
+   Deep gradient mesh "dark island" 
+   ───────────────────────────────────────────── */
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"],
+:root[data-sidebar-theme="aurora"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: oklch(0.11 0.02 260);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-muted-foreground: oklch(0.65 0 0);
+  --sidebar-border: color-mix(in oklch, white 10%, transparent);
+  --sidebar-accent: color-mix(in oklch, var(--primary) 18%, oklch(0.20 0.02 260));
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: color-mix(in oklch, var(--primary), white 30%);
+
+  --background: var(--sidebar);
+  --foreground: var(--sidebar-foreground);
+  --muted-foreground: var(--sidebar-muted-foreground);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: var(--sidebar-accent-foreground);
+  --card: var(--sidebar);
+  --card-foreground: var(--sidebar-foreground);
+  --popover: oklch(0.10 0.02 260);
+  --popover-foreground: var(--sidebar-foreground);
+  --secondary: oklch(0.16 0.02 260);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.16 0.02 260);
+  --ring: var(--sidebar-ring);
+
+  background: 
+    radial-gradient(ellipse at 15% 0%, color-mix(in oklch, var(--primary), oklch(0.12 0 0) 70%) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 100%, color-mix(in oklch, var(--primary), oklch(0.15 0.03 300) 40%) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, oklch(0.08 0.02 280) 0%, transparent 70%),
+    oklch(0.10 0.01 260) !important;
+  color: var(--sidebar-foreground);
+}
+
+/* ─────────────────────────────────────────────
+   AURORA — Dark Mode
+   Slightly brighter mesh to stand out from 
+   the dark content area. More vivid gradients.
+   ───────────────────────────────────────────── */
+html.dark[data-sidebar-theme="aurora"] [data-slot="sidebar"],
+html.dark[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-theme="aurora"] [data-mobile="true"][data-slot="sidebar"] {
+  --sidebar: oklch(0.13 0.02 260);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-muted-foreground: oklch(0.65 0 0);
+  --sidebar-border: color-mix(in oklch, white 8%, transparent);
+  --sidebar-accent: color-mix(in oklch, var(--primary) 22%, oklch(0.22 0.02 260));
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: color-mix(in oklch, var(--primary), white 20%);
+
+  --background: var(--sidebar);
+  --foreground: var(--sidebar-foreground);
+  --muted-foreground: var(--sidebar-muted-foreground);
+  --border: var(--sidebar-border);
+  --input: var(--sidebar-border);
+  --accent: var(--sidebar-accent);
+  --accent-foreground: var(--sidebar-accent-foreground);
+  --card: var(--sidebar);
+  --card-foreground: var(--sidebar-foreground);
+  --popover: oklch(0.11 0.02 260);
+  --popover-foreground: var(--sidebar-foreground);
+  --secondary: oklch(0.18 0.02 260);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.18 0.02 260);
+  --ring: var(--sidebar-ring);
+
+  background: 
+    radial-gradient(ellipse at 15% 0%, color-mix(in oklch, var(--primary), oklch(0.14 0 0) 65%) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 100%, color-mix(in oklch, var(--primary), oklch(0.17 0.03 300) 35%) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, oklch(0.10 0.02 280) 0%, transparent 70%),
+    oklch(0.12 0.01 260) !important;
+  color: var(--sidebar-foreground);
+}
+
+/* Aurora — shared active/separator/label rules */
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"] [data-active="true"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"] [data-active="true"] {
+  background-color: color-mix(in oklch, var(--primary), white 15%) !important;
+  color: oklch(0.985 0 0) !important;
+}
+
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"] [data-slot="separator"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"] [data-slot="sidebar-separator"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"] [data-slot="separator"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"] [data-slot="sidebar-separator"] {
+  background-color: color-mix(in oklch, white 8%, transparent) !important;
+}
+
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"] [data-slot="sidebar-menu-sub"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"] [data-slot="sidebar-menu-sub"] {
+  border-color: color-mix(in oklch, white 8%, transparent);
+}
+
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar"] [data-slot="sidebar-group-label"],
+:root[data-sidebar-theme="aurora"] [data-slot="sidebar-inner"] [data-slot="sidebar-group-label"] {
+  color: oklch(0.55 0.02 260);
+}
+

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useTheme } from "next-themes"
 
 export type SidebarMode = "normal" | "compact" | "offcanvas"
+export type SidebarTheme = "default" | "dark" | "brand" | "image" | "aurora"
 export type ContentMode = "compact" | "full"
 export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
@@ -12,6 +13,7 @@ export type ColorScheme = "zinc" | "slate" | "neutral" | "blue" | "green" | "ora
 
 interface ThemeSettings {
   sidebarMode: SidebarMode
+  sidebarTheme: SidebarTheme
   themeMode: "light" | "dark" | "system"
   colorScheme: ColorScheme
   fontFamily: FontFamily
@@ -23,6 +25,7 @@ interface ThemeSettings {
 
 interface ThemeSettingsContextType extends ThemeSettings {
   setSidebarMode: (mode: SidebarMode) => void
+  setSidebarTheme: (theme: SidebarTheme) => void
   setThemeMode: (mode: "light" | "dark" | "system") => void
   setColorScheme: (scheme: ColorScheme) => void
   setFontFamily: (family: FontFamily) => void
@@ -35,6 +38,7 @@ interface ThemeSettingsContextType extends ThemeSettings {
 
 const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
+  sidebarTheme: "default",
   themeMode: "system",
   colorScheme: "zinc",
   fontFamily: "inter",
@@ -102,6 +106,9 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     
     // Apply sidebar mode
     root.setAttribute("data-sidebar-mode", settings.sidebarMode)
+
+    // Apply sidebar theme
+    root.setAttribute("data-sidebar-theme", settings.sidebarTheme)
     
     // Apply content mode
     root.setAttribute("data-content-mode", settings.contentMode)
@@ -117,6 +124,14 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
   const setSidebarMode = useCallback((mode: SidebarMode) => {
     setSettings(prev => {
       const newSettings = { ...prev, sidebarMode: mode }
+      saveSettings(newSettings)
+      return newSettings
+    })
+  }, [saveSettings])
+
+  const setSidebarTheme = useCallback((theme: SidebarTheme) => {
+    setSettings(prev => {
+      const newSettings = { ...prev, sidebarTheme: theme }
       saveSettings(newSettings)
       return newSettings
     })
@@ -197,6 +212,7 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
       value={{
         ...settings,
         setSidebarMode,
+        setSidebarTheme,
         setThemeMode,
         setColorScheme,
         setFontFamily,

@@ -1,6 +1,6 @@
 "use client"
 
-import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers } from "lucide-react"
+import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, type SidebarMode, type ContentMode, type ContentView } from "@/contexts/theme-settings-context"
+import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, type SidebarMode, type SidebarTheme, type ContentMode, type ContentView } from "@/contexts/theme-settings-context"
 import { cn } from "@/lib/utils"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
@@ -48,6 +48,7 @@ const fontSizes: { value: FontSize; label: string }[] = [
 export function ThemeSettingsPanel() {
   const {
     sidebarMode,
+    sidebarTheme,
     themeMode,
     colorScheme,
     fontFamily,
@@ -56,6 +57,7 @@ export function ThemeSettingsPanel() {
     contentView,
     radius,
     setSidebarMode,
+    setSidebarTheme,
     setThemeMode,
     setColorScheme,
     setFontFamily,
@@ -127,6 +129,59 @@ export function ThemeSettingsPanel() {
               {sidebarMode === "normal" && "Full sidebar with text labels visible"}
               {sidebarMode === "compact" && "Collapsed sidebar showing only icons"}
               {sidebarMode === "offcanvas" && "Hidden sidebar with floating icon trigger"}
+            </p>
+          </div>
+
+          <Separator className="bg-border" />
+
+          {/* Sidebar Theme */}
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2">
+              <Paintbrush className="size-4 text-muted-foreground" />
+              <Label className="text-[11px] font-medium text-foreground uppercase tracking-wider">
+                Sidebar Theme
+              </Label>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <SidebarThemeButton
+                theme="default"
+                currentTheme={sidebarTheme}
+                onClick={() => setSidebarTheme("default")}
+                label="Default"
+              />
+              <SidebarThemeButton
+                theme="dark"
+                currentTheme={sidebarTheme}
+                onClick={() => setSidebarTheme("dark")}
+                label="Dark"
+              />
+              <SidebarThemeButton
+                theme="brand"
+                currentTheme={sidebarTheme}
+                onClick={() => setSidebarTheme("brand")}
+                label="Brand"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <SidebarThemeButton
+                theme="image"
+                currentTheme={sidebarTheme}
+                onClick={() => setSidebarTheme("image")}
+                label="Image"
+              />
+              <SidebarThemeButton
+                theme="aurora"
+                currentTheme={sidebarTheme}
+                onClick={() => setSidebarTheme("aurora")}
+                label="Aurora"
+              />
+            </div>
+            <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
+              {sidebarTheme === "default" && "Standard sidebar following global theme"}
+              {sidebarTheme === "dark" && "Always dark, harmonized with color scheme"}
+              {sidebarTheme === "brand" && "Solid primary color background"}
+              {sidebarTheme === "image" && "Background image with dark overlay"}
+              {sidebarTheme === "aurora" && "Gradient mesh with color accents"}
             </p>
           </div>
 
@@ -388,6 +443,41 @@ function SidebarModeButton({
       )}
     >
       {icon}
+      <span className="text-[10px] font-medium">{label}</span>
+    </button>
+  )
+}
+
+function SidebarThemeButton({
+  theme,
+  currentTheme,
+  onClick,
+  label,
+}: {
+  theme: SidebarTheme
+  currentTheme: SidebarTheme
+  onClick: () => void
+  label: string
+}) {
+  const previewStyles: Record<SidebarTheme, string> = {
+    default: "bg-sidebar border border-sidebar-border",
+    dark: "bg-zinc-900 border border-zinc-700",
+    brand: "bg-primary border border-primary",
+    image: "bg-gradient-to-b from-slate-700 to-slate-900 border border-slate-600",
+    aurora: "bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-900 border border-indigo-700/50",
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
+        currentTheme === theme
+          ? "border-primary bg-secondary text-foreground"
+          : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
+      )}
+    >
+      <div className={cn("w-8 h-5 rounded-sm", previewStyles[theme])} />
       <span className="text-[10px] font-medium">{label}</span>
     </button>
   )
