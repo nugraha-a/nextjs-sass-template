@@ -67,7 +67,7 @@ const mockNotifications: NotificationItem[] = [
 
 function getIcon(type: NotificationItem["type"]) {
     switch (type) {
-        case "info": return <Info className="size-4 text-blue-500" />
+        case "info": return <Info className="size-4 text-primary" />
         case "warning": return <AlertTriangle className="size-4 text-amber-500" />
         case "success": return <CheckCircle className="size-4 text-green-500" />
         case "system": return <Settings className="size-4 text-purple-500" />
@@ -107,7 +107,7 @@ export function NotificationPopover() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-auto p-0 text-xs text-blue-500 hover:text-blue-600 hover:bg-transparent transition-colors"
+              className="h-auto p-0 text-xs text-primary hover:text-primary/80 hover:bg-transparent transition-colors"
               onClick={() => setUnreadCount(0)}
             >
               Mark all as read
@@ -145,14 +145,14 @@ export function NotificationPopover() {
                     </p>
                 </div>
                 {!item.read && (
-                    <div className="size-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0 animate-pulse" />
+                    <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
                 )}
               </div>
             ))}
           </div>
         </ScrollArea>
         <div className="border-t border-border/50 p-2 bg-muted/20">
-             <Button variant="ghost" className="w-full h-8 text-xs justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors rounded-md" onClick={() => setOpen(false)} asChild>
+             <Button variant="ghost" className="w-full h-8 text-xs justify-center text-primary hover:text-primary/80 hover:bg-secondary/50 transition-colors rounded-md" onClick={() => setOpen(false)} asChild>
                <Link href="/notifications">
                  View all notifications <ChevronRight className="ml-1 size-3" />
                </Link>

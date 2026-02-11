@@ -60,7 +60,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
         <CommandEmpty>No results found.</CommandEmpty>
         
         <div className="px-2 py-2">
-             <span className="text-xs font-semibold text-blue-500 cursor-pointer hover:underline">Advanced search</span>
+             <span className="text-xs font-semibold text-primary cursor-pointer hover:underline">Advanced search</span>
         </div>
         
         <CommandGroup heading="Recent" className="text-muted-foreground">
@@ -71,25 +71,25 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
                <span>/</span>
                <span className="p-0.5 bg-secondary rounded text-[10px]"><MoreHorizontal className="size-3" /></span>
                <span>/</span>
-               <span className="text-blue-500">Create new</span>
+               <span className="text-primary">Create new</span>
                <CornerDownLeft className="size-3 ml-1" />
             </div>
           </CommandItem>
            <CommandItem className="flex items-center gap-2 py-2 cursor-pointer" onSelect={() => setOpen(false)}>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-               <span className="text-blue-500">Homepage</span>
+               <span className="text-primary">Homepage</span>
                <span>/</span>
-               <span className="text-blue-500">E-commerce</span>
+               <span className="text-primary">E-commerce</span>
                <CornerDownLeft className="size-3 ml-1" />
             </div>
           </CommandItem>
           <CommandItem className="flex items-center gap-2 py-2 cursor-pointer" onSelect={() => setOpen(false)}>
              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-               <span className="text-blue-500">Pages</span>
+               <span className="text-primary">Pages</span>
                <span>/</span>
-               <span className="text-blue-500">Starter</span>
+               <span className="text-primary">Starter</span>
                <CornerDownLeft className="size-3 ml-1" />
             </div>
           </CommandItem>
@@ -99,7 +99,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
         
         <CommandGroup heading="Files">
           <CommandItem className="flex items-center gap-3 py-2 cursor-pointer" onSelect={() => setOpen(false)}>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                <File className="size-4" />
             </div>
             <div className="flex flex-col">
@@ -117,7 +117,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
             </div>
           </CommandItem>
           <CommandItem className="flex items-center gap-3 py-2 cursor-pointer" onSelect={() => setOpen(false)}>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                <FileText className="size-4" />
             </div>
             <div className="flex flex-col">
@@ -146,7 +146,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
                     <span className="text-xs font-medium">{contact.name}</span>
                  </div>
                ))}
-                <div className="flex items-center gap-1 px-2 py-1 cursor-pointer text-blue-500 hover:underline">
+                <div className="flex items-center gap-1 px-2 py-1 cursor-pointer text-primary hover:underline">
                   <span className="text-xs font-semibold">See All Contacts</span>
                   <ChevronRight className="size-3" />
                 </div>

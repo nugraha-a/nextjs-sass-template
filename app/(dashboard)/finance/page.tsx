@@ -431,6 +431,7 @@ export default function FinancePage() {
                     <Progress
                       value={percentUsed}
                       className="h-1.5 bg-muted"
+                      indicatorClassName="bg-primary/80"
                     />
                   </div>
                 )
