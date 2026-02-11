@@ -49,7 +49,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
   }, [setOpen])
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} onOpenChange={setOpen} className="top-[3.9%] translate-y-0 sm:max-w-4xl">
       <div className="relative">
         <CommandInput placeholder="Search" />
         <button onClick={() => setOpen(false)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground cursor-pointer">
