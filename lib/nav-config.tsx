@@ -142,3 +142,81 @@ export const supportItems: NavItem[] = [
   { title: "Settings", icon: Settings, href: "/settings" },
   { title: "Help & Docs", icon: HelpCircle, href: "/help" },
 ]
+
+// ─────────────────────────────────────────────
+// YAYASAN AL MA'SOEM — Tenant-specific navigation
+// ─────────────────────────────────────────────
+
+import {
+  Users,
+  CalendarCheck,
+  Wallet,
+  Calculator,
+  FileStack,
+  ClipboardCheck,
+  BarChart3,
+  Scale,
+  Mail,
+  MailOpen,
+  FileCheck,
+  GraduationCap,
+  Heart,
+  TrendingUp as TrendingUpIcon,
+  Receipt,
+} from "lucide-react"
+
+export const yayasanCoreModules: NavItem[] = [
+  {
+    title: "Dashboard Eksekutif",
+    icon: BarChart3,
+    href: "/executive",
+  },
+  {
+    title: "SDM",
+    icon: Users,
+    items: [
+      { title: "Manajemen SDM", href: "/sdm" },
+      { title: "Kehadiran", href: "/sdm/kehadiran" },
+      { title: "Penggajian", href: "/sdm/penggajian" },
+      { title: "Kinerja", href: "/sdm/kinerja" },
+    ],
+  },
+  {
+    title: "Keuangan",
+    icon: Wallet,
+    items: [
+      { title: "Manajemen Keuangan", href: "/keuangan" },
+      { title: "Arus Kas", href: "/keuangan/arus-kas" },
+      { title: "Anggaran", href: "/keuangan/anggaran" },
+      { title: "Persetujuan", href: "/keuangan/persetujuan" },
+    ],
+  },
+]
+
+export const yayasanBusinessModules: NavItem[] = [
+  {
+    title: "Akuntansi",
+    icon: Calculator,
+    items: [
+      { title: "Manajemen Akuntansi", href: "/akuntansi" },
+      { title: "Jurnal Umum", href: "/akuntansi/jurnal" },
+      { title: "Laporan Keuangan", href: "/akuntansi/laporan" },
+      { title: "Neraca", href: "/akuntansi/neraca" },
+    ],
+  },
+  {
+    title: "Kesekretariatan",
+    icon: FileStack,
+    items: [
+      { title: "Manajemen Arsip", href: "/kesekretariatan" },
+      { title: "Surat Masuk", href: "/kesekretariatan/surat-masuk" },
+      { title: "Surat Keluar", href: "/kesekretariatan/surat-keluar" },
+      { title: "Dokumen Legal", href: "/kesekretariatan/legal" },
+    ],
+  },
+]
+
+export const yayasanSupportItems: NavItem[] = [
+  { title: "Pengaturan", icon: Settings, href: "/settings" },
+  { title: "Bantuan", icon: HelpCircle, href: "/help" },
+]

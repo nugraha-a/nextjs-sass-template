@@ -3,10 +3,13 @@
 import React, { useEffect, useState, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import {
   ChevronsUpDown,
   Sparkles,
   ChevronRight,
+  Check,
+  Building2,
   Globe,
   Palette,
   Key,
@@ -57,9 +60,13 @@ import {
   kernelModules,
   businessModules,
   supportItems,
+  yayasanCoreModules,
+  yayasanBusinessModules,
+  yayasanSupportItems,
   type NavItem,
   type NavSubItem,
 } from "@/lib/nav-config"
+import { useTenant } from "@/contexts/tenant-context"
 
 function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActive: boolean }) {
   const ref = useRef<HTMLAnchorElement>(null)
@@ -250,11 +257,17 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   const pathname = usePathname()
   const { sidebarMode, setSidebarMode } = useThemeSettings()
   const { open, setOpen, isMobile, setOpenMobile } = useSidebar()
+  const { tenant, tenantId, setTenant, allTenants } = useTenant()
   const [openGroups, setOpenGroups] = useState<string[]>([])
+
+  // Tenant-aware module resolution
+  const activeKernel = tenantId === "yayasan" ? yayasanCoreModules : kernelModules
+  const activeBusiness = tenantId === "yayasan" ? yayasanBusinessModules : businessModules
+  const activeSupport = tenantId === "yayasan" ? yayasanSupportItems : supportItems
 
   // Helper to find the active group based on current path
   const getActiveGroupTitle = () => {
-    const allGroups = [...kernelModules, ...businessModules, ...supportItems]
+    const allGroups = [...activeKernel, ...activeBusiness, ...activeSupport]
     return allGroups.find(g => 
        g.items?.some(i => pathname === i.href || pathname.startsWith(i.href + '/'))
     )?.title
@@ -364,15 +377,21 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                   size="lg"
                   className="data-[state=open]:bg-sidebar-primary/10 data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-primary/5 transition-colors duration-150"
                 >
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
-                    <Sparkles className="size-4" />
-                  </div>
+                  {tenantId === "yayasan" ? (
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-white/90 shrink-0 border border-white/20 shadow-sm overflow-hidden">
+                      <Image src="/images/yab.png" alt="YAB" width={32} height={32} className="size-6 object-contain" />
+                    </div>
+                  ) : (
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
+                      <Sparkles className="size-4" />
+                    </div>
+                  )}
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold tracking-tight text-foreground">
-                      Acme Inc
+                      {tenant.name}
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      Nextjs SaaS Template
+                      {tenant.subtitle}
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
@@ -384,15 +403,19 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                 side="bottom"
                 sideOffset={4}
               >
-                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
-                  <Sparkles className="mr-2 size-4" />
-                  Acme Inc 
-                </DropdownMenuItem>
+                <DropdownMenuLabel className="text-xs text-muted-foreground font-normal px-2 py-1.5">Workspaces</DropdownMenuLabel>
+                {allTenants.map((t) => (
+                  <DropdownMenuItem
+                    key={t.id}
+                    className="text-foreground focus:bg-accent focus:text-accent-foreground"
+                    onClick={() => setTenant(t.id)}
+                  >
+                    {t.id === "yayasan" ? <Building2 className="mr-2 size-4" /> : <Sparkles className="mr-2 size-4" />}
+                    <span className="flex-1">{t.name}</span>
+                    {tenantId === t.id && <Check className="ml-2 size-4 text-primary" />}
+                  </DropdownMenuItem>
+                ))}
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem className="text-muted-foreground focus:bg-accent focus:text-accent-foreground">
-                  <Globe className="mr-2 size-4" />
-                  Switch tenant
-                </DropdownMenuItem>
                 <DropdownMenuItem className="text-muted-foreground focus:bg-accent focus:text-accent-foreground">
                   <Palette className="mr-2 size-4" />
                   Customize branding
@@ -419,11 +442,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
-            Core Kernel
+            {tenantId === "yayasan" ? "Modul Inti" : "Core Kernel"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {kernelModules.map((item) => (
+              {activeKernel.map((item) => (
                 <NavItemWithSub 
                   key={item.title} 
                   item={item} 
@@ -439,11 +462,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
-            Business Modules
+            {tenantId === "yayasan" ? "Modul Operasional" : "Business Modules"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {businessModules.map((item) => (
+              {activeBusiness.map((item) => (
                 <NavItemWithSub 
                   key={item.title} 
                   item={item} 
@@ -459,11 +482,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest px-1 mb-1">
-            Support
+            {tenantId === "yayasan" ? "Dukungan" : "Support"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {supportItems.map((item) => (
+              {activeSupport.map((item) => (
                 <NavItemWithSub 
                   key={item.title} 
                   item={item} 

@@ -19,18 +19,20 @@ import {
 import { SearchCommand } from "@/components/dashboard/search-command"
 import { NotificationPopover } from "@/components/dashboard/notification-popover"
 
-import { kernelModules, businessModules, supportItems } from "@/lib/nav-config"
+import {
+  kernelModules, businessModules, supportItems,
+  yayasanCoreModules, yayasanBusinessModules, yayasanSupportItems,
+  type NavItem,
+} from "@/lib/nav-config"
+import { useTenant } from "@/contexts/tenant-context"
 
-function getBreadcrumbs(pathname: string) {
+function getBreadcrumbs(pathname: string, allModules: NavItem[]) {
   const crumbs = [{ label: "Dashboard", href: "/" }]
   
   if (pathname === "/") {
     crumbs.push({ label: "Overview", href: "/" })
     return crumbs
   }
-
-  // Helper to find path in modules
-  const allModules = [...kernelModules, ...businessModules, ...supportItems]
   
   for (const module of allModules) {
     // Check if it matches a top-level item
@@ -100,10 +102,17 @@ function getBreadcrumbs(pathname: string) {
 export function DashboardHeader() {
   const { toggleSidebar, isMobile } = useSidebar()
   const { sidebarMode, setSidebarMode } = useThemeSettings()
+  const { tenantId } = useTenant()
   const pathname = usePathname()
-  const breadcrumbs = getBreadcrumbs(pathname)
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileTabsOpen, setMobileTabsOpen] = useState(false)
+
+  // Tenant-aware module resolution for breadcrumbs
+  const allModules = tenantId === "yayasan"
+    ? [...yayasanCoreModules, ...yayasanBusinessModules, ...yayasanSupportItems]
+    : [...kernelModules, ...businessModules, ...supportItems]
+
+  const breadcrumbs = getBreadcrumbs(pathname, allModules)
 
   const handleSidebarToggle = () => {
     // Mobile always uses toggleSidebar for offcanvas
@@ -194,42 +203,79 @@ export function DashboardHeader() {
 
       {/* Bottom Row: Module Tabs (Full Width) */}
       <div className={`px-0 -mb-px items-center overflow-x-auto no-scrollbar border-b border-transparent ${mobileTabsOpen ? 'flex' : 'hidden'} md:flex`}>
-        <Link 
-          href="/" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          Overview
-        </Link>
-        <Link 
-          href="/config" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/config") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          Configuration
-        </Link>
-        <Link 
-          href="/tenants" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/tenants") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          Tenants
-        </Link>
-        <Link 
-          href="/iam" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/iam") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          IAM
-        </Link>
-        <Link 
-          href="/workflow" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/workflow") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          Workflow
-        </Link>
-        <Link 
-          href="/finance" 
-          className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/finance") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
-        >
-          Finance
-        </Link>
+        {tenantId === "yayasan" ? (
+          <>
+            <Link 
+              href="/executive" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/executive") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Eksekutif
+            </Link>
+            <Link 
+              href="/sdm" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/sdm") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              SDM
+            </Link>
+            <Link 
+              href="/keuangan" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/keuangan") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Keuangan
+            </Link>
+            <Link 
+              href="/akuntansi" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/akuntansi") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Akuntansi
+            </Link>
+            <Link 
+              href="/kesekretariatan" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/kesekretariatan") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Kesekretariatan
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link 
+              href="/" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Overview
+            </Link>
+            <Link 
+              href="/config" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/config") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Configuration
+            </Link>
+            <Link 
+              href="/tenants" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/tenants") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Tenants
+            </Link>
+            <Link 
+              href="/iam" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/iam") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              IAM
+            </Link>
+            <Link 
+              href="/workflow" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/workflow") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Workflow
+            </Link>
+            <Link 
+              href="/finance" 
+              className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/finance") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
+            >
+              Finance
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Mobile Toggle Ribbon */}
