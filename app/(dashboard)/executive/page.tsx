@@ -72,28 +72,32 @@ const kpiData = [
       { label: "Total Pegawai", value: 424, suffix: "", trend: "up" as const, trendVal: "+3.8%", color: "text-primary" },
       { label: "Kehadiran", value: 96, suffix: "%", trend: "up" as const, trendVal: "+1.2%", color: "text-emerald-500" },
       { label: "Skor Kinerja", value: 87, suffix: "/100", trend: "up" as const, trendVal: "+2.3%", color: "text-blue-500" },
-    ]
+    ],
+    sparkData: [400, 405, 410, 412, 415, 418, 420, 422, 424, 424, 424]
   },
   {
     module: "Keuangan", icon: Wallet, kpis: [
       { label: "Saldo Kas", value: 3100, suffix: " jt", trend: "up" as const, trendVal: "+24%", color: "text-primary" },
       { label: "Pemasukan", value: 3800, suffix: " jt", trend: "up" as const, trendVal: "+8.6%", color: "text-emerald-500" },
       { label: "Realisasi", value: 72, suffix: "%", trend: "up" as const, trendVal: "+6.2%", color: "text-blue-500" },
-    ]
+    ],
+    sparkData: [2800, 2900, 2850, 3000, 3100, 3200, 3050, 3150, 3300, 3200, 3100]
   },
   {
     module: "Akuntansi", icon: Calculator, kpis: [
       { label: "Total Jurnal", value: 142, suffix: "", trend: "up" as const, trendVal: "+12", color: "text-primary" },
       { label: "Laba Bersih", value: 700, suffix: " jt", trend: "up" as const, trendVal: "+55.6%", color: "text-emerald-500" },
       { label: "Tutup Buku", value: 16, suffix: " hari", trend: "down" as const, trendVal: "H-16", color: "text-amber-500" },
-    ]
+    ],
+    sparkData: [100, 110, 105, 120, 115, 125, 130, 128, 135, 140, 142]
   },
   {
     module: "Kesekretariatan", icon: Mail, kpis: [
       { label: "Surat Masuk", value: 128, suffix: "", trend: "up" as const, trendVal: "+15.3%", color: "text-primary" },
       { label: "Disposisi", value: 93, suffix: "%", trend: "up" as const, trendVal: "+1.2%", color: "text-emerald-500" },
       { label: "Dokumen Legal", value: 52, suffix: "", trend: "up" as const, trendVal: "+4", color: "text-blue-500" },
-    ]
+    ],
+    sparkData: [80, 85, 90, 88, 92, 95, 100, 110, 115, 120, 128]
   },
 ]
 
@@ -156,24 +160,84 @@ function QuickLink({ icon, label, description }: { icon: React.ReactNode; label:
   )
 }
 
-/* ─── Stat Mini ────────────────────────────────────────── */
+/* ─── Module Stat Card ─────────────────────────────────── */
 
-function StatMini({ label, value, suffix, trend, trendVal, color }: {
-  label: string; value: number; suffix: string; trend: "up" | "down"; trendVal: string; color: string
+function ModuleStatCard({ module, icon: Icon, kpis, sparkData }: {
+  module: string; icon: any; kpis: typeof kpiData[0]["kpis"]; sparkData?: number[]
 }) {
-  const animated = useCountUp(value)
+  const primaryKpi = kpis[0]
+  const secondaryKpis = kpis.slice(1)
+  const animatedPrimary = useCountUp(primaryKpi.value)
+  const gradientId = useId()
+
+  const chartData = sparkData ? sparkData.map((v, i) => ({ i, v })) : []
+
   return (
-    <div className="flex items-center justify-between py-1.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className={`text-sm font-bold tabular-nums ${color}`}>
-          {animated.toLocaleString("id-ID")}{suffix}
-        </span>
-        <Badge variant="secondary" className={`text-[9px] px-1 py-0 h-4 border-0 ${trend === "up" ? "text-emerald-400" : "text-amber-400"}`}>
-          {trendVal}
-        </Badge>
-      </div>
-    </div>
+    <Card className="bg-card border border-border group hover:border-primary/30 transition-colors duration-200 shadow-sm relative overflow-hidden">
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className={`flex size-8 items-center justify-center rounded-lg ${primaryKpi.color.replace("text-", "bg-")}/10 ${primaryKpi.color}`}>
+              <Icon className="size-4" />
+            </div>
+            <h3 className="font-semibold text-card-foreground text-sm tracking-tight">{module}</h3>
+          </div>
+          <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-normal bg-muted text-muted-foreground border-0">
+            Real-time
+          </Badge>
+        </div>
+
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground mb-0.5">{primaryKpi.label}</p>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-bold text-foreground tracking-tight">
+                {animatedPrimary.toLocaleString("id-ID")}<span className="text-sm font-medium text-muted-foreground ml-0.5">{primaryKpi.suffix}</span>
+              </span>
+            </div>
+            <div className={`flex items-center gap-1 mt-1 text-[11px] font-medium ${primaryKpi.trend === "up" ? "text-emerald-500" : "text-amber-500"}`}>
+              {primaryKpi.trend === "up" ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
+              <span>{primaryKpi.trendVal}</span>
+              <span className="text-muted-foreground font-normal ml-0.5">vs bulan lalu</span>
+            </div>
+          </div>
+          <div className="w-24 h-12 -mb-1 opacity-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <Area 
+                  type="monotone" 
+                  dataKey="v" 
+                  stroke="var(--primary)" 
+                  strokeWidth={1.5} 
+                  fill={`url(#${gradientId})`} 
+                  dot={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/50">
+          {secondaryKpis.map((kpi, i) => (
+            <div key={i}>
+              <p className="text-[10px] text-muted-foreground mb-0.5 truncate">{kpi.label}</p>
+              <p className="text-sm font-semibold text-foreground">
+                {kpi.value.toLocaleString("id-ID")}{kpi.suffix}
+              </p>
+              <p className={`text-[9px] mt-0.5 flex items-center gap-0.5 ${kpi.trend === "up" ? "text-emerald-500" : "text-amber-500"}`}>
+                {kpi.trendVal}
+              </p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -209,19 +273,11 @@ export default function ExecutiveDashboardPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-foreground">{totalPegawai}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Total Pegawai</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-foreground">Rp {saldoKas.toLocaleString("id-ID")} jt</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Saldo Kas</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-foreground">{kehadiranRata}%</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Kehadiran</p>
-              </div>
+            <div className="relative z-10 grid grid-cols-2 gap-3 mt-4">
+              <QuickLink icon={<BarChart3 className="size-4" />} label="Laporan Terpadu" description="Analisis performa seluruh unit" />
+              <QuickLink icon={<FileCheck className="size-4" />} label="Persetujuan" description="4 pengajuan menunggu approval" />
+              <QuickLink icon={<Building2 className="size-4" />} label="Indikator Kinerja" description="KPI mingguan per departemen" />
+              <QuickLink icon={<Wallet className="size-4" />} label="Arus Kas Global" description="Monitoring keuangan real-time" />
             </div>
           </CardContent>
         </Card>
@@ -300,21 +356,7 @@ export default function ExecutiveDashboardPage() {
       {/* ─── Row 2: 4 KPI Module Cards ────────────────────── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpiData.map((mod) => (
-          <Card key={mod.module} className="bg-card border border-border group hover:border-primary/30 transition-colors duration-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary shrink-0">
-                  <mod.icon className="size-4" />
-                </div>
-                <p className="text-sm font-semibold text-card-foreground">{mod.module}</p>
-              </div>
-              <div className="space-y-0.5 divide-y divide-border">
-                {mod.kpis.map((kpi) => (
-                  <StatMini key={kpi.label} {...kpi} />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <ModuleStatCard key={mod.module} {...mod} />
         ))}
       </div>
 
