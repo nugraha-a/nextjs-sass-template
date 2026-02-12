@@ -23,13 +23,15 @@ import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, typ
 import { cn } from "@/lib/utils"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
-  { value: "zinc", label: "Zinc", preview: "bg-zinc-500" },
+  { value: "carbon", label: "Carbon", preview: "bg-[oklch(0.25_0.015_260)]" },
   { value: "slate", label: "Slate", preview: "bg-slate-500" },
-  { value: "neutral", label: "Neutral", preview: "bg-neutral-500" },
+  { value: "navy", label: "Navy", preview: "bg-[oklch(0.35_0.14_255)]" },
   { value: "blue", label: "Blue", preview: "bg-blue-500" },
+  { value: "indigo", label: "Indigo", preview: "bg-indigo-500" },
+  { value: "teal", label: "Teal", preview: "bg-teal-500" },
   { value: "green", label: "Green", preview: "bg-emerald-500" },
-  { value: "orange", label: "Orange", preview: "bg-orange-500" },
-  { value: "rose", label: "Rose", preview: "bg-rose-500" },
+  { value: "amber", label: "Amber", preview: "bg-amber-600" },
+  { value: "crimson", label: "Crimson", preview: "bg-[oklch(0.42_0.16_25)]" },
 ]
 
 const fontFamilies: { value: FontFamily; label: string }[] = [
@@ -230,8 +232,8 @@ export function ThemeSettingsPanel() {
                 Color Scheme
               </Label>
             </div>
-            <div className="grid grid-cols-4 gap-1.5">
-              {colorSchemes.slice(0, 4).map((scheme) => (
+            <div className="grid grid-cols-3 gap-1.5">
+              {colorSchemes.map((scheme) => (
                 <ColorSchemeButton
                   key={scheme.value}
                   scheme={scheme}
@@ -239,18 +241,6 @@ export function ThemeSettingsPanel() {
                   onClick={() => setColorScheme(scheme.value)}
                 />
               ))}
-            </div>
-            <div className="grid grid-cols-4 gap-1.5">
-              {colorSchemes.slice(4).map((scheme) => (
-                <ColorSchemeButton
-                  key={scheme.value}
-                  scheme={scheme}
-                  isSelected={colorScheme === scheme.value}
-                  onClick={() => setColorScheme(scheme.value)}
-                />
-              ))}
-              {/* Empty placeholder to fill the 4th column */}
-              <div className="hidden" />
             </div>
           </div>
 

@@ -1,11 +1,26 @@
 export const themeScript = `
 (function() {
   try {
-    const storageKey = 'next-sass-theme-settings';
-    const stored = localStorage.getItem(storageKey);
+    var storageKey = 'next-sass-theme-settings';
+    var stored = localStorage.getItem(storageKey);
     var root = document.documentElement;
+
+    // Migration map: old scheme names → new scheme names
+    var migrationMap = {
+      'zinc': 'carbon',
+      'neutral': 'slate',
+      'orange': 'teal',
+      'rose': 'crimson'
+    };
+
     if (stored) {
       var settings = JSON.parse(stored);
+
+      // Auto-remap old color schemes to new ones
+      if (settings.colorScheme && migrationMap[settings.colorScheme]) {
+        settings.colorScheme = migrationMap[settings.colorScheme];
+        localStorage.setItem(storageKey, JSON.stringify(settings));
+      }
       
       if (settings.themeMode === 'system') {
         var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -29,7 +44,7 @@ export const themeScript = `
       root.classList.add('light');
       root.setAttribute('data-font-size', 'small');
       root.setAttribute('data-font-family', 'geist');
-      root.setAttribute('data-color-scheme', 'slate');
+      root.setAttribute('data-color-scheme', 'carbon');
       root.setAttribute('data-sidebar-mode', 'normal');
       root.setAttribute('data-sidebar-theme', 'aurora');
       root.setAttribute('data-content-mode', 'full');

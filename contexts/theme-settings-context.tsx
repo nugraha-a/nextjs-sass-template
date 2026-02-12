@@ -9,7 +9,7 @@ export type ContentMode = "compact" | "full"
 export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
-export type ColorScheme = "zinc" | "slate" | "neutral" | "blue" | "green" | "orange" | "rose"
+export type ColorScheme = "carbon" | "slate" | "navy" | "blue" | "indigo" | "teal" | "green" | "amber" | "crimson"
 
 interface ThemeSettings {
   sidebarMode: SidebarMode
@@ -40,7 +40,7 @@ const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
   sidebarTheme: "default",
   themeMode: "light",
-  colorScheme: "slate",
+  colorScheme: "carbon",
   fontFamily: "geist",
   fontSize: "small",
   contentMode: "full",
@@ -72,9 +72,24 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     if (stored) {
       try {
         const parsed = JSON.parse(stored)
+        // Migrate old color scheme names to new ones
+        const migrationMap: Record<string, ColorScheme> = {
+          zinc: "carbon",
+          neutral: "slate",
+          orange: "teal",
+          rose: "crimson",
+        }
+        const needsMigration = parsed.colorScheme && migrationMap[parsed.colorScheme]
+        if (needsMigration) {
+          parsed.colorScheme = migrationMap[parsed.colorScheme]
+        }
         setSettings({ ...defaultSettings, ...parsed })
         if (parsed.themeMode) {
           setTheme(parsed.themeMode)
+        }
+        // Persist migrated settings
+        if (needsMigration) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...defaultSettings, ...parsed }))
         }
       } catch {
         // Invalid JSON, use defaults
