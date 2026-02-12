@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import {
   Globe,
   Palette,
@@ -20,6 +20,10 @@ import {
   Monitor,
   Languages,
   Hash,
+  Zap,
+  Shield,
+  ChevronRight,
+  TrendingUp,
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -36,6 +40,14 @@ import {
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import {
+  Area,
+  AreaChart,
+  Pie,
+  PieChart,
+  Cell,
+  ResponsiveContainer,
+} from "recharts"
 
 /* ─── Data ─────────────────────────────────────────────── */
 
@@ -66,6 +78,35 @@ const localeOptions = {
   fiscalYears: ["January — December", "April — March", "July — June", "October — September"],
 }
 
+const featurePieData = [
+  { name: "Enabled", value: 5 },
+  { name: "Disabled", value: 3 },
+]
+const featurePieColors = ["var(--color-primary)", "var(--color-muted)"]
+
+/* ─── Animated counter hook ────────────────────────────── */
+
+function useCountUp(target: number, duration = 1200) {
+  const [count, setCount] = useState(0)
+  const hasAnimated = useRef(false)
+
+  useEffect(() => {
+    if (hasAnimated.current) return
+    hasAnimated.current = true
+    const startTime = performance.now()
+    const animate = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * target))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+  }, [target, duration])
+
+  return count
+}
+
 /* ─── Shared Field Wrapper ─────────────────────────────── */
 
 function FormField({
@@ -87,6 +128,69 @@ function FormField({
       </div>
       {children}
     </div>
+  )
+}
+
+/* ─── Quick Link ───────────────────────────────────────── */
+
+function QuickLink({ icon, label, description }: { icon: React.ReactNode; label: string; description: string }) {
+  return (
+    <div className="flex items-start gap-2.5 p-2.5 rounded-lg bg-background/60 border border-border/50 hover:border-primary/30 hover:bg-background transition-colors cursor-pointer group">
+      <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary shrink-0 group-hover:bg-primary/15 transition-colors">
+        {icon}
+      </div>
+      <div>
+        <p className="text-[12px] font-medium text-card-foreground">{label}</p>
+        <p className="text-[10px] text-muted-foreground leading-relaxed">{description}</p>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Stat Card with Sparkline ─────────────────────────── */
+
+function StatCard({ label, value, change, chartColor }: {
+  label: string; value: number; change: string; chartColor: string
+}) {
+  const count = useCountUp(value)
+  const sparkData = [35, 50, 40, 60, 45, 70, 55, 80, 60, 90, 65, 85].map((v, i) => ({ i, v }))
+
+  return (
+    <Card className="bg-card border border-border hover:border-primary/30 transition-colors">
+      <CardContent className="p-4 pb-3">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[12px] font-medium text-card-foreground">{label}</p>
+          <Badge variant="secondary" className="text-[9px] bg-primary/10 text-primary border-0 h-4 px-1.5">
+            config
+          </Badge>
+        </div>
+        <p className="text-2xl font-bold text-foreground tracking-tight">{count}</p>
+        <div className="flex items-center gap-1.5 mt-2">
+          <div className="flex items-center gap-0.5 text-[11px] font-medium text-emerald-500">
+            <TrendingUp className="size-3" />
+            {change}
+          </div>
+        </div>
+        <div className="h-8 mt-2 -mx-1">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={sparkData}>
+              <defs>
+                <linearGradient id={`spark-config-${label}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={chartColor} stopOpacity={0.3} />
+                  <stop offset="100%" stopColor={chartColor} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area type="monotone" dataKey="v" stroke={chartColor} strokeWidth={1.5} fill={`url(#spark-config-${label})`} dot={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="mt-2">
+          <Button variant="link" size="sm" className="text-primary text-[11px] p-0 h-auto">
+            Details <ChevronRight className="size-3 ml-0.5" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -126,35 +230,125 @@ export default function ConfigPage() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-foreground tracking-tight">
-            Configuration Engine
-          </h1>
-          <p className="text-[13px] text-muted-foreground mt-1">
-            Customize terminology, localization, and feature toggles without code changes
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent"
-          >
-            <RotateCcw className="size-3.5 mr-1.5" />
-            Reset
-          </Button>
-          <Button
-            size="sm"
-            className="h-8 bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            <Save className="size-3.5 mr-1.5" />
-            Save Changes
-          </Button>
-        </div>
+      {/* ─── Row 1: Welcome Banner + Feature Summary + Last Update ─── */}
+      <div className="grid gap-4 lg:grid-cols-12">
+        {/* Welcome Banner */}
+        <Card className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-20 h-20 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <CardContent className="p-5">
+            <h2 className="text-lg font-semibold text-foreground">
+              Configuration Engine
+            </h2>
+            <p className="text-[12px] text-muted-foreground mt-1">
+              Customize terminology, localization, and features
+            </p>
+            <div className="relative z-10 grid grid-cols-2 gap-3 mt-4">
+              <QuickLink icon={<Tags className="size-4" />} label="Terminology" description="Customize org labels" />
+              <QuickLink icon={<Globe className="size-4" />} label="Localization" description="Language & regional" />
+              <QuickLink icon={<ToggleLeft className="size-4" />} label="Feature Flags" description="Enable/disable modules" />
+              <QuickLink icon={<Palette className="size-4" />} label="Branding" description="Colors & identity" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Feature Summary Donut */}
+        <Card className="lg:col-span-4 bg-card border border-border">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-card-foreground">
+                Feature Overview
+              </CardTitle>
+              <Button variant="link" size="sm" className="text-primary text-[11px] p-0 h-auto">
+                Manage <ChevronRight className="size-3 ml-0.5" />
+              </Button>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              {enabledCount} of {featureFlags.length} features currently enabled
+            </p>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="flex items-center justify-center py-2">
+              <div className="relative size-32">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={featurePieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={38}
+                      outerRadius={54}
+                      paddingAngle={3}
+                      dataKey="value"
+                      strokeWidth={0}
+                    >
+                      {featurePieData.map((_, idx) => (
+                        <Cell key={idx} fill={featurePieColors[idx]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xl font-bold text-foreground">{enabledCount}/{featureFlags.length}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 mt-1">
+              {featurePieData.map((entry, idx) => (
+                <div key={entry.name} className="flex items-center gap-1.5">
+                  <div className="size-2 rounded-full" style={{ backgroundColor: featurePieColors[idx] }} />
+                  <span className="text-[10px] text-muted-foreground">{entry.name} ({entry.value})</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Config Status */}
+        <Card className="lg:col-span-3 bg-card border border-border">
+          <CardContent className="p-5 flex flex-col h-full justify-between">
+            <div>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Last updated</p>
+              <h3 className="text-sm font-semibold text-primary mt-1">
+                System Configuration
+              </h3>
+              <Badge className="mt-2 bg-primary/10 text-primary border-0 text-[10px]">
+                <Clock className="size-3 mr-1" /> 2 hours ago
+              </Badge>
+              <p className="text-[11px] text-muted-foreground mt-3 leading-relaxed">
+                All settings synced. 5 features enabled, 3 locales configured.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 h-8 border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent text-xs"
+              >
+                <RotateCcw className="size-3 mr-1.5" />
+                Reset
+              </Button>
+              <Button
+                size="sm"
+                className="flex-1 h-8 bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+              >
+                <Save className="size-3 mr-1.5" />
+                Save
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
+      {/* ─── Row 2: Sparkline Stats ─── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Active Features" value={enabledCount} change="+2 this month" chartColor="var(--color-primary)" />
+        <StatCard label="Custom Terms" value={customTerms.length + terminologyConfig.length} change="+1 added" chartColor="var(--color-chart-2)" />
+        <StatCard label="Locales" value={3} change="Stable" chartColor="var(--color-chart-3)" />
+        <StatCard label="Config Changes" value={47} change="+12 this week" chartColor="var(--color-chart-4)" />
+      </div>
+
+      {/* ─── Row 3: Tabs ─── */}
       <Tabs defaultValue="terminology" className="space-y-0">
         <div className="overflow-x-auto pb-1 -mb-1">
           <TabsList className="bg-transparent p-0 h-auto rounded-none border-b border-border w-full justify-start">
