@@ -3,12 +3,12 @@ export const themeScript = `
   try {
     const storageKey = 'next-sass-theme-settings';
     const stored = localStorage.getItem(storageKey);
+    var root = document.documentElement;
     if (stored) {
-      const settings = JSON.parse(stored);
-      const root = document.documentElement;
+      var settings = JSON.parse(stored);
       
       if (settings.themeMode === 'system') {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         root.classList.add(systemTheme);
       } else if (settings.themeMode) {
         root.classList.add(settings.themeMode);
@@ -25,6 +25,16 @@ export const themeScript = `
       if (settings.contentMode) root.setAttribute('data-content-mode', settings.contentMode);
       if (settings.contentView) root.setAttribute('data-content-view', settings.contentView);
       if (settings.radius) root.style.setProperty('--radius', settings.radius + 'rem');
+    } else {
+      root.classList.add('light');
+      root.setAttribute('data-font-size', 'small');
+      root.setAttribute('data-font-family', 'geist');
+      root.setAttribute('data-color-scheme', 'slate');
+      root.setAttribute('data-sidebar-mode', 'normal');
+      root.setAttribute('data-sidebar-theme', 'aurora');
+      root.setAttribute('data-content-mode', 'full');
+      root.setAttribute('data-content-view', 'carded');
+      root.style.setProperty('--radius', '0.5rem');
     }
   } catch (e) {
     console.error('Failed to apply theme settings', e);

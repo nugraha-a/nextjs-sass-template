@@ -501,6 +501,36 @@ html[data-font-family="jakarta"] body {
 [data-content-view="boxed"] .content-container > div > .grid > *,
 [data-content-view="boxed"] .content-container [role="tabpanel"] > .grid > * {
   background-color: var(--card) !important;
+  padding: 0 !important;
+}
+
+/* --- 6b. NESTED GRIDS (e.g. stat cards 2×2 inside 12-col row) --- */
+[data-content-view="boxed"] .content-container > div > .grid > .grid {
+  gap: 1px !important;
+  background-color: var(--boxed-divider) !important;
+  padding: 0 !important;
+}
+[data-content-view="boxed"] .content-container > div > .grid > .grid > * {
+  background-color: var(--card) !important;
+}
+
+/* --- 6c. GRID CELL CARDS — ensure they fill and have no margin overflow --- */
+[data-content-view="boxed"] .content-container > div > .grid > [data-slot="card"] {
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: var(--card) !important;
+}
+[data-content-view="boxed"] .content-container > div > .grid > .grid > [data-slot="card"] {
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: var(--card) !important;
+}
+
+/* --- 7. ROW DIVIDERS — border-bottom on EVERY direct child (overrides rule 10) --- */
+[data-content-view="boxed"] .content-container > div > *:not(:last-child) {
+  border-bottom: 1px solid var(--boxed-divider) !important;
 }
 
 /* --- 10. CARDS — Flat, no own decoration --- */
@@ -508,7 +538,12 @@ html[data-font-family="jakarta"] body {
 [data-content-view="boxed"] .content-container .card,
 [data-content-view="boxed"] .content-container .bg-card {
   border-radius: 0 !important;
-  border-color: transparent !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom-color: transparent !important;
+  border-bottom-style: solid !important;
+  border-bottom-width: 0 !important;
   box-shadow: none !important;
   background-color: var(--card) !important;
 }

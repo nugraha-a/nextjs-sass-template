@@ -38,11 +38,11 @@ interface ThemeSettingsContextType extends ThemeSettings {
 
 const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
-  sidebarTheme: "default",
-  themeMode: "system",
-  colorScheme: "zinc",
-  fontFamily: "inter",
-  fontSize: "medium",
+  sidebarTheme: "aurora",
+  themeMode: "light",
+  colorScheme: "slate",
+  fontFamily: "geist",
+  fontSize: "small",
   contentMode: "full",
   contentView: "carded",
   radius: 0.5,
