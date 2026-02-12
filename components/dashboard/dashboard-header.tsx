@@ -233,7 +233,7 @@ export function DashboardHeader() {
       </div>
 
       {/* Mobile Toggle Ribbon */}
-      <div className="absolute left-1/2 -bottom-[22px] -translate-x-1/2 z-10 md:hidden">
+      <div className="absolute left-1/2 -bottom-5 -translate-x-1/2 z-10 md:hidden">
         <Button
           variant="secondary"
           size="sm"
