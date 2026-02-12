@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, Search, Command, PanelLeft } from "lucide-react"
+import { ChevronRight, Search, Command, PanelLeft, ChevronDown, ChevronUp } from "lucide-react"
 import { useSidebar } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeSettingsPanel } from "@/components/dashboard/theme-settings-panel"
@@ -103,6 +103,7 @@ export function DashboardHeader() {
   const pathname = usePathname()
   const breadcrumbs = getBreadcrumbs(pathname)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [mobileTabsOpen, setMobileTabsOpen] = useState(false)
 
   const handleSidebarToggle = () => {
     // Mobile always uses toggleSidebar for offcanvas
@@ -124,7 +125,7 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="flex flex-col border-b border-border bg-background">
+    <header className="relative flex flex-col border-b border-border bg-background">
       <SearchCommand open={searchOpen} setOpen={setSearchOpen} />
       
       {/* Top Row: Sidebar Trigger & Breadcrumbs */}
@@ -192,7 +193,7 @@ export function DashboardHeader() {
       </div>
 
       {/* Bottom Row: Module Tabs (Full Width) */}
-      <div className="px-0 -mb-px flex items-center overflow-x-auto no-scrollbar border-b border-transparent">
+      <div className={`px-0 -mb-px items-center overflow-x-auto no-scrollbar border-b border-transparent ${mobileTabsOpen ? 'flex' : 'hidden'} md:flex`}>
         <Link 
           href="/" 
           className={`relative h-10 flex items-center justify-center border-b-2 px-4 text-[13px] transition-colors duration-150 ${isTabActive("/") ? "border-primary text-foreground font-medium" : "border-transparent text-muted-foreground hover:text-foreground/80"}`}
@@ -229,6 +230,22 @@ export function DashboardHeader() {
         >
           Finance
         </Link>
+      </div>
+
+      {/* Mobile Toggle Ribbon */}
+      <div className="absolute left-1/2 -bottom-[22px] -translate-x-1/2 z-10 md:hidden">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="h-4 w-12 rounded-b-lg rounded-t-none border-x border-b border-border shadow-sm p-0 hover:bg-accent"
+          onClick={() => setMobileTabsOpen(!mobileTabsOpen)}
+        >
+          {mobileTabsOpen ? (
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          )}
+        </Button>
       </div>
     </header>
   )
