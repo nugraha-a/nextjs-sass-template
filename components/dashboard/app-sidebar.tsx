@@ -67,6 +67,8 @@ import {
   type NavSubItem,
 } from "@/lib/nav-config"
 import { useTenant } from "@/contexts/tenant-context"
+import { useAuth } from "@/contexts/auth-context"
+import { useRouter } from "next/navigation"
 
 function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActive: boolean }) {
   const ref = useRef<HTMLAnchorElement>(null)
@@ -255,9 +257,11 @@ interface AppSidebarProps {
 
 export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { sidebarMode, setSidebarMode } = useThemeSettings()
   const { open, setOpen, isMobile, setOpenMobile } = useSidebar()
   const { tenant, tenantId, setTenant, allTenants } = useTenant()
+  const { user, logout, isDemo } = useAuth()
   const [openGroups, setOpenGroups] = useState<string[]>([])
 
   // Tenant-aware module resolution
@@ -510,15 +514,15 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                 >
                   <Avatar className="size-8 rounded-md shrink-0">
                     <AvatarFallback className="rounded-md bg-secondary text-muted-foreground text-xs font-medium">
-                      AD
+                      {user?.name ? user.name.split(" ").map(n => n[0]).join("").slice(0,2).toUpperCase() : "DU"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium tracking-tight text-foreground text-[13px]">
-                      Admin User
+                      {user?.name || (isDemo ? "Demo User" : "User")}
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      Super Admin
+                      {user?.email || (isDemo ? "demo@company.com" : "user@company.com")}
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
@@ -530,16 +534,16 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
+                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground" onClick={() => router.push("/settings/api")}>
                   <Key className="mr-2 size-4" />
                   API Keys
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground">
+                <DropdownMenuItem className="text-foreground focus:bg-accent focus:text-accent-foreground" onClick={() => router.push("/settings/security")}>
                   <Settings className="mr-2 size-4" />
                   Account settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem className="text-destructive-foreground focus:bg-accent focus:text-destructive-foreground">
+                <DropdownMenuItem className="text-destructive-foreground focus:bg-accent focus:text-destructive-foreground" onClick={() => logout()}>
                   <LogOut className="mr-2 size-4" />
                   Log out
                 </DropdownMenuItem>

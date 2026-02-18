@@ -139,7 +139,17 @@ export const businessModules: NavItem[] = [
 ]
 
 export const supportItems: NavItem[] = [
-  { title: "Settings", icon: Settings, href: "/settings" },
+  {
+    title: "Settings",
+    icon: Settings,
+    items: [
+      { title: "General", href: "/settings" },
+      { title: "Users", href: "/settings/users" },
+      { title: "Roles & Access", href: "/settings/rbac" },
+      { title: "API Clients", href: "/settings/api" },
+      { title: "Security", href: "/settings/security" },
+    ],
+  },
   { title: "Help & Docs", icon: HelpCircle, href: "/help" },
 ]
 
@@ -217,6 +227,16 @@ export const yayasanBusinessModules: NavItem[] = [
 ]
 
 export const yayasanSupportItems: NavItem[] = [
-  { title: "Pengaturan", icon: Settings, href: "/settings" },
+  {
+    title: "Pengaturan",
+    icon: Settings,
+    items: [
+      { title: "Umum", href: "/settings" },
+      { title: "Pengguna", href: "/settings/users" },
+      { title: "Peran & Akses", href: "/settings/rbac" },
+      { title: "API Clients", href: "/settings/api" },
+      { title: "Keamanan", href: "/settings/security" },
+    ],
+  },
   { title: "Bantuan", icon: HelpCircle, href: "/help" },
 ]

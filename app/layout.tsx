@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist_Mono, Inter, Open_Sans, Plus_Jakarta_Sans, Geist } from 'next/font/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { ThemeSettingsProvider } from "@/contexts/theme-settings-context"
+import { AuthProvider } from "@/contexts/auth-context"
 import './globals.css'
 
 const geistMono = Geist_Mono({
@@ -53,10 +54,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ThemeSettingsProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </ThemeSettingsProvider>
         </ThemeProvider>
       </body>
     </html>
   )
 }
+

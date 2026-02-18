@@ -38,9 +38,9 @@ interface ThemeSettingsContextType extends ThemeSettings {
 
 const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
-  sidebarTheme: "default",
+  sidebarTheme: "brand",
   themeMode: "light",
-  colorScheme: "carbon",
+  colorScheme: "indigo",
   fontFamily: "geist",
   fontSize: "small",
   contentMode: "full",
