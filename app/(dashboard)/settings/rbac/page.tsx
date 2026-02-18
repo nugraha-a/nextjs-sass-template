@@ -28,7 +28,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -120,83 +119,93 @@ export default function RBACPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Roles & Access</h1>
-          <p className="text-muted-foreground">
-            Manage roles and permissions
-          </p>
-        </div>
-
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Role
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create Role</DialogTitle>
-              <DialogDescription>
-                Define a new role with custom permissions
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="role-name">Name</Label>
-                <Input id="role-name" placeholder="e.g. Branch Manager" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role-desc">Description</Label>
-                <Textarea id="role-desc" placeholder="Describe what this role can do" rows={3} />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-              <Button onClick={() => setCreateOpen(false)}>Create →</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Roles & Access</h1>
+        <p className="text-muted-foreground">
+          Manage roles and permissions
+        </p>
       </div>
 
+      {/* Create Role Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Role</DialogTitle>
+            <DialogDescription>
+              Define a new role with custom permissions
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="role-name">Name</Label>
+              <Input id="role-name" placeholder="e.g. Branch Manager" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role-desc">Description</Label>
+              <Textarea id="role-desc" placeholder="Describe what this role can do" rows={3} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button onClick={() => setCreateOpen(false)}>Create →</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Role list */}
-        <div className="space-y-2">
-          {mockRoles.map((role) => (
-            <button
-              key={role.id}
-              onClick={() => setSelectedRole(role)}
-              className={`
-                w-full text-left px-4 py-3 rounded-lg border transition-colors
-                ${selectedRole.id === role.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:bg-accent"
-                }
-              `}
-            >
-              <div className="flex items-start justify-between">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-sm">{role.name}</span>
-                    {role.isSystem && (
-                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">System</Badge>
-                    )}
+        {/* Role list — wrapped in Card */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Roles
+                </CardTitle>
+                <CardDescription>{mockRoles.length} roles configured</CardDescription>
+              </div>
+              <Button size="sm" onClick={() => setCreateOpen(true)}>
+                <Plus className="h-4 w-4 mr-1" />
+                New
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {mockRoles.map((role) => (
+              <button
+                key={role.id}
+                onClick={() => setSelectedRole(role)}
+                className={`
+                  w-full text-left px-4 py-3 rounded-lg border transition-colors
+                  ${selectedRole.id === role.id
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:bg-accent"
+                  }
+                `}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-sm">{role.name}</span>
+                      {role.isSystem && (
+                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">System</Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{role.description}</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">{role.description}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {role.userCount}
-                </span>
-                <span>{role.permissionsCount} permissions</span>
-              </div>
-            </button>
-          ))}
-        </div>
+                <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {role.userCount}
+                  </span>
+                  <span>{role.permissionsCount} permissions</span>
+                </div>
+              </button>
+            ))}
+          </CardContent>
+        </Card>
 
         {/* Permission matrix */}
         <div className="lg:col-span-3">

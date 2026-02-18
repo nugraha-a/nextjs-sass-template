@@ -28,7 +28,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -106,74 +105,86 @@ export default function ApiClientsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">API Clients</h1>
-          <p className="text-muted-foreground">
-            Manage external API integrations
-          </p>
-        </div>
-
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Client
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create API Client</DialogTitle>
-              <DialogDescription>
-                Generate credentials for external system integration
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="client-name">Client Name</Label>
-                <Input id="client-name" placeholder="e.g. Mobile App" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Rate Limit</Label>
-                  <Select defaultValue="500">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="100">100 req/min</SelectItem>
-                      <SelectItem value="500">500 req/min</SelectItem>
-                      <SelectItem value="1000">1,000 req/min</SelectItem>
-                      <SelectItem value="5000">5,000 req/min</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Expiry</Label>
-                  <Select defaultValue="365">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="30">30 days</SelectItem>
-                      <SelectItem value="90">90 days</SelectItem>
-                      <SelectItem value="365">1 year</SelectItem>
-                      <SelectItem value="never">Never</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-              <Button onClick={() => setCreateOpen(false)}>Generate Credentials →</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">API Clients</h1>
+        <p className="text-muted-foreground">
+          Manage external API integrations
+        </p>
       </div>
 
-      {/* API Client Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+      {/* Create Client Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create API Client</DialogTitle>
+            <DialogDescription>
+              Generate credentials for external system integration
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="client-name">Client Name</Label>
+              <Input id="client-name" placeholder="e.g. Mobile App" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Rate Limit</Label>
+                <Select defaultValue="500">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="100">100 req/min</SelectItem>
+                    <SelectItem value="500">500 req/min</SelectItem>
+                    <SelectItem value="1000">1,000 req/min</SelectItem>
+                    <SelectItem value="5000">5,000 req/min</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Expiry</Label>
+                <Select defaultValue="365">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">30 days</SelectItem>
+                    <SelectItem value="90">90 days</SelectItem>
+                    <SelectItem value="365">1 year</SelectItem>
+                    <SelectItem value="never">Never</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button onClick={() => setCreateOpen(false)}>Generate Credentials →</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* API Clients Card */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Key className="h-5 w-5" />
+                Clients
+              </CardTitle>
+              <CardDescription>{mockClients.length} API clients configured</CardDescription>
+            </div>
+            <Button size="sm" onClick={() => setCreateOpen(true)}>
+              <Plus className="h-4 w-4 mr-1" />
+              New
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {/* API Client Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {mockClients.map((client) => (
           <Card key={client.id} className="relative">
             <CardHeader className="pb-2">
@@ -255,7 +266,9 @@ export default function ApiClientsPage() {
             </CardContent>
           </Card>
         ))}
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
