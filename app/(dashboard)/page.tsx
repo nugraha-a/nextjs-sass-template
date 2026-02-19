@@ -217,12 +217,12 @@ export default function DashboardPage() {
       {/* ─── Row 1: Welcome + Team Progress + Announcement ─── */}
       <div className="grid gap-4 lg:grid-cols-12">
         {/* Welcome Banner */}
-        <Card className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
+        <Card className="lg:col-span-5 border-primary/20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, color-mix(in oklch, var(--primary), transparent 92%) 0%, transparent 50%), var(--card)' }}>
           {/* Decorative background pattern */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
           <CardContent className="p-5">
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-gradient-primary">
               Welcome to Acme Inc!
             </h2>
             <p className="text-[12px] text-muted-foreground mt-1">
@@ -487,7 +487,7 @@ export default function DashboardPage() {
                         <p className="text-[12px] font-medium text-card-foreground truncate">
                           {activity.user}
                         </p>
-                        <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{activity.time}</span>
+                        <span className="text-[10px] text-tertiary-foreground ml-2 shrink-0">{activity.time}</span>
                       </div>
                       <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
                         {activity.detail}
@@ -795,7 +795,7 @@ export default function DashboardPage() {
         <p className="text-[11px] text-muted-foreground">
           Thank you for creating with Acme Inc | 2026 © Acme
         </p>
-        <p className="text-[10px] text-muted-foreground">v3.0.2</p>
+        <p className="text-[10px] text-tertiary-foreground">v3.0.2</p>
       </div>
     </div>
   )
