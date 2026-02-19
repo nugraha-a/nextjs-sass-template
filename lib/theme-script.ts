@@ -10,7 +10,8 @@ export const themeScript = `
       'zinc': 'carbon',
       'neutral': 'slate',
       'orange': 'teal',
-      'rose': 'crimson'
+      'rose': 'crimson',
+      'green': 'gold'
     };
 
     if (stored) {
@@ -36,7 +37,9 @@ export const themeScript = `
         document.body.setAttribute('data-color-scheme', settings.colorScheme);
       }
       if (settings.sidebarMode) root.setAttribute('data-sidebar-mode', settings.sidebarMode);
-      if (settings.sidebarTheme) root.setAttribute('data-sidebar-theme', settings.sidebarTheme);
+      // Force sidebar theme to default in dark mode
+      var isDark = settings.themeMode === 'dark' || (settings.themeMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (settings.sidebarTheme) root.setAttribute('data-sidebar-theme', isDark ? 'default' : settings.sidebarTheme);
       if (settings.contentMode) root.setAttribute('data-content-mode', settings.contentMode);
       if (settings.contentView) root.setAttribute('data-content-view', settings.contentView);
       if (settings.radius) root.style.setProperty('--radius', settings.radius + 'rem');

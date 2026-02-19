@@ -23,14 +23,14 @@ import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, typ
 import { cn } from "@/lib/utils"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
-  { value: "carbon", label: "Carbon", preview: "bg-[oklch(0.25_0.015_260)]" },
-  { value: "slate", label: "Slate", preview: "bg-slate-500" },
-  { value: "navy", label: "Navy", preview: "bg-[oklch(0.35_0.14_255)]" },
-  { value: "blue", label: "Blue", preview: "bg-blue-500" },
+  { value: "carbon", label: "Carbon", preview: "bg-[#42526D]" },
+  { value: "slate", label: "Slate", preview: "bg-[#0EA5E9]" },
+  { value: "navy", label: "Navy", preview: "bg-[#023047]" },
+  { value: "blue", label: "Blue", preview: "bg-[#007AFF]" },
   { value: "indigo", label: "Indigo", preview: "bg-indigo-500" },
-  { value: "teal", label: "Teal", preview: "bg-teal-500" },
-  { value: "green", label: "Green", preview: "bg-emerald-500" },
-  { value: "amber", label: "Amber", preview: "bg-amber-600" },
+  { value: "teal", label: "Teal", preview: "bg-[#219EBC]" },
+  { value: "gold", label: "Gold", preview: "bg-[#F59E0B]" },
+  { value: "amber", label: "Amber", preview: "bg-[#FB8500]" },
   { value: "crimson", label: "Crimson", preview: "bg-[oklch(0.42_0.16_25)]" },
 ]
 
@@ -144,47 +144,55 @@ export function ThemeSettingsPanel() {
                 Sidebar Theme
               </Label>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <SidebarThemeButton
-                theme="default"
-                currentTheme={sidebarTheme}
-                onClick={() => setSidebarTheme("default")}
-                label="Default"
-              />
-              <SidebarThemeButton
-                theme="dark"
-                currentTheme={sidebarTheme}
-                onClick={() => setSidebarTheme("dark")}
-                label="Dark"
-              />
-              <SidebarThemeButton
-                theme="brand"
-                currentTheme={sidebarTheme}
-                onClick={() => setSidebarTheme("brand")}
-                label="Brand"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <SidebarThemeButton
-                theme="image"
-                currentTheme={sidebarTheme}
-                onClick={() => setSidebarTheme("image")}
-                label="Image"
-              />
-              <SidebarThemeButton
-                theme="aurora"
-                currentTheme={sidebarTheme}
-                onClick={() => setSidebarTheme("aurora")}
-                label="Aurora"
-              />
-            </div>
-            <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
-              {sidebarTheme === "default" && "Standard sidebar following global theme"}
-              {sidebarTheme === "dark" && "Always dark, harmonized with color scheme"}
-              {sidebarTheme === "brand" && "Solid primary color background"}
-              {sidebarTheme === "image" && "Background image with dark overlay"}
-              {sidebarTheme === "aurora" && "Gradient mesh with color accents"}
-            </p>
+            {themeMode === "dark" || (themeMode === "system" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) ? (
+              <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
+                Sidebar theme is locked to Default in dark mode
+              </p>
+            ) : (
+              <>
+                <div className="grid grid-cols-3 gap-2">
+                  <SidebarThemeButton
+                    theme="default"
+                    currentTheme={sidebarTheme}
+                    onClick={() => setSidebarTheme("default")}
+                    label="Default"
+                  />
+                  <SidebarThemeButton
+                    theme="dark"
+                    currentTheme={sidebarTheme}
+                    onClick={() => setSidebarTheme("dark")}
+                    label="Dark"
+                  />
+                  <SidebarThemeButton
+                    theme="brand"
+                    currentTheme={sidebarTheme}
+                    onClick={() => setSidebarTheme("brand")}
+                    label="Brand"
+                  />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <SidebarThemeButton
+                    theme="image"
+                    currentTheme={sidebarTheme}
+                    onClick={() => setSidebarTheme("image")}
+                    label="Image"
+                  />
+                  <SidebarThemeButton
+                    theme="aurora"
+                    currentTheme={sidebarTheme}
+                    onClick={() => setSidebarTheme("aurora")}
+                    label="Aurora"
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
+                  {sidebarTheme === "default" && "Standard sidebar following global theme"}
+                  {sidebarTheme === "dark" && "Always dark, harmonized with color scheme"}
+                  {sidebarTheme === "brand" && "Solid primary color background"}
+                  {sidebarTheme === "image" && "Background image with dark overlay"}
+                  {sidebarTheme === "aurora" && "Gradient mesh with color accents"}
+                </p>
+              </>
+            )}
           </div>
 
           <Separator className="bg-border" />

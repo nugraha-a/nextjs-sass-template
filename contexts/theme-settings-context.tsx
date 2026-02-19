@@ -9,7 +9,7 @@ export type ContentMode = "compact" | "full"
 export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
-export type ColorScheme = "carbon" | "slate" | "navy" | "blue" | "indigo" | "teal" | "green" | "amber" | "crimson"
+export type ColorScheme = "carbon" | "slate" | "navy" | "blue" | "indigo" | "teal" | "gold" | "amber" | "crimson"
 
 interface ThemeSettings {
   sidebarMode: SidebarMode
@@ -61,7 +61,7 @@ export function useThemeSettings() {
 const STORAGE_KEY = "next-sass-theme-settings"
 
 export function ThemeSettingsProvider({ children }: { children: React.ReactNode }) {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [settings, setSettings] = useState<ThemeSettings>(defaultSettings)
 
@@ -78,6 +78,7 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
           neutral: "slate",
           orange: "teal",
           rose: "crimson",
+          green: "gold",
         }
         const needsMigration = parsed.colorScheme && migrationMap[parsed.colorScheme]
         if (needsMigration) {
@@ -122,8 +123,9 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     // Apply sidebar mode
     root.setAttribute("data-sidebar-mode", settings.sidebarMode)
 
-    // Apply sidebar theme
-    root.setAttribute("data-sidebar-theme", settings.sidebarTheme)
+    // Apply sidebar theme — force "default" in dark mode
+    const isDark = resolvedTheme === "dark"
+    root.setAttribute("data-sidebar-theme", isDark ? "default" : settings.sidebarTheme)
     
     // Apply content mode
     root.setAttribute("data-content-mode", settings.contentMode)
@@ -134,7 +136,7 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     // Apply border radius CSS variable
     root.style.setProperty("--radius", `${settings.radius}rem`)
     
-  }, [mounted, settings])
+  }, [mounted, settings, resolvedTheme])
 
   const setSidebarMode = useCallback((mode: SidebarMode) => {
     setSettings(prev => {
