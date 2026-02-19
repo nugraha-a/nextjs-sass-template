@@ -23,15 +23,14 @@ import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, typ
 import { cn } from "@/lib/utils"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
-  { value: "carbon", label: "Carbon", preview: "bg-[#42526D]" },
-  { value: "slate", label: "Slate", preview: "bg-[#0EA5E9]" },
+  { value: "default", label: "Default", preview: "bg-[#023047]" },
+  { value: "neutral", label: "Neutral", preview: "bg-[#42526D]" },
+  { value: "sky", label: "Sky", preview: "bg-[#0EA5E9]" },
   { value: "navy", label: "Navy", preview: "bg-[#023047]" },
   { value: "blue", label: "Blue", preview: "bg-[#007AFF]" },
-  { value: "indigo", label: "Indigo", preview: "bg-indigo-500" },
-  { value: "teal", label: "Teal", preview: "bg-[#219EBC]" },
-  { value: "gold", label: "Gold", preview: "bg-[#F59E0B]" },
-  { value: "amber", label: "Amber", preview: "bg-[#FB8500]" },
-  { value: "crimson", label: "Crimson", preview: "bg-[oklch(0.42_0.16_25)]" },
+  { value: "cyan", label: "Cyan", preview: "bg-[#219EBC]" },
+  { value: "yellow", label: "Yellow", preview: "bg-[#F59E0B]" },
+  { value: "orange", label: "Orange", preview: "bg-[#FB8500]" },
 ]
 
 const fontFamilies: { value: FontFamily; label: string }[] = [

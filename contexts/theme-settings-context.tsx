@@ -9,7 +9,7 @@ export type ContentMode = "compact" | "full"
 export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
-export type ColorScheme = "carbon" | "slate" | "navy" | "blue" | "indigo" | "teal" | "gold" | "amber" | "crimson"
+export type ColorScheme = "default" | "neutral" | "sky" | "navy" | "blue" | "cyan" | "yellow" | "orange"
 
 interface ThemeSettings {
   sidebarMode: SidebarMode
@@ -74,11 +74,16 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
         const parsed = JSON.parse(stored)
         // Migrate old color scheme names to new ones
         const migrationMap: Record<string, ColorScheme> = {
-          zinc: "carbon",
-          neutral: "slate",
-          orange: "teal",
-          rose: "crimson",
-          green: "gold",
+          carbon: "neutral",
+          slate: "sky",
+          teal: "cyan",
+          gold: "yellow",
+          amber: "orange",
+          indigo: "blue",
+          crimson: "neutral",
+          zinc: "neutral",
+          rose: "neutral",
+          green: "yellow",
         }
         const needsMigration = parsed.colorScheme && migrationMap[parsed.colorScheme]
         if (needsMigration) {

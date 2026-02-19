@@ -7,11 +7,16 @@ export const themeScript = `
 
     // Migration map: old scheme names → new scheme names
     var migrationMap = {
-      'zinc': 'carbon',
-      'neutral': 'slate',
-      'orange': 'teal',
-      'rose': 'crimson',
-      'green': 'gold'
+      'carbon': 'neutral',
+      'slate': 'sky',
+      'teal': 'cyan',
+      'gold': 'yellow',
+      'amber': 'orange',
+      'indigo': 'blue',
+      'crimson': 'neutral',
+      'zinc': 'neutral',
+      'rose': 'neutral',
+      'green': 'yellow'
     };
 
     if (stored) {
@@ -47,7 +52,7 @@ export const themeScript = `
       root.classList.add('light');
       root.setAttribute('data-font-size', 'small');
       root.setAttribute('data-font-family', 'geist');
-      root.setAttribute('data-color-scheme', 'carbon');
+      root.setAttribute('data-color-scheme', 'default');
       root.setAttribute('data-sidebar-mode', 'normal');
       root.setAttribute('data-sidebar-theme', 'aurora');
       root.setAttribute('data-content-mode', 'full');
