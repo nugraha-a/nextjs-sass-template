@@ -187,7 +187,7 @@ export function ThemeSettingsPanel() {
                   {sidebarTheme === "default" && "Standard sidebar following global theme"}
                   {sidebarTheme === "dark" && "Always dark, harmonized with color scheme"}
                   {sidebarTheme === "brand" && "Solid primary color background"}
-                  {sidebarTheme === "image" && "Background image with dark overlay"}
+                  {sidebarTheme === "image" && "Unsplash photo with scheme-tinted overlay"}
                   {sidebarTheme === "aurora" && "Gradient mesh with color accents"}
                 </p>
               </>
@@ -460,7 +460,7 @@ function SidebarThemeButton({
     default: "bg-sidebar border border-sidebar-border",
     dark: "bg-zinc-900 border border-zinc-700",
     brand: "bg-primary border border-primary",
-    image: "bg-gradient-to-b from-slate-700 to-slate-900 border border-slate-600",
+    image: "border border-slate-600 bg-cover bg-center",
     aurora: "bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-900 border border-indigo-700/50",
   }
 
@@ -474,7 +474,12 @@ function SidebarThemeButton({
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
       )}
     >
-      <div className={cn("w-8 h-5 rounded-sm", previewStyles[theme])} />
+      <div
+        className={cn("w-8 h-5 rounded-sm", previewStyles[theme])}
+        style={theme === "image" ? {
+          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("https://images.unsplash.com/photo-1519681393784-d120267933ba?w=100&q=60")`,
+        } : undefined}
+      />
       <span className="text-[10px] font-medium">{label}</span>
     </button>
   )
