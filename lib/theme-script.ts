@@ -5,7 +5,6 @@ export const themeScript = `
     var stored = localStorage.getItem(storageKey);
     var root = document.documentElement;
 
-    // Migration map: old scheme names → new scheme names
     var migrationMap = {
       'carbon': 'neutral',
       'slate': 'sky',
@@ -19,45 +18,55 @@ export const themeScript = `
       'green': 'yellow'
     };
 
+    var colorScheme = 'blue';
+
     if (stored) {
       var settings = JSON.parse(stored);
 
-      // Auto-remap old color schemes to new ones
       if (settings.colorScheme && migrationMap[settings.colorScheme]) {
         settings.colorScheme = migrationMap[settings.colorScheme];
         localStorage.setItem(storageKey, JSON.stringify(settings));
       }
-      
+
       if (settings.themeMode === 'system') {
         var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         root.classList.add(systemTheme);
       } else if (settings.themeMode) {
         root.classList.add(settings.themeMode);
       }
-      
-      if (settings.fontSize) root.setAttribute('data-font-size', settings.fontSize);
-      if (settings.fontFamily) root.setAttribute('data-font-family', settings.fontFamily);
-      if (settings.colorScheme) {
-        root.setAttribute('data-color-scheme', settings.colorScheme);
-        document.body.setAttribute('data-color-scheme', settings.colorScheme);
-      }
-      if (settings.sidebarMode) root.setAttribute('data-sidebar-mode', settings.sidebarMode);
-      // Force sidebar theme to default in dark mode
+
+      root.setAttribute('data-font-size', settings.fontSize || 'small');
+      root.setAttribute('data-font-family', settings.fontFamily || 'geist');
+      colorScheme = settings.colorScheme || 'blue';
+      root.setAttribute('data-color-scheme', colorScheme);
+      root.setAttribute('data-sidebar-mode', settings.sidebarMode || 'normal');
       var isDark = settings.themeMode === 'dark' || (settings.themeMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (settings.sidebarTheme) root.setAttribute('data-sidebar-theme', isDark ? 'default' : settings.sidebarTheme);
-      if (settings.contentMode) root.setAttribute('data-content-mode', settings.contentMode);
-      if (settings.contentView) root.setAttribute('data-content-view', settings.contentView);
-      if (settings.radius) root.style.setProperty('--radius', settings.radius + 'rem');
+      root.setAttribute('data-sidebar-theme', isDark ? 'default' : (settings.sidebarTheme || 'brand'));
+      root.setAttribute('data-content-mode', settings.contentMode || 'full');
+      root.setAttribute('data-content-view', settings.contentView || 'carded');
+      root.style.setProperty('--radius', (settings.radius || 0.5) + 'rem');
     } else {
       root.classList.add('light');
       root.setAttribute('data-font-size', 'small');
       root.setAttribute('data-font-family', 'geist');
-      root.setAttribute('data-color-scheme', 'default');
+      root.setAttribute('data-color-scheme', 'blue');
       root.setAttribute('data-sidebar-mode', 'normal');
-      root.setAttribute('data-sidebar-theme', 'aurora');
+      root.setAttribute('data-sidebar-theme', 'brand');
       root.setAttribute('data-content-mode', 'full');
       root.setAttribute('data-content-view', 'carded');
       root.style.setProperty('--radius', '0.5rem');
+    }
+
+    // Apply color scheme to body once it exists
+    var applyBodyScheme = function() {
+      if (document.body) {
+        document.body.setAttribute('data-color-scheme', colorScheme);
+      }
+    };
+    if (document.body) {
+      applyBodyScheme();
+    } else {
+      document.addEventListener('DOMContentLoaded', applyBodyScheme);
     }
   } catch (e) {
     console.error('Failed to apply theme settings', e);

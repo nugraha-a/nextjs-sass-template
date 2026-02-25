@@ -114,24 +114,24 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
 
     const root = document.documentElement
     const body = document.body
-    
+
     // Apply font size
     root.setAttribute("data-font-size", settings.fontSize)
-    
+
     // Apply font family
     root.setAttribute("data-font-family", settings.fontFamily)
-    
+
     // Apply color scheme - set on both root and body for CSS targeting
     root.setAttribute("data-color-scheme", settings.colorScheme)
     body.setAttribute("data-color-scheme", settings.colorScheme)
-    
+
     // Apply sidebar mode
     root.setAttribute("data-sidebar-mode", settings.sidebarMode)
 
     // Apply sidebar theme — force "default" in dark mode
     const isDark = resolvedTheme === "dark"
     root.setAttribute("data-sidebar-theme", isDark ? "default" : settings.sidebarTheme)
-    
+
     // Apply content mode
     root.setAttribute("data-content-mode", settings.contentMode)
 
@@ -140,7 +140,7 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
 
     // Apply border radius CSS variable
     root.style.setProperty("--radius", `${settings.radius}rem`)
-    
+
   }, [mounted, settings, resolvedTheme])
 
   const setSidebarMode = useCallback((mode: SidebarMode) => {

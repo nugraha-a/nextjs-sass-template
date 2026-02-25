@@ -45,8 +45,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${geistMono.variable} ${inter.variable} ${openSans.variable} ${jakarta.variable} ${geistSans.variable} font-sans antialiased`}>
+      <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body suppressHydrationWarning className={`${geistMono.variable} ${inter.variable} ${openSans.variable} ${jakarta.variable} ${geistSans.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
