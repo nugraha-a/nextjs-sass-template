@@ -45,6 +45,9 @@ export const themeScript = `
       root.setAttribute('data-content-mode', settings.contentMode || 'full');
       root.setAttribute('data-content-view', settings.contentView || 'carded');
       root.style.setProperty('--radius', (settings.radius || 0.5) + 'rem');
+      var imgUrl = settings.sidebarImageUrl || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80';
+      root.style.setProperty('--sidebar-bg-image', 'url("' + imgUrl + '")');
+      root.setAttribute('data-sidebar-image-brightness', settings.sidebarImageBrightness || 'dark');
     } else {
       root.classList.add('light');
       root.setAttribute('data-font-size', 'small');
@@ -55,6 +58,8 @@ export const themeScript = `
       root.setAttribute('data-content-mode', 'full');
       root.setAttribute('data-content-view', 'carded');
       root.style.setProperty('--radius', '0.5rem');
+      root.style.setProperty('--sidebar-bg-image', 'url("https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80")');
+      root.setAttribute('data-sidebar-image-brightness', 'dark');
     }
 
     // Apply color scheme to body once it exists

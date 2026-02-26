@@ -10,6 +10,7 @@ export type ContentView = "carded" | "boxed"
 export type FontFamily = "geist" | "inter" | "jakarta" | "open-sans" | "system"
 export type FontSize = "small" | "medium" | "large"
 export type ColorScheme = "default" | "neutral" | "sky" | "navy" | "blue" | "cyan" | "yellow" | "orange"
+export type ImageBrightness = "bright" | "medium" | "dark"
 
 interface ThemeSettings {
   sidebarMode: SidebarMode
@@ -21,6 +22,8 @@ interface ThemeSettings {
   contentMode: ContentMode
   contentView: ContentView
   radius: number
+  sidebarImageUrl: string | null
+  sidebarImageBrightness: ImageBrightness | null
 }
 
 interface ThemeSettingsContextType extends ThemeSettings {
@@ -33,6 +36,8 @@ interface ThemeSettingsContextType extends ThemeSettings {
   setContentMode: (mode: ContentMode) => void
   setContentView: (view: ContentView) => void
   setRadius: (radius: number) => void
+  setSidebarImageUrl: (url: string | null) => void
+  setSidebarImageBrightness: (brightness: ImageBrightness | null) => void
   resetToDefaults: () => void
 }
 
@@ -46,6 +51,8 @@ const defaultSettings: ThemeSettings = {
   contentMode: "full",
   contentView: "carded",
   radius: 0.5,
+  sidebarImageUrl: null,
+  sidebarImageBrightness: null,
 }
 
 const ThemeSettingsContext = createContext<ThemeSettingsContextType | null>(null)
@@ -141,6 +148,14 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     // Apply border radius CSS variable
     root.style.setProperty("--radius", `${settings.radius}rem`)
 
+    // Apply sidebar background image CSS variable
+    const sidebarImgUrl = settings.sidebarImageUrl
+      || "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
+    root.style.setProperty("--sidebar-bg-image", `url("${sidebarImgUrl}")`)
+
+    // Apply sidebar image brightness for adaptive gradient
+    root.setAttribute("data-sidebar-image-brightness", settings.sidebarImageBrightness || "dark")
+
   }, [mounted, settings, resolvedTheme])
 
   const setSidebarMode = useCallback((mode: SidebarMode) => {
@@ -216,6 +231,22 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     })
   }, [saveSettings])
 
+  const setSidebarImageUrl = useCallback((url: string | null) => {
+    setSettings(prev => {
+      const newSettings = { ...prev, sidebarImageUrl: url }
+      saveSettings(newSettings)
+      return newSettings
+    })
+  }, [saveSettings])
+
+  const setSidebarImageBrightness = useCallback((brightness: ImageBrightness | null) => {
+    setSettings(prev => {
+      const newSettings = { ...prev, sidebarImageBrightness: brightness }
+      saveSettings(newSettings)
+      return newSettings
+    })
+  }, [saveSettings])
+
   const resetToDefaults = useCallback(() => {
     setSettings(defaultSettings)
     setTheme(defaultSettings.themeMode)
@@ -242,6 +273,8 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
         setContentMode,
         setContentView,
         setRadius,
+        setSidebarImageUrl,
+        setSidebarImageBrightness,
         resetToDefaults,
       }}
     >

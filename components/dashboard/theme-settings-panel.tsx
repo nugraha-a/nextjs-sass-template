@@ -1,6 +1,7 @@
 "use client"
 
-import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush } from "lucide-react"
+import { useState, useRef } from "react"
+import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush, Upload, ImageIcon, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import { useThemeSettings, type ColorScheme, type FontFamily, type FontSize, type SidebarMode, type SidebarTheme, type ContentMode, type ContentView } from "@/contexts/theme-settings-context"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 const colorSchemes: { value: ColorScheme; label: string; preview: string }[] = [
   { value: "default", label: "Default", preview: "bg-[#023047]" },
@@ -187,9 +189,12 @@ export function ThemeSettingsPanel() {
                   {sidebarTheme === "default" && "Standard sidebar following global theme"}
                   {sidebarTheme === "dark" && "Always dark, harmonized with color scheme"}
                   {sidebarTheme === "brand" && "Solid primary color background"}
-                  {sidebarTheme === "image" && "Unsplash photo with scheme-tinted overlay"}
+                  {sidebarTheme === "image" && "Custom background with a tinted overlay. Choose from Unsplash Default or upload your own image (Darker images recommended, Max size: 2MB)."}
                   {sidebarTheme === "aurora" && "Gradient mesh with color accents"}
                 </p>
+                {sidebarTheme === "image" && (
+                  <SidebarImageSection />
+                )}
               </>
             )}
           </div>
@@ -413,6 +418,244 @@ export function ThemeSettingsPanel() {
         </div>
       </SheetContent>
     </Sheet>
+  )
+}
+
+const DEFAULT_UNSPLASH_URL = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
+const BRIGHTNESS_LABELS = { bright: "Bright", medium: "Medium", dark: "Dark" } as const
+
+/** Analyze average brightness of an image file using Canvas */
+function analyzeImageBrightness(file: File): Promise<"bright" | "medium" | "dark"> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      // Use small canvas for performance (max 100px wide)
+      const scale = Math.min(1, 100 / img.width)
+      const w = Math.round(img.width * scale)
+      const h = Math.round(img.height * scale)
+
+      const canvas = document.createElement("canvas")
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext("2d")!
+      ctx.drawImage(img, 0, 0, w, h)
+
+      const imageData = ctx.getImageData(0, 0, w, h)
+      const data = imageData.data
+      let totalLuminance = 0
+      let pixelCount = 0
+
+      // Sample every 4th pixel for speed
+      for (let i = 0; i < data.length; i += 16) {
+        const r = data[i]
+        const g = data[i + 1]
+        const b = data[i + 2]
+        // Relative luminance (perceptual)
+        totalLuminance += 0.299 * r + 0.587 * g + 0.114 * b
+        pixelCount++
+      }
+
+      const avgBrightness = totalLuminance / pixelCount
+      URL.revokeObjectURL(img.src)
+
+      if (avgBrightness > 160) resolve("bright")
+      else if (avgBrightness > 80) resolve("medium")
+      else resolve("dark")
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src)
+      resolve("medium") // fallback
+    }
+    img.src = URL.createObjectURL(file)
+  })
+}
+
+function SidebarImageSection() {
+  const {
+    sidebarImageUrl, setSidebarImageUrl,
+    sidebarImageBrightness, setSidebarImageBrightness,
+  } = useThemeSettings()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [pendingPreview, setPendingPreview] = useState<string | null>(null)
+  const [pendingBrightness, setPendingBrightness] = useState<"bright" | "medium" | "dark" | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+
+  const currentImage = sidebarImageUrl || DEFAULT_UNSPLASH_URL
+  const isCustom = !!sidebarImageUrl
+  const displayBrightness = pendingBrightness || sidebarImageBrightness || "dark"
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Only JPG, PNG, and WebP formats are allowed")
+      return
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File too large. Maximum size is 2MB")
+      return
+    }
+
+    // Analyze brightness
+    const brightness = await analyzeImageBrightness(file)
+
+    setPendingFile(file)
+    setPendingPreview(URL.createObjectURL(file))
+    setPendingBrightness(brightness)
+
+    // Reset input so re-selecting same file works
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  const handleConfirm = async () => {
+    if (!pendingFile) return
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append("image", pendingFile)
+
+      const headers: HeadersInit = {}
+      if (sidebarImageUrl) {
+        headers["x-old-image"] = sidebarImageUrl
+      }
+
+      const res = await fetch("/api/sidebar-image", {
+        method: "POST",
+        headers,
+        body: formData,
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Upload failed")
+      }
+
+      const { url } = await res.json()
+      setSidebarImageUrl(url)
+      setSidebarImageBrightness(pendingBrightness)
+      toast.success("Sidebar image updated")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed")
+    } finally {
+      if (pendingPreview) URL.revokeObjectURL(pendingPreview)
+      setPendingFile(null)
+      setPendingPreview(null)
+      setPendingBrightness(null)
+      setIsUploading(false)
+    }
+  }
+
+  const handleCancel = () => {
+    if (pendingPreview) URL.revokeObjectURL(pendingPreview)
+    setPendingFile(null)
+    setPendingPreview(null)
+    setPendingBrightness(null)
+  }
+
+  const handleReset = async () => {
+    if (!sidebarImageUrl) return
+
+    try {
+      await fetch("/api/sidebar-image", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: sidebarImageUrl }),
+      })
+    } catch {
+      // Silently continue — file may not exist
+    }
+
+    setSidebarImageUrl(null)
+    setSidebarImageBrightness(null)
+    toast.success("Reset to default image")
+  }
+
+  return (
+    <div className="mt-2 space-y-2 rounded-md border border-border bg-secondary/30 p-2.5">
+      <div className="flex items-center gap-1.5">
+        <ImageIcon className="size-3.5 text-muted-foreground" />
+        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          Background Image
+        </span>
+      </div>
+
+      {/* Current / Pending preview */}
+      <div className="relative overflow-hidden rounded-md border border-border aspect-[16/9] bg-muted">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={pendingPreview || currentImage}
+          alt="Sidebar background"
+          className="w-full h-full object-cover"
+        />
+        {pendingPreview && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <span className="text-[10px] font-medium text-white bg-black/50 px-2 py-0.5 rounded">
+              Preview
+            </span>
+          </div>
+        )}
+        {!pendingPreview && isCustom && (
+          <div className="absolute top-1 right-1">
+            <span className="text-[9px] font-medium text-white bg-primary/80 px-1.5 py-0.5 rounded">
+              Custom
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      {pendingPreview ? (
+        <div className="flex gap-1.5">
+          <button
+            onClick={handleConfirm}
+            disabled={isUploading}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors cursor-pointer"
+          >
+            <Check className="size-3" />
+            {isUploading ? "Uploading..." : "Confirm"}
+          </button>
+          <button
+            onClick={handleCancel}
+            disabled={isUploading}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md border border-border hover:bg-secondary disabled:opacity-50 transition-colors cursor-pointer"
+          >
+            <X className="size-3" />
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md border border-border hover:bg-secondary transition-colors cursor-pointer"
+          >
+            <Upload className="size-3" />
+            Upload Image
+          </button>
+          {isCustom && (
+            <button
+              onClick={handleReset}
+              className="flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 px-2 rounded-md border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors cursor-pointer"
+            >
+              <RotateCcw className="size-3" />
+              Reset
+            </button>
+          )}
+        </div>
+      )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+    </div>
   )
 }
 

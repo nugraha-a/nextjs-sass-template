@@ -1258,19 +1258,26 @@ html.dark[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-active="
 }
 
 /* ─────────────────────────────────────────────
-   IMAGE — Light Mode
-   Photo clearly visible behind a primary-color 
-   gradient fade. The gradient uses the selected 
-   color scheme for dynamic tinting.
+   IMAGE — Light Mode — Brightness-adaptive gradient
+   Overlay strength adapts based on image brightness
+   via data-sidebar-image-brightness attribute.
    ───────────────────────────────────────────── */
 :root[data-sidebar-theme="image"] [data-slot="sidebar"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"],
 :root[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  /* Brightness-adaptive: defaults = dark image (lightest overlay) */
+  --img-overlay-top: 0.58;
+  --img-overlay-mid: 0.38;
+  --img-overlay-low: 0.28;
+  --img-overlay-bottom: 0.25;
+  --img-tint-top: 45%;
+  --img-tint-bottom: 85%;
+
   --sidebar: color-mix(in oklch, var(--primary), oklch(0.15 0 0) 40%);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-muted-foreground: oklch(0.85 0 0);
-  --sidebar-border: color-mix(in oklch, white 15%, transparent);
-  --sidebar-accent: rgba(255, 255, 255, 0.15);
+  --sidebar-muted-foreground: oklch(0.80 0 0);
+  --sidebar-border: color-mix(in oklch, white 12%, transparent);
+  --sidebar-accent: rgba(255, 255, 255, 0.12);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.985 0 0);
   --sidebar-primary-foreground: var(--primary);
@@ -1293,30 +1300,65 @@ html.dark[data-sidebar-theme="brand"] [data-slot="sidebar-inner"] [data-active="
   --ring: var(--sidebar-ring);
 
   background-image:
+    /* Layer 1 — color tint */
     linear-gradient(180deg,
-      color-mix(in oklch, var(--primary) 92%, black) 0%,
-      color-mix(in oklch, var(--primary) 80%, oklch(0.15 0 0)) 35%,
-      color-mix(in oklch, var(--primary) 45%, transparent) 65%,
-      color-mix(in oklch, var(--primary) 25%, transparent) 100%),
-    url("https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80") !important;
+      color-mix(in oklch, var(--primary), transparent var(--img-tint-top)) 0%,
+      color-mix(in oklch, var(--primary), transparent var(--img-tint-bottom)) 100%),
+    /* Layer 2 — dark readability (brightness-adaptive) */
+    linear-gradient(180deg,
+      rgba(0, 0, 0, var(--img-overlay-top)) 0%,
+      rgba(0, 0, 0, var(--img-overlay-mid)) 40%,
+      rgba(0, 0, 0, var(--img-overlay-low)) 70%,
+      rgba(0, 0, 0, var(--img-overlay-bottom)) 100%),
+    /* Layer 3 — photo */
+    var(--sidebar-bg-image) !important;
   background-size: cover !important;
   background-position: center !important;
   color: var(--sidebar-foreground);
 }
 
+/* Brightness tier: medium — balanced overlay, photo still visible */
+:root[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-slot="sidebar"],
+:root[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+:root[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --img-overlay-top: 0.72;
+  --img-overlay-mid: 0.55;
+  --img-overlay-low: 0.42;
+  --img-overlay-bottom: 0.38;
+  --img-tint-top: 38%;
+  --img-tint-bottom: 72%;
+}
+
+/* Brightness tier: bright — heavy overlay to protect ALL text areas */
+:root[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-slot="sidebar"],
+:root[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+:root[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --img-overlay-top: 0.85;
+  --img-overlay-mid: 0.70;
+  --img-overlay-low: 0.58;
+  --img-overlay-bottom: 0.52;
+  --img-tint-top: 32%;
+  --img-tint-bottom: 65%;
+}
+
 /* ─────────────────────────────────────────────
-   IMAGE — Dark Mode
-   Same gradient fade approach but slightly 
-   darker blend to distinguish from dark content
+   IMAGE — Dark Mode (brightness-adaptive)
    ───────────────────────────────────────────── */
 html.dark[data-sidebar-theme="image"] [data-slot="sidebar"],
 html.dark[data-sidebar-theme="image"] [data-slot="sidebar-inner"],
 html.dark[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --img-overlay-top: 0.65;
+  --img-overlay-mid: 0.45;
+  --img-overlay-low: 0.32;
+  --img-overlay-bottom: 0.28;
+  --img-tint-top: 50%;
+  --img-tint-bottom: 88%;
+
   --sidebar: color-mix(in oklch, var(--primary), oklch(0.12 0 0) 50%);
   --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-muted-foreground: oklch(0.78 0 0);
-  --sidebar-border: color-mix(in oklch, white 12%, transparent);
-  --sidebar-accent: rgba(255, 255, 255, 0.12);
+  --sidebar-muted-foreground: oklch(0.75 0 0);
+  --sidebar-border: color-mix(in oklch, white 10%, transparent);
+  --sidebar-accent: rgba(255, 255, 255, 0.10);
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-primary: oklch(0.985 0 0);
   --sidebar-primary-foreground: var(--primary);
@@ -1340,20 +1382,46 @@ html.dark[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] 
 
   background-image:
     linear-gradient(180deg,
-      color-mix(in oklch, var(--primary) 85%, oklch(0.08 0 0)) 0%,
-      color-mix(in oklch, var(--primary) 65%, oklch(0.10 0 0)) 35%,
-      color-mix(in oklch, var(--primary) 35%, oklch(0.08 0 0) / 0.80) 65%,
-      color-mix(in oklch, var(--primary) 20%, oklch(0.06 0 0) / 0.70) 100%),
-    url("https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80") !important;
+      color-mix(in oklch, var(--primary), transparent var(--img-tint-top)) 0%,
+      color-mix(in oklch, var(--primary), transparent var(--img-tint-bottom)) 100%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, var(--img-overlay-top)) 0%,
+      rgba(0, 0, 0, var(--img-overlay-mid)) 40%,
+      rgba(0, 0, 0, var(--img-overlay-low)) 70%,
+      rgba(0, 0, 0, var(--img-overlay-bottom)) 100%),
+    var(--sidebar-bg-image) !important;
   background-size: cover !important;
   background-position: center !important;
   color: var(--sidebar-foreground);
 }
 
-/* Image — active item: white/light bg pill with blur */
+/* Dark mode brightness tiers */
+html.dark[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-slot="sidebar"],
+html.dark[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-image-brightness="medium"][data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --img-overlay-top: 0.78;
+  --img-overlay-mid: 0.60;
+  --img-overlay-low: 0.48;
+  --img-overlay-bottom: 0.42;
+  --img-tint-top: 40%;
+  --img-tint-bottom: 78%;
+}
+
+html.dark[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-slot="sidebar"],
+html.dark[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-slot="sidebar-inner"],
+html.dark[data-sidebar-image-brightness="bright"][data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] {
+  --img-overlay-top: 0.90;
+  --img-overlay-mid: 0.75;
+  --img-overlay-low: 0.62;
+  --img-overlay-bottom: 0.55;
+  --img-tint-top: 35%;
+  --img-tint-bottom: 70%;
+}
+
+/* Image — active item: frosted glass pill */
 :root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-active="true"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-active="true"] {
-  background-color: rgba(255, 255, 255, 0.20) !important;
+  background-color: rgba(255, 255, 255, 0.18) !important;
   color: oklch(0.985 0 0) !important;
   backdrop-filter: blur(12px);
 }
@@ -1363,19 +1431,19 @@ html.dark[data-sidebar-theme="image"] [data-mobile="true"][data-slot="sidebar"] 
 :root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-separator"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="separator"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-separator"] {
-  background-color: color-mix(in oklch, white 15%, transparent) !important;
+  background-color: color-mix(in oklch, white 12%, transparent) !important;
 }
 
 /* Image — sub-menu border */
 :root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-menu-sub"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-menu-sub"] {
-  border-color: color-mix(in oklch, white 15%, transparent);
+  border-color: color-mix(in oklch, white 12%, transparent);
 }
 
 /* Image — group labels */
 :root[data-sidebar-theme="image"] [data-slot="sidebar"] [data-slot="sidebar-group-label"],
 :root[data-sidebar-theme="image"] [data-slot="sidebar-inner"] [data-slot="sidebar-group-label"] {
-  color: oklch(0.82 0 0);
+  color: oklch(0.78 0 0);
 }
 
 /* ─────────────────────────────────────────────
