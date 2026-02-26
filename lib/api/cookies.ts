@@ -17,24 +17,36 @@ export const WORKSPACE_COOKIE = "ws"
 export const ACCESS_TOKEN_MAX_AGE = 15 * 60 // 15 minutes
 export const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60 // 7 days
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production"
+
 export function createCookieHeader(
   name: string,
   value: string,
   maxAge: number
 ): string {
   const parts = [
-    `${name}=${value}`,
+    `${name}=${encodeURIComponent(value)}`,
     `HttpOnly`,
     `Path=${name === REFRESH_TOKEN_COOKIE ? "/api/auth" : "/"}`,
     `Max-Age=${maxAge}`,
     `SameSite=${name === REFRESH_TOKEN_COOKIE ? "Strict" : "Lax"}`,
   ]
-  if (process.env.NODE_ENV === "production") {
+  if (IS_PRODUCTION) {
     parts.push("Secure")
   }
   return parts.join("; ")
 }
 
 export function deleteCookieHeader(name: string): string {
-  return `${name}=; HttpOnly; Path=${name === REFRESH_TOKEN_COOKIE ? "/api/auth" : "/"}; Max-Age=0; SameSite=Lax`
+  const parts = [
+    `${name}=`,
+    "HttpOnly",
+    `Path=${name === REFRESH_TOKEN_COOKIE ? "/api/auth" : "/"}`,
+    "Max-Age=0",
+    "SameSite=Lax",
+  ]
+  if (IS_PRODUCTION) {
+    parts.push("Secure")
+  }
+  return parts.join("; ")
 }

@@ -1,7 +1,9 @@
 /**
  * Demo mode mock data.
- * When NEXT_DEMO_MODE=true, all API calls are bypassed
+ * When NEXT_PUBLIC_DEMO_MODE=true, all API calls are bypassed
  * and this data is returned instead.
+ *
+ * SECURITY: Demo mode is force-disabled in production builds.
  */
 
 import type {
@@ -16,7 +18,18 @@ import type {
   Endpoint,
 } from "./types"
 
-export const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+// ─── Production Safety Guard ───
+const IS_PRODUCTION = process.env.NODE_ENV === "production"
+const DEMO_ENV = process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+
+export const IS_DEMO = IS_PRODUCTION ? false : DEMO_ENV
+
+if (IS_PRODUCTION && DEMO_ENV) {
+  console.warn(
+    "[SECURITY] NEXT_PUBLIC_DEMO_MODE is set to 'true' in a production environment. " +
+    "Demo mode has been FORCE-DISABLED for security. Remove this env var in production."
+  )
+}
 
 // ─── Demo User ───
 

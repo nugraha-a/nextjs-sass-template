@@ -69,32 +69,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = async () => {
     try {
+      // Check if authenticated via status endpoint (no token exposure)
       const res = await fetch("/api/auth/token")
       if (res.ok) {
-        const { accessToken } = await res.json()
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-        const meRes = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        if (meRes.ok) {
-          const user = await meRes.json()
-          setState({
-            user,
-            workspace: null,
-            isAuthenticated: true,
-            isLoading: false,
-            requires2FA: false,
-          })
-          return
+        const { authenticated } = await res.json()
+        if (authenticated) {
+          // Get user data via refresh which returns fresh token server-side
+          const refreshRes = await fetch("/api/auth/refresh", { method: "POST" })
+          if (refreshRes.ok) {
+            // Fetch user profile via the BFF proxy pattern
+            // The token is in the cookie, so we just need to call /api/auth/me
+            const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
+            const meRes = await fetch(`${API_BASE}/auth/me`, {
+              credentials: "include",
+            })
+            if (meRes.ok) {
+              const user = await meRes.json()
+              setState({
+                user,
+                workspace: null,
+                isAuthenticated: true,
+                isLoading: false,
+                requires2FA: false,
+              })
+              return
+            }
+          }
         }
       }
     } catch {
-      // Not authenticated
+      // Not authenticated — fail secure
     }
     setState((s) => ({ ...s, isLoading: false }))
   }
 
-  // ─── Demo login: accept anything ───
+  // ─── Login ───
   const login = useCallback(
     async (email: string, _password: string): Promise<LoginResponse> => {
       if (IS_DEMO) {
@@ -241,7 +250,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (workspaceId: string) => {
       if (IS_DEMO) {
         const ws = DEMO_WORKSPACES.find((w) => w.id === workspaceId) || DEMO_ACTIVE_WORKSPACE
-        document.cookie = `ws=${workspaceId};path=/;max-age=31536000;samesite=lax`
+        // Set cookie securely via BFF route instead of document.cookie
+        await fetch("/api/auth/workspace", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ workspaceId }),
+        })
         setState((s) => ({ ...s, workspace: ws }))
         router.push("/")
         return
@@ -256,7 +270,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      document.cookie = `ws=${workspaceId};path=/;max-age=31536000;samesite=lax`
+      // Set cookie securely via BFF route instead of document.cookie
+      await fetch("/api/auth/workspace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workspaceId }),
+      })
 
       const wsRes = await fetch(`${API_BASE}/workspaces/${workspaceId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -275,19 +294,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (IS_DEMO) return "demo.access.token"
 
     try {
-      const res = await fetch("/api/auth/token")
-      if (res.ok) {
-        const { accessToken } = await res.json()
-        return accessToken
-      }
-
+      // Try to get a fresh token via refresh endpoint
+      // The token is set as HttpOnly cookie server-side
       const refreshRes = await fetch("/api/auth/refresh", { method: "POST" })
       if (refreshRes.ok) {
         const { accessToken } = await refreshRes.json()
         return accessToken
       }
     } catch {
-      // Token unavailable
+      // Token unavailable — fail secure
     }
     return null
   }, [])

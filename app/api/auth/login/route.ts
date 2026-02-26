@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 import {
   IS_DEMO,
   DEMO_USER,
@@ -14,6 +15,11 @@ import {
   createCookieHeader,
 } from "@/lib/api/cookies"
 
+const loginSchema = z.object({
+  email: z.string().email("Invalid email format").max(255),
+  password: z.string().min(1, "Password is required").max(128),
+})
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -26,7 +32,16 @@ export async function POST(request: NextRequest) {
       return response
     }
 
-    const { email, password } = body
+    // ─── Input validation ───
+    const parsed = loginSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: "Invalid input", errors: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
+    }
+
+    const { email, password } = parsed.data
     const result = await authApi.login(email, password)
 
     if (result.requires2FA) {
@@ -43,7 +58,8 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error: unknown) {
     const status = (error as { status?: number }).status || 500
-    const body = (error as { body?: unknown }).body || { message: "Login failed" }
-    return NextResponse.json(body, { status })
+    // Sanitize: don't leak internal error details to client
+    const message = status === 401 ? "Invalid credentials" : "Login failed"
+    return NextResponse.json({ message }, { status })
   }
 }
