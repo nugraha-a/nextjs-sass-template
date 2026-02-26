@@ -248,10 +248,21 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
   }, [saveSettings])
 
   const resetToDefaults = useCallback(() => {
+    // Delete sidebar image file from disk if one exists
+    const currentImageUrl = settings.sidebarImageUrl
+    if (currentImageUrl && currentImageUrl.startsWith("/uploads/sidebar/")) {
+      fetch("/api/sidebar-image", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: currentImageUrl }),
+      }).catch(() => { })
+    }
+
     setSettings(defaultSettings)
     setTheme(defaultSettings.themeMode)
     saveSettings(defaultSettings)
-  }, [setTheme, saveSettings])
+  }, [setTheme, saveSettings, settings.sidebarImageUrl])
+
 
   // Sync theme mode with next-themes
   useEffect(() => {

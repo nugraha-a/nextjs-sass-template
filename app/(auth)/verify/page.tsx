@@ -26,6 +26,7 @@ function VerifyContent() {
   const [error, setError] = useState("")
   const [countdown, setCountdown] = useState(60)
   const [canResend, setCanResend] = useState(false)
+  const [isResending, setIsResending] = useState(false)
 
   // Countdown timer
   useEffect(() => {
@@ -39,6 +40,7 @@ function VerifyContent() {
 
   const handleVerify = useCallback(
     async (otpCode: string) => {
+      if (isLoading) return
       setIsLoading(true)
       setError("")
 
@@ -87,23 +89,28 @@ function VerifyContent() {
 
   // Auto-submit when all digits entered
   useEffect(() => {
-    if (code.length === 6) {
+    if (code.length === 6 && !isLoading) {
       handleVerify(code)
     }
-  }, [code, handleVerify])
+  }, [code, handleVerify, isLoading])
 
   const handleResend = async () => {
+    if (isResending) return
+    setIsResending(true)
     setCountdown(60)
     setCanResend(false)
-    // Trigger resend via the same forgot-password endpoint
-    await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identifier: maskedContact,
-        channel: "email",
-      }),
-    })
+    try {
+      await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: maskedContact,
+          channel: "email",
+        }),
+      })
+    } finally {
+      setIsResending(false)
+    }
   }
 
   const titles: Record<string, string> = {
@@ -166,7 +173,8 @@ function VerifyContent() {
               {canResend ? (
                 <button
                   onClick={handleResend}
-                  className="text-primary hover:underline font-medium"
+                  disabled={isResending}
+                  className="text-primary hover:underline font-medium disabled:opacity-50"
                 >
                   Resend code
                 </button>

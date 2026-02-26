@@ -480,12 +480,15 @@ function SidebarImageSection() {
   const [pendingPreview, setPendingPreview] = useState<string | null>(null)
   const [pendingBrightness, setPendingBrightness] = useState<"bright" | "medium" | "dark" | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
 
+  const isBusy = isUploading || isResetting
   const currentImage = sidebarImageUrl || DEFAULT_UNSPLASH_URL
   const isCustom = !!sidebarImageUrl
   const displayBrightness = pendingBrightness || sidebarImageBrightness || "dark"
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isBusy) return
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -511,7 +514,7 @@ function SidebarImageSection() {
   }
 
   const handleConfirm = async () => {
-    if (!pendingFile) return
+    if (!pendingFile || isUploading) return
     setIsUploading(true)
 
     try {
@@ -550,6 +553,7 @@ function SidebarImageSection() {
   }
 
   const handleCancel = () => {
+    if (isBusy) return
     if (pendingPreview) URL.revokeObjectURL(pendingPreview)
     setPendingFile(null)
     setPendingPreview(null)
@@ -557,22 +561,32 @@ function SidebarImageSection() {
   }
 
   const handleReset = async () => {
-    if (!sidebarImageUrl) return
+    if (!sidebarImageUrl || isResetting) return
+    setIsResetting(true)
 
     try {
-      await fetch("/api/sidebar-image", {
+      const res = await fetch("/api/sidebar-image", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: sidebarImageUrl }),
       })
-    } catch {
-      // Silently continue — file may not exist
-    }
 
-    setSidebarImageUrl(null)
-    setSidebarImageBrightness(null)
-    toast.success("Reset to default image")
+      if (!res.ok) {
+        const data = await res.json()
+        toast.error(data.error || "Failed to delete image")
+        return
+      }
+
+      setSidebarImageUrl(null)
+      setSidebarImageBrightness(null)
+      toast.success("Reset to default image")
+    } catch {
+      toast.error("Failed to delete image")
+    } finally {
+      setIsResetting(false)
+    }
   }
+
 
   return (
     <div className="mt-2 space-y-2 rounded-md border border-border bg-secondary/30 p-2.5">
@@ -612,7 +626,7 @@ function SidebarImageSection() {
         <div className="flex gap-1.5">
           <button
             onClick={handleConfirm}
-            disabled={isUploading}
+            disabled={isBusy}
             className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors cursor-pointer"
           >
             <Check className="size-3" />
@@ -620,7 +634,7 @@ function SidebarImageSection() {
           </button>
           <button
             onClick={handleCancel}
-            disabled={isUploading}
+            disabled={isBusy}
             className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md border border-border hover:bg-secondary disabled:opacity-50 transition-colors cursor-pointer"
           >
             <X className="size-3" />
@@ -631,7 +645,8 @@ function SidebarImageSection() {
         <div className="flex gap-1.5">
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md border border-border hover:bg-secondary transition-colors cursor-pointer"
+            disabled={isBusy}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 rounded-md border border-border hover:bg-secondary disabled:opacity-50 transition-colors cursor-pointer"
           >
             <Upload className="size-3" />
             Upload Image
@@ -639,10 +654,11 @@ function SidebarImageSection() {
           {isCustom && (
             <button
               onClick={handleReset}
-              className="flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 px-2 rounded-md border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors cursor-pointer"
+              disabled={isBusy}
+              className="flex items-center justify-center gap-1 text-[10px] font-medium py-1.5 px-2 rounded-md border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 disabled:opacity-50 transition-colors cursor-pointer"
             >
               <RotateCcw className="size-3" />
-              Reset
+              {isResetting ? "..." : "Reset"}
             </button>
           )}
         </div>
@@ -658,6 +674,7 @@ function SidebarImageSection() {
     </div>
   )
 }
+
 
 function SidebarModeButton({
   mode,

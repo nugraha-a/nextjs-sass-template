@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { writeFile, unlink, mkdir } from "fs/promises"
+import { writeFile, unlink, mkdir, readdir } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
-import { DEMO_SESSION_COOKIE } from "@/lib/api/cookies"
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "sidebar")
+const PUBLIC_DIR = path.resolve(process.cwd(), "public")
+const UPLOAD_DIR = path.join(PUBLIC_DIR, "uploads", "sidebar")
 const MAX_SIZE = 2 * 1024 * 1024 // 2MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 const EXT_MAP: Record<string, string> = {
@@ -39,14 +39,24 @@ function isAuthenticated(request: NextRequest): boolean {
     return Boolean(accessToken)
 }
 
-function isDemoSession(request: NextRequest): boolean {
-    return request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
-}
+/**
+ * Convert a public URL path like "/uploads/sidebar/img.jpg"
+ * to an absolute filesystem path, safely.
+ *
+ * SECURITY: Strips leading slashes, resolves to canonical path,
+ * and verifies the result is inside UPLOAD_DIR.
+ */
+function resolveUploadPath(urlPath: string): string | null {
+    // Strip leading slash to avoid path.resolve treating it as absolute root
+    const cleaned = urlPath.replace(/^\/+/, "")
+    const resolved = path.resolve(PUBLIC_DIR, cleaned)
 
-function isPathSafe(filePath: string): boolean {
-    const resolved = path.resolve(process.cwd(), "public", filePath)
-    const safeBase = path.resolve(UPLOAD_DIR)
-    return resolved.startsWith(safeBase + path.sep) || resolved === safeBase
+    // Must be inside UPLOAD_DIR (prevents path traversal)
+    if (!resolved.startsWith(UPLOAD_DIR + path.sep) && resolved !== UPLOAD_DIR) {
+        return null
+    }
+
+    return resolved
 }
 
 async function ensureDir() {
@@ -55,32 +65,29 @@ async function ensureDir() {
     }
 }
 
-async function deleteFileIfExists(filePath: string) {
+/**
+ * Safely delete a file by its public URL path.
+ * Returns true if file was actually deleted.
+ */
+async function safeDeleteFile(urlPath: string): Promise<boolean> {
+    const resolved = resolveUploadPath(urlPath)
+    if (!resolved) return false
+
     try {
-        const resolved = path.resolve(process.cwd(), "public", filePath)
-        if (!resolved.startsWith(path.resolve(UPLOAD_DIR))) {
-            return
-        }
         if (existsSync(resolved)) {
             await unlink(resolved)
+            return true
         }
     } catch {
-        // Silently ignore deletion errors
+        // Deletion error — file may be locked or already gone
     }
+    return false
 }
 
+// ─── POST: Upload new sidebar image ───
 export async function POST(request: NextRequest) {
-    // ─── Auth check ───
     if (!isAuthenticated(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    // ─── Read-only enforcement for demo sessions ───
-    if (isDemoSession(request)) {
-        return NextResponse.json(
-            { error: "File uploads are disabled in demo mode." },
-            { status: 403 }
-        )
     }
 
     try {
@@ -105,7 +112,7 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // ─── Verify actual file content via magic bytes ───
+        // Verify actual file content via magic bytes
         const bytes = await file.arrayBuffer()
         if (!verifyMagicBytes(bytes, file.type)) {
             return NextResponse.json(
@@ -114,10 +121,10 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Delete old image if header provided (with path safety check)
+        // Delete old image if header provided
         const oldImage = request.headers.get("x-old-image")
-        if (oldImage && oldImage.startsWith("/uploads/sidebar/") && isPathSafe(oldImage)) {
-            await deleteFileIfExists(oldImage)
+        if (oldImage && oldImage.startsWith("/uploads/sidebar/")) {
+            await safeDeleteFile(oldImage)
         }
 
         await ensureDir()
@@ -127,7 +134,8 @@ export async function POST(request: NextRequest) {
         const filename = sanitizeFilename(rawFilename)
         const filePath = path.join(UPLOAD_DIR, filename)
 
-        if (!filePath.startsWith(path.resolve(UPLOAD_DIR))) {
+        // Final safety check
+        if (!filePath.startsWith(UPLOAD_DIR)) {
             return NextResponse.json({ error: "Invalid file path" }, { status: 400 })
         }
 
@@ -142,38 +150,66 @@ export async function POST(request: NextRequest) {
     }
 }
 
+// ─── DELETE: Remove a sidebar image ───
 export async function DELETE(request: NextRequest) {
-    // ─── Auth check ───
     if (!isAuthenticated(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    // ─── Read-only enforcement for demo sessions ───
-    if (isDemoSession(request)) {
-        return NextResponse.json(
-            { error: "File deletion is disabled in demo mode." },
-            { status: 403 }
-        )
     }
 
     try {
         const { url } = await request.json()
 
-        if (!url || typeof url !== "string" || !url.startsWith("/uploads/sidebar/")) {
+        if (!url || typeof url !== "string") {
             return NextResponse.json({ error: "Invalid path" }, { status: 400 })
         }
 
-        if (!isPathSafe(url)) {
+        if (!url.startsWith("/uploads/sidebar/")) {
             return NextResponse.json({ error: "Invalid path" }, { status: 400 })
         }
 
-        await deleteFileIfExists(url)
+        // Prevent deleting directories or dotfiles
+        const basename = path.basename(url)
+        if (!basename || basename.startsWith(".") || basename.includes("..")) {
+            return NextResponse.json({ error: "Invalid filename" }, { status: 400 })
+        }
 
-        return NextResponse.json({ success: true })
+        const deleted = await safeDeleteFile(url)
+
+        return NextResponse.json({ success: true, deleted })
     } catch {
         return NextResponse.json(
             { error: "Delete failed" },
             { status: 500 }
         )
+    }
+}
+
+// ─── Cleanup: Remove orphaned files older than 24h ───
+// Called internally or via cron. Not exposed as public route.
+export async function cleanupOrphanedFiles() {
+    try {
+        if (!existsSync(UPLOAD_DIR)) return
+
+        const files = await readdir(UPLOAD_DIR)
+        const now = Date.now()
+        const MAX_AGE = 24 * 60 * 60 * 1000 // 24 hours
+
+        for (const file of files) {
+            // Extract timestamp from filename: sidebar-bg-{timestamp}.ext
+            const match = file.match(/sidebar-bg-(\d+)\./)
+            if (!match) continue
+
+            const fileTimestamp = parseInt(match[1], 10)
+            if (now - fileTimestamp > MAX_AGE) {
+                const filePath = path.join(UPLOAD_DIR, file)
+                try {
+                    await unlink(filePath)
+                } catch {
+                    // Skip files that can't be deleted
+                }
+            }
+        }
+    } catch {
+        // Cleanup is best-effort
     }
 }

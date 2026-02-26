@@ -5,10 +5,6 @@ import { useRouter } from "next/navigation"
 import { Building2, ChevronRight, LogOut, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
-import {
-  IS_DEMO,
-  DEMO_WORKSPACES,
-} from "@/lib/api/demo-data"
 
 interface WorkspaceItem {
   id: string
@@ -17,28 +13,28 @@ interface WorkspaceItem {
   role: string
 }
 
+const DEMO_WORKSPACES_FALLBACK = [
+  { id: "ws-acme", name: "Acme Corporation", memberCount: 24, role: "Admin" },
+  { id: "ws-yayasan", name: "Yayasan Al Ma'soem", memberCount: 48, role: "Admin" },
+]
+
 export default function WorkspacePage() {
   const router = useRouter()
   const { logout, switchWorkspace, isDemo } = useAuth()
   const [workspaces, setWorkspaces] = useState<WorkspaceItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selecting, setSelecting] = useState<string | null>(null)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const isBusy = selecting !== null || isLoggingOut
 
   useEffect(() => {
     loadWorkspaces()
   }, [])
 
   const loadWorkspaces = async () => {
-    // Demo mode: use mock workspaces
-    if (IS_DEMO) {
-      setWorkspaces(
-        DEMO_WORKSPACES.map((ws) => ({
-          id: ws.id,
-          name: ws.name,
-          memberCount: ws.memberCount || 0,
-          role: "Admin",
-        }))
-      )
+    if (isDemo) {
+      setWorkspaces(DEMO_WORKSPACES_FALLBACK)
       setIsLoading(false)
       return
     }
@@ -72,11 +68,14 @@ export default function WorkspacePage() {
   }
 
   const handleSelect = async (workspaceId: string) => {
+    if (isBusy) return
     setSelecting(workspaceId)
     await switchWorkspace(workspaceId)
   }
 
   const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
     await logout()
   }
 
@@ -97,9 +96,9 @@ export default function WorkspacePage() {
           <p className="text-muted-foreground">
             You don&apos;t have access to any workspaces yet.
           </p>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button variant="outline" onClick={handleLogout} disabled={isLoggingOut}>
             <LogOut className="h-4 w-4 mr-2" />
-            Sign out
+            {isLoggingOut ? "Signing out..." : "Sign out"}
           </Button>
         </div>
       </div>
@@ -129,10 +128,10 @@ export default function WorkspacePage() {
             <button
               key={ws.id}
               onClick={() => handleSelect(ws.id)}
-              disabled={selecting !== null}
+              disabled={isBusy}
               className={`
                 w-full flex items-center gap-4 px-5 py-4 text-left
-                hover:bg-accent transition-colors
+                hover:bg-accent transition-colors disabled:opacity-50
                 ${i < workspaces.length - 1 ? "border-b border-border" : ""}
                 ${selecting === ws.id ? "bg-accent" : ""}
               `}
@@ -159,9 +158,10 @@ export default function WorkspacePage() {
           Signed in · {" "}
           <button
             onClick={handleLogout}
-            className="text-primary hover:underline"
+            disabled={isBusy}
+            className="text-primary hover:underline disabled:opacity-50"
           >
-            Sign out
+            {isLoggingOut ? "Signing out..." : "Sign out"}
           </button>
         </div>
       </div>
