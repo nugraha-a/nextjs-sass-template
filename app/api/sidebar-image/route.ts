@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { writeFile, unlink, mkdir } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
+import { DEMO_SESSION_COOKIE } from "@/lib/api/cookies"
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "sidebar")
 const MAX_SIZE = 2 * 1024 * 1024 // 2MB
@@ -38,6 +39,10 @@ function isAuthenticated(request: NextRequest): boolean {
     return Boolean(accessToken)
 }
 
+function isDemoSession(request: NextRequest): boolean {
+    return request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
+}
+
 function isPathSafe(filePath: string): boolean {
     const resolved = path.resolve(process.cwd(), "public", filePath)
     const safeBase = path.resolve(UPLOAD_DIR)
@@ -53,7 +58,6 @@ async function ensureDir() {
 async function deleteFileIfExists(filePath: string) {
     try {
         const resolved = path.resolve(process.cwd(), "public", filePath)
-        // Double-check path safety before deletion
         if (!resolved.startsWith(path.resolve(UPLOAD_DIR))) {
             return
         }
@@ -69,6 +73,14 @@ export async function POST(request: NextRequest) {
     // ─── Auth check ───
     if (!isAuthenticated(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    // ─── Read-only enforcement for demo sessions ───
+    if (isDemoSession(request)) {
+        return NextResponse.json(
+            { error: "File uploads are disabled in demo mode." },
+            { status: 403 }
+        )
     }
 
     try {
@@ -115,7 +127,6 @@ export async function POST(request: NextRequest) {
         const filename = sanitizeFilename(rawFilename)
         const filePath = path.join(UPLOAD_DIR, filename)
 
-        // Final path safety check
         if (!filePath.startsWith(path.resolve(UPLOAD_DIR))) {
             return NextResponse.json({ error: "Invalid file path" }, { status: 400 })
         }
@@ -137,6 +148,14 @@ export async function DELETE(request: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // ─── Read-only enforcement for demo sessions ───
+    if (isDemoSession(request)) {
+        return NextResponse.json(
+            { error: "File deletion is disabled in demo mode." },
+            { status: 403 }
+        )
+    }
+
     try {
         const { url } = await request.json()
 
@@ -144,7 +163,6 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: "Invalid path" }, { status: 400 })
         }
 
-        // Path traversal protection
         if (!isPathSafe(url)) {
             return NextResponse.json({ error: "Invalid path" }, { status: 400 })
         }

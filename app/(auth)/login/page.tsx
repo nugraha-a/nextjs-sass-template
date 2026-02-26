@@ -12,15 +12,24 @@ import { Label } from "@/components/ui/label"
 import { BrandPanel } from "@/components/auth/brand-panel"
 import { PasswordInput } from "@/components/auth/password-input"
 import { GoogleSSOButton } from "@/components/auth/google-sso-button"
-import { IS_DEMO, DEMO_USER, DEMO_ACTIVE_WORKSPACE } from "@/lib/api/demo-data"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState(IS_DEMO ? "demo@company.com" : "")
-  const [password, setPassword] = useState(IS_DEMO ? "demo1234" : "")
+  const { demoAvailable } = useAuth()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [remember, setRemember] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  // Pre-fill demo credentials when demoAvailable becomes true (client-side only)
+  React.useEffect(() => {
+    if (demoAvailable) {
+      setEmail("demo@company.com")
+      setPassword("demo1234")
+    }
+  }, [demoAvailable])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,13 +39,6 @@ export default function LoginPage() {
     setError("")
 
     try {
-      if (IS_DEMO) {
-        // Demo mode: skip API, go straight to dashboard
-        router.push("/")
-        return
-      }
-
-      // Production: call BFF login endpoint
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,11 +66,25 @@ export default function LoginPage() {
   }
 
   const handleGoogleLogin = async () => {
-    if (IS_DEMO) {
-      router.push("/")
-      return
+    if (demoAvailable) {
+      // In demo mode, Google login goes through demo flow
+      setIsLoading(true)
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken: "demo" }),
+        })
+        if (res.ok) {
+          router.push("/")
+          return
+        }
+      } catch {
+        // fall through
+      } finally {
+        setIsLoading(false)
+      }
     }
-    // Production: would trigger Google OAuth flow
     setError("Google SSO requires a configured OAuth client")
   }
 
@@ -99,10 +115,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Demo mode banner */}
-          {IS_DEMO && (
+          {/* Demo mode banner — rendered client-side only to avoid hydration mismatch */}
+          {demoAvailable && (
             <div className="rounded-lg bg-primary/10 border border-primary/20 px-4 py-3 text-sm text-primary">
-              <strong>Demo Mode</strong> — Any credentials will work. Just click Sign In.
+              <strong>Demo Mode</strong> — Use <code>demo@company.com</code> to sign in.
             </div>
           )}
 

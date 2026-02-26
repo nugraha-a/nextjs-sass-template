@@ -1,9 +1,13 @@
 /**
  * Demo mode mock data.
- * When NEXT_PUBLIC_DEMO_MODE=true, all API calls are bypassed
- * and this data is returned instead.
+ * When DEMO_MODE=true (server-side env), demo login is enabled.
  *
- * SECURITY: Demo mode is force-disabled in production builds.
+ * SECURITY PRINCIPLES:
+ * 1. Uses server-side only env var (not NEXT_PUBLIC_) — never leaks to client bundle
+ * 2. Demo login requires specific email (demo@company.com)
+ * 3. All security headers and CSRF protection remain active
+ * 4. File uploads are blocked in demo sessions (read-only)
+ * 5. Demo sessions have 1-hour TTL (vs 7-day for normal sessions)
  */
 
 import type {
@@ -18,24 +22,18 @@ import type {
   Endpoint,
 } from "./types"
 
-// ─── Production Safety Guard ───
-const IS_PRODUCTION = process.env.NODE_ENV === "production"
-const DEMO_ENV = process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+// ─── Server-side only demo flag ───
+// DEMO_MODE (not NEXT_PUBLIC_) — safe for production
+export const IS_DEMO = process.env.DEMO_MODE === "true"
 
-export const IS_DEMO = IS_PRODUCTION ? false : DEMO_ENV
-
-if (IS_PRODUCTION && DEMO_ENV) {
-  console.warn(
-    "[SECURITY] NEXT_PUBLIC_DEMO_MODE is set to 'true' in a production environment. " +
-    "Demo mode has been FORCE-DISABLED for security. Remove this env var in production."
-  )
-}
+// ─── Demo Credentials ───
+export const DEMO_EMAIL = "demo@company.com"
 
 // ─── Demo User ───
 
 export const DEMO_USER: User = {
   id: "demo-user-001",
-  email: "demo@company.com",
+  email: DEMO_EMAIL,
   name: "Demo User",
   avatarUrl: undefined,
   has2FA: false,

@@ -1,26 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
-import { IS_DEMO } from "@/lib/api/demo-data"
-import { ACCESS_TOKEN_COOKIE } from "@/lib/api/cookies"
+import { ACCESS_TOKEN_COOKIE, DEMO_SESSION_COOKIE } from "@/lib/api/cookies"
 
 /**
  * GET /api/auth/token
- * Returns authentication status ONLY — never exposes the raw token.
+ * Returns authentication status and demo flag — never exposes the raw token.
  * The BFF proxy pattern keeps tokens server-side.
- *
- * SECURITY: Previously this endpoint returned the raw access token from
- * the HttpOnly cookie, which completely defeated HttpOnly protection
- * and enabled XSS → token theft attacks.
  */
 export async function GET(request: NextRequest) {
-  if (IS_DEMO) {
-    return NextResponse.json({ authenticated: true })
-  }
-
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value
+  const isDemoSession = request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
 
   if (!accessToken) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
+    return NextResponse.json({ authenticated: false, isDemo: false }, { status: 401 })
   }
 
-  return NextResponse.json({ authenticated: true })
+  return NextResponse.json({ authenticated: true, isDemo: isDemoSession })
 }

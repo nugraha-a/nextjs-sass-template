@@ -9,12 +9,43 @@ import React, {
 } from "react"
 import { useRouter } from "next/navigation"
 import type { User, Workspace } from "@/lib/api/types"
-import {
-  IS_DEMO,
-  DEMO_USER,
-  DEMO_WORKSPACES,
-  DEMO_ACTIVE_WORKSPACE,
-} from "@/lib/api/demo-data"
+
+/**
+ * SECURITY: Demo mode is determined by:
+ * 1. Server: GET /api/config → { demoEnabled: true/false }
+ * 2. Session: Login response → { isDemo: true } + `dm` cookie marker
+ *
+ * The client NEVER reads DEMO_MODE env var directly (it's server-side only).
+ */
+
+// ─── Demo mock data (client-side only, for UI) ───
+const DEMO_USER_FALLBACK: User = {
+  id: "demo-user-001",
+  email: "demo@company.com",
+  name: "Demo User",
+  avatarUrl: undefined,
+  has2FA: false,
+  workspaces: [],
+}
+
+const DEMO_WORKSPACES: Workspace[] = [
+  {
+    id: "ws-acme",
+    name: "Acme Corporation",
+    slug: "acme",
+    memberCount: 24,
+    createdAt: "2024-01-15T00:00:00Z",
+  },
+  {
+    id: "ws-yayasan",
+    name: "Yayasan Al Ma'soem",
+    slug: "yayasan",
+    memberCount: 48,
+    createdAt: "2024-03-01T00:00:00Z",
+  },
+]
+
+const DEMO_ACTIVE_WORKSPACE = DEMO_WORKSPACES[0]
 
 interface AuthState {
   user: User | null
@@ -32,6 +63,7 @@ interface AuthContextType extends AuthState {
   switchWorkspace: (workspaceId: string) => Promise<void>
   getAccessToken: () => Promise<string | null>
   isDemo: boolean
+  demoAvailable: boolean
 }
 
 interface LoginResponse {
@@ -54,31 +86,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   const [state, setState] = useState<AuthState>({
-    user: IS_DEMO ? DEMO_USER : null,
-    workspace: IS_DEMO ? DEMO_ACTIVE_WORKSPACE : null,
-    isAuthenticated: IS_DEMO,
-    isLoading: !IS_DEMO,
+    user: null,
+    workspace: null,
+    isAuthenticated: false,
+    isLoading: true,
     requires2FA: false,
   })
 
-  // Check authentication status on mount (skip in demo)
+  // Whether demo mode is available on the server
+  const [demoAvailable, setDemoAvailable] = useState(false)
+  // Whether the current session is a demo session
+  const [isDemo, setIsDemo] = useState(false)
+
+  // Fetch config and check auth on mount
   useEffect(() => {
-    if (IS_DEMO) return
+    fetchConfig()
     checkAuth()
   }, [])
 
+  const fetchConfig = async () => {
+    try {
+      const res = await fetch("/api/config")
+      if (res.ok) {
+        const { demoEnabled } = await res.json()
+        setDemoAvailable(demoEnabled)
+      }
+    } catch {
+      // Config unavailable — demo not available
+    }
+  }
+
   const checkAuth = async () => {
     try {
-      // Check if authenticated via status endpoint (no token exposure)
       const res = await fetch("/api/auth/token")
       if (res.ok) {
-        const { authenticated } = await res.json()
+        const { authenticated, isDemo: isDemoSession } = await res.json()
         if (authenticated) {
-          // Get user data via refresh which returns fresh token server-side
+          if (isDemoSession) {
+            // Restore demo session
+            setIsDemo(true)
+            setState({
+              user: DEMO_USER_FALLBACK,
+              workspace: DEMO_ACTIVE_WORKSPACE,
+              isAuthenticated: true,
+              isLoading: false,
+              requires2FA: false,
+            })
+            return
+          }
+
+          // Normal session — refresh to keep alive
           const refreshRes = await fetch("/api/auth/refresh", { method: "POST" })
           if (refreshRes.ok) {
-            // Fetch user profile via the BFF proxy pattern
-            // The token is in the cookie, so we just need to call /api/auth/me
             const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
             const meRes = await fetch(`${API_BASE}/auth/me`, {
               credentials: "include",
@@ -106,18 +165,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ─── Login ───
   const login = useCallback(
     async (email: string, _password: string): Promise<LoginResponse> => {
-      if (IS_DEMO) {
-        const demoUser = { ...DEMO_USER, email }
-        setState({
-          user: demoUser,
-          workspace: DEMO_ACTIVE_WORKSPACE,
-          isAuthenticated: true,
-          isLoading: false,
-          requires2FA: false,
-        })
-        return { user: demoUser }
-      }
-
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,6 +186,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      // Check if this was a demo login
+      if (data.isDemo) {
+        setIsDemo(true)
+        setState({
+          user: data.user,
+          workspace: DEMO_ACTIVE_WORKSPACE,
+          isAuthenticated: true,
+          isLoading: false,
+          requires2FA: false,
+        })
+        return { user: data.user }
+      }
+
       setState({
         user: data.user,
         workspace: null,
@@ -154,17 +214,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = useCallback(
     async (idToken: string): Promise<LoginResponse> => {
-      if (IS_DEMO) {
-        setState({
-          user: DEMO_USER,
-          workspace: DEMO_ACTIVE_WORKSPACE,
-          isAuthenticated: true,
-          isLoading: false,
-          requires2FA: false,
-        })
-        return { user: DEMO_USER }
-      }
-
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -183,6 +232,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { requires2FA: true, verificationToken: data.verificationToken }
       }
 
+      if (data.isDemo) {
+        setIsDemo(true)
+        setState({
+          user: data.user,
+          workspace: DEMO_ACTIVE_WORKSPACE,
+          isAuthenticated: true,
+          isLoading: false,
+          requires2FA: false,
+        })
+        return { user: data.user }
+      }
+
       setState({
         user: data.user,
         workspace: null,
@@ -197,9 +258,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   const logout = useCallback(async () => {
-    if (!IS_DEMO) {
-      await fetch("/api/auth/logout", { method: "POST" })
-    }
+    await fetch("/api/auth/logout", { method: "POST" })
+    setIsDemo(false)
     setState({
       user: null,
       workspace: null,
@@ -212,17 +272,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verify2FA = useCallback(
     async (code: string, verificationToken: string) => {
-      if (IS_DEMO) {
-        setState({
-          user: DEMO_USER,
-          workspace: DEMO_ACTIVE_WORKSPACE,
-          isAuthenticated: true,
-          isLoading: false,
-          requires2FA: false,
-        })
-        return
-      }
-
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -235,6 +284,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await res.json()
+
+      if (data.isDemo) {
+        setIsDemo(true)
+        setState({
+          user: data.user,
+          workspace: DEMO_ACTIVE_WORKSPACE,
+          isAuthenticated: true,
+          isLoading: false,
+          requires2FA: false,
+        })
+        return
+      }
+
       setState({
         user: data.user,
         workspace: null,
@@ -248,9 +310,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const switchWorkspace = useCallback(
     async (workspaceId: string) => {
-      if (IS_DEMO) {
+      if (isDemo) {
         const ws = DEMO_WORKSPACES.find((w) => w.id === workspaceId) || DEMO_ACTIVE_WORKSPACE
-        // Set cookie securely via BFF route instead of document.cookie
         await fetch("/api/auth/workspace", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -270,7 +331,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      // Set cookie securely via BFF route instead of document.cookie
       await fetch("/api/auth/workspace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -287,15 +347,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.push("/")
     },
-    [router]
+    [router, isDemo]
   )
 
   const getAccessToken = useCallback(async (): Promise<string | null> => {
-    if (IS_DEMO) return "demo.access.token"
-
     try {
-      // Try to get a fresh token via refresh endpoint
-      // The token is set as HttpOnly cookie server-side
       const refreshRes = await fetch("/api/auth/refresh", { method: "POST" })
       if (refreshRes.ok) {
         const { accessToken } = await refreshRes.json()
@@ -317,7 +373,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         verify2FA,
         switchWorkspace,
         getAccessToken,
-        isDemo: IS_DEMO,
+        isDemo,
+        demoAvailable,
       }}
     >
       {children}

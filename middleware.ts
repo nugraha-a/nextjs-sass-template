@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// ─── Security: Production guard for demo mode ───
+/**
+ * SECURITY: Demo mode uses DEMO_MODE (server-side only, not NEXT_PUBLIC_).
+ * Middleware NEVER bypasses security for demo — headers + CSRF always active.
+ * Demo users go through normal auth flow with controlled credentials.
+ */
+
 const IS_PRODUCTION = process.env.NODE_ENV === "production"
-const IS_DEMO = IS_PRODUCTION
-  ? false // NEVER allow demo mode in production
-  : process.env.NEXT_PUBLIC_DEMO_MODE === "true"
 
 const PUBLIC_PATHS = ["/login", "/forgot-password", "/reset-password", "/invite"]
 const PARTIAL_AUTH_PATHS = ["/verify"]
 const AUTH_ONLY_PATHS = ["/workspace"]
 const API_AUTH_PREFIX = "/api/auth"
+const API_CONFIG_PREFIX = "/api/config"
 
 // ─── Security Headers ───
 const SECURITY_HEADERS: Record<string, string> = {
@@ -97,16 +100,10 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Demo mode: bypass route protection (NEVER in production)
-  if (IS_DEMO) {
-    return applySecurityHeaders(NextResponse.next())
-  }
-
   const accessToken = request.cookies.get("at")?.value
-  const workspaceCookie = request.cookies.get("ws")?.value
 
-  // Always pass through API auth routes
-  if (pathname.startsWith(API_AUTH_PREFIX)) {
+  // Always pass through API auth & config routes
+  if (pathname.startsWith(API_AUTH_PREFIX) || pathname.startsWith(API_CONFIG_PREFIX)) {
     return applySecurityHeaders(NextResponse.next())
   }
 
@@ -135,17 +132,11 @@ export function middleware(request: NextRequest) {
     return applySecurityHeaders(NextResponse.next())
   }
 
-  // Dashboard routes — require auth + workspace
+  // Dashboard routes — require auth (both normal and demo sessions)
   if (!accessToken) {
     const loginUrl = new URL("/login", request.url)
     loginUrl.searchParams.set("callbackUrl", pathname)
     return applySecurityHeaders(NextResponse.redirect(loginUrl))
-  }
-
-  // If authenticated but no workspace selected, redirect to workspace selector
-  if (!workspaceCookie && pathname !== "/") {
-    // Allow the root path so we don't get infinite redirects
-    // The workspace selector page will handle the flow
   }
 
   return applySecurityHeaders(NextResponse.next())
