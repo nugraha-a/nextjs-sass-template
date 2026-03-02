@@ -9,6 +9,7 @@ import {
   Eye,
   EyeOff,
   AlertTriangle,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -89,6 +90,19 @@ const statusColors: Record<string, string> = {
 export default function ApiClientsPage() {
   const [createOpen, setCreateOpen] = useState(false)
   const [showIds, setShowIds] = useState<Set<string>>(new Set())
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  const handleGenerate = async () => {
+    if (isGenerating) return
+    setIsGenerating(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+      setCreateOpen(false)
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   const toggleShowId = (id: string) => {
     setShowIds((prev) => {
@@ -159,8 +173,10 @@ export default function ApiClientsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button onClick={() => setCreateOpen(false)}>Generate Credentials →</Button>
+            <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={isGenerating}>Cancel</Button>
+            <Button onClick={handleGenerate} disabled={isGenerating}>
+              {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate Credentials →"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -185,87 +201,87 @@ export default function ApiClientsPage() {
         <CardContent>
           {/* API Client Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-        {mockClients.map((client) => (
-          <Card key={client.id} className="relative">
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary">
-                    <Key className="h-5 w-5" />
+            {mockClients.map((client) => (
+              <Card key={client.id} className="relative">
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary">
+                        <Key className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base">{client.name}</CardTitle>
+                        <CardDescription className="text-xs">
+                          Created {client.createdAt}
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem>Manage Endpoints</DropdownMenuItem>
+                        <DropdownMenuItem>View Usage</DropdownMenuItem>
+                        <DropdownMenuItem>Regenerate Secret</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-destructive">Revoke</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
-                  <div>
-                    <CardTitle className="text-base">{client.name}</CardTitle>
-                    <CardDescription className="text-xs">
-                      Created {client.createdAt}
-                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Client ID */}
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Client ID</Label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 text-xs font-mono bg-muted px-2 py-1.5 rounded border border-border truncate">
+                        {showIds.has(client.id) ? client.clientId : "••••••••••••••••"}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0"
+                        onClick={() => toggleShowId(client.id)}
+                      >
+                        {showIds.has(client.id) ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0"
+                        onClick={() => copyToClipboard(client.clientId)}
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Manage Endpoints</DropdownMenuItem>
-                    <DropdownMenuItem>View Usage</DropdownMenuItem>
-                    <DropdownMenuItem>Regenerate Secret</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">Revoke</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Client ID */}
-              <div className="space-y-1">
-                <Label className="text-xs text-muted-foreground">Client ID</Label>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 text-xs font-mono bg-muted px-2 py-1.5 rounded border border-border truncate">
-                    {showIds.has(client.id) ? client.clientId : "••••••••••••••••"}
-                  </code>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 w-7 p-0"
-                    onClick={() => toggleShowId(client.id)}
-                  >
-                    {showIds.has(client.id) ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 w-7 p-0"
-                    onClick={() => copyToClipboard(client.clientId)}
-                  >
-                    <Copy className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </div>
 
-              {/* Stats */}
-              <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground">
-                <Badge variant="secondary" className={statusColors[client.status]}>
-                  {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
-                </Badge>
-                <span>{client.rateLimit} req/min</span>
-                <span>{client.endpointCount}/{client.totalEndpoints} endpoints</span>
-              </div>
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground">
+                    <Badge variant="secondary" className={statusColors[client.status]}>
+                      {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
+                    </Badge>
+                    <span>{client.rateLimit} req/min</span>
+                    <span>{client.endpointCount}/{client.totalEndpoints} endpoints</span>
+                  </div>
 
-              {client.status === "expired" && (
-                <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-2 rounded-md">
-                  <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
-                  <span>Expired — regenerate credentials</span>
-                </div>
-              )}
+                  {client.status === "expired" && (
+                    <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-2 rounded-md">
+                      <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
+                      <span>Expired — regenerate credentials</span>
+                    </div>
+                  )}
 
-              <p className="text-xs text-muted-foreground">
-                Last used: {client.lastUsedAt}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+                  <p className="text-xs text-muted-foreground">
+                    Last used: {client.lastUsedAt}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>

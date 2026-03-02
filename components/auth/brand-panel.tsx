@@ -1,26 +1,69 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect, useCallback } from "react"
+import Image from "next/image"
+
+const SLIDES = [
+  {
+    src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
+    alt: "Modern office workspace",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&q=80",
+    alt: "Team collaboration",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80",
+    alt: "Data analytics dashboard",
+  },
+]
+
+const INTERVAL_MS = 5000
 
 /**
  * Brand panel for auth pages.
- * Left side: gradient background using --primary, logo, tagline.
- * Adapts to active color scheme.
+ * Full-bleed image fade slider with gradient overlay, logo, and tagline.
  */
 export function BrandPanel() {
+  const [active, setActive] = useState(0)
+
+  const next = useCallback(
+    () => setActive((i) => (i + 1) % SLIDES.length),
+    []
+  )
+
+  useEffect(() => {
+    const id = setInterval(next, INTERVAL_MS)
+    return () => clearInterval(id)
+  }, [next])
+
   return (
     <div className="relative hidden lg:flex lg:w-1/2 items-center justify-center overflow-hidden">
-      {/* Gradient background using primary color */}
+      {/* Image slides */}
+      {SLIDES.map((slide, i) => (
+        <Image
+          key={slide.src}
+          src={slide.src}
+          alt={slide.alt}
+          fill
+          sizes="50vw"
+          priority={i === 0}
+          className="object-cover transition-opacity duration-1000 ease-in-out"
+          style={{ opacity: i === active ? 1 : 0 }}
+        />
+      ))}
+
+      {/* Gradient overlay using --primary */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 z-1"
         style={{
-          background: `linear-gradient(135deg, var(--primary), color-mix(in oklch, var(--primary) 60%, black))`,
+          background: `linear-gradient(135deg, color-mix(in oklch, var(--primary) 85%, transparent), color-mix(in oklch, var(--primary) 55%, black))`,
         }}
       />
 
       {/* Geometric pattern overlay */}
       <svg
-        className="absolute inset-0 w-full h-full opacity-10"
+        className="absolute inset-0 z-2 w-full h-full opacity-[0.06]"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
@@ -49,6 +92,7 @@ export function BrandPanel() {
             <path d="M12 12h8v8h-8z" fill="currentColor" style={{ color: "var(--primary)" }} />
           </svg>
         </div>
+
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">
             Enterprise Management
@@ -57,10 +101,26 @@ export function BrandPanel() {
             Secure, scalable, and intelligent platform for modern organizations
           </p>
         </div>
+
+        {/* Slide indicators */}
         <div className="flex gap-2 mt-4">
-          <div className="w-2 h-2 rounded-full bg-white/60" />
-          <div className="w-2 h-2 rounded-full bg-white/30" />
-          <div className="w-2 h-2 rounded-full bg-white/30" />
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => setActive(i)}
+              className="group relative h-2 rounded-full transition-all duration-500 cursor-pointer"
+              style={{ width: i === active ? "2rem" : "0.5rem" }}
+            >
+              <span
+                className="absolute inset-0 rounded-full transition-colors duration-500"
+                style={{
+                  backgroundColor: i === active ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.3)",
+                }}
+              />
+            </button>
+          ))}
         </div>
       </div>
     </div>

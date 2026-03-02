@@ -45,7 +45,7 @@ const defaultSettings: ThemeSettings = {
   sidebarMode: "normal",
   sidebarTheme: "brand",
   themeMode: "light",
-  colorScheme: "blue",
+  colorScheme: "navy",
   fontFamily: "geist",
   fontSize: "small",
   contentMode: "full",

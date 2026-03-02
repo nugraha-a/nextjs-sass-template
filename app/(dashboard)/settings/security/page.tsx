@@ -8,6 +8,7 @@ import {
   Monitor,
   LogOut,
   Unlink,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -42,6 +43,55 @@ export default function SecurityPage() {
   const [has2FA, setHas2FA] = useState(false)
   const [passwordOpen, setPasswordOpen] = useState(false)
   const [newPassword, setNewPassword] = useState("")
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
+  const [revokingSessionId, setRevokingSessionId] = useState<string | null>(null)
+  const [isRevokingAll, setIsRevokingAll] = useState(false)
+  const [isConnecting, setIsConnecting] = useState(false)
+
+  const isBusy = isUpdatingPassword || revokingSessionId !== null || isRevokingAll || isConnecting
+
+  const handleUpdatePassword = async () => {
+    if (isUpdatingPassword) return
+    setIsUpdatingPassword(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+      setPasswordOpen(false)
+      setNewPassword("")
+    } finally {
+      setIsUpdatingPassword(false)
+    }
+  }
+
+  const handleRevokeSession = async (sessionId: string) => {
+    if (revokingSessionId) return
+    setRevokingSessionId(sessionId)
+    try {
+      await new Promise((r) => setTimeout(r, 800))
+    } finally {
+      setRevokingSessionId(null)
+    }
+  }
+
+  const handleRevokeAll = async () => {
+    if (isRevokingAll) return
+    setIsRevokingAll(true)
+    try {
+      await new Promise((r) => setTimeout(r, 800))
+    } finally {
+      setIsRevokingAll(false)
+    }
+  }
+
+  const handleConnect = async () => {
+    if (isConnecting) return
+    setIsConnecting(true)
+    try {
+      await new Promise((r) => setTimeout(r, 800))
+    } finally {
+      setIsConnecting(false)
+    }
+  }
 
   return (
     <div className="p-6 space-y-6 max-w-3xl">
@@ -127,8 +177,10 @@ export default function SecurityPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setPasswordOpen(false)}>Cancel</Button>
-                <Button onClick={() => setPasswordOpen(false)}>Update Password →</Button>
+                <Button variant="outline" onClick={() => setPasswordOpen(false)} disabled={isUpdatingPassword}>Cancel</Button>
+                <Button onClick={handleUpdatePassword} disabled={isUpdatingPassword}>
+                  {isUpdatingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : "Update Password →"}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -148,8 +200,12 @@ export default function SecurityPage() {
                 Devices currently signed in
               </CardDescription>
             </div>
-            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
-              <LogOut className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={handleRevokeAll} disabled={isBusy}>
+              {isRevokingAll ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <LogOut className="h-4 w-4 mr-2" />
+              )}
               Revoke All
             </Button>
           </div>
@@ -185,8 +241,18 @@ export default function SecurityPage() {
                 </div>
 
                 {!session.isCurrent && (
-                  <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                    Revoke
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => handleRevokeSession(session.id)}
+                    disabled={isBusy}
+                  >
+                    {revokingSessionId === session.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Revoke"
+                    )}
                   </Button>
                 )}
               </div>
@@ -222,7 +288,9 @@ export default function SecurityPage() {
                 <p className="text-xs text-muted-foreground">Not connected</p>
               </div>
             </div>
-            <Button variant="outline" size="sm">Connect</Button>
+            <Button variant="outline" size="sm" onClick={handleConnect} disabled={isConnecting}>
+              {isConnecting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Connect"}
+            </Button>
           </div>
         </CardContent>
       </Card>

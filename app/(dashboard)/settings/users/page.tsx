@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
   Mail,
   Shield,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -73,6 +74,19 @@ export default function UsersPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [selected, setSelected] = useState<string[]>([])
   const [inviteOpen, setInviteOpen] = useState(false)
+  const [isSendingInvite, setIsSendingInvite] = useState(false)
+
+  const handleSendInvite = async () => {
+    if (isSendingInvite) return
+    setIsSendingInvite(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+      setInviteOpen(false)
+    } finally {
+      setIsSendingInvite(false)
+    }
+  }
 
   const filteredUsers = mockUsers.filter((u) => {
     if (search && !u.name.toLowerCase().includes(search.toLowerCase()) && !u.email.toLowerCase().includes(search.toLowerCase())) return false
@@ -128,12 +142,15 @@ export default function UsersPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setInviteOpen(false)}>
+            <Button variant="outline" onClick={() => setInviteOpen(false)} disabled={isSendingInvite}>
               Cancel
             </Button>
-            <Button onClick={() => setInviteOpen(false)}>
-              <Mail className="h-4 w-4 mr-2" />
-              Send Invite →
+            <Button onClick={handleSendInvite} disabled={isSendingInvite}>
+              {isSendingInvite ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <><Mail className="h-4 w-4 mr-2" />Send Invite →</>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

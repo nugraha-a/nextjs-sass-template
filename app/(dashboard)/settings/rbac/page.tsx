@@ -7,6 +7,7 @@ import {
   Users,
   MoreHorizontal,
   Check,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -86,6 +87,31 @@ const actions = ["view", "create", "edit", "delete"] as const
 export default function RBACPage() {
   const [selectedRole, setSelectedRole] = useState(mockRoles[0])
   const [createOpen, setCreateOpen] = useState(false)
+  const [isCreatingRole, setIsCreatingRole] = useState(false)
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false)
+
+  const handleCreateRole = async () => {
+    if (isCreatingRole) return
+    setIsCreatingRole(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+      setCreateOpen(false)
+    } finally {
+      setIsCreatingRole(false)
+    }
+  }
+
+  const handleSavePermissions = async () => {
+    if (isSavingPermissions) return
+    setIsSavingPermissions(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+    } finally {
+      setIsSavingPermissions(false)
+    }
+  }
 
   // Mock permission state — in real impl this comes from API
   const [permissions, setPermissions] = useState<Record<string, Set<string>>>({
@@ -146,8 +172,10 @@ export default function RBACPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button onClick={() => setCreateOpen(false)}>Create →</Button>
+            <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={isCreatingRole}>Cancel</Button>
+            <Button onClick={handleCreateRole} disabled={isCreatingRole}>
+              {isCreatingRole ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create →"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -273,7 +301,9 @@ export default function RBACPage() {
 
               {!selectedRole.isSystem && (
                 <div className="flex justify-end mt-4">
-                  <Button>Save Permissions</Button>
+                  <Button onClick={handleSavePermissions} disabled={isSavingPermissions}>
+                    {isSavingPermissions ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Permissions"}
+                  </Button>
                 </div>
               )}
             </CardContent>

@@ -1,7 +1,7 @@
 "use client"
 
-import React from "react"
-import { Building2, Globe, Clock, Upload } from "lucide-react"
+import React, { useState } from "react"
+import { Building2, Globe, Clock, Upload, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,6 +21,19 @@ import {
 } from "@/components/ui/card"
 
 export default function SettingsGeneralPage() {
+  const [isSaving, setIsSaving] = useState(false)
+
+  const handleSave = async () => {
+    if (isSaving) return
+    setIsSaving(true)
+    try {
+      // TODO: Replace with real API call
+      await new Promise((r) => setTimeout(r, 800))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   return (
     <div className="p-6 space-y-6 max-w-3xl">
       <div>
@@ -138,7 +151,9 @@ export default function SettingsGeneralPage() {
       </Card>
 
       <div className="flex justify-end">
-        <Button>Save Changes</Button>
+        <Button onClick={handleSave} disabled={isSaving}>
+          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Changes"}
+        </Button>
       </div>
     </div>
   )

@@ -16,6 +16,7 @@ import {
   Settings,
   LogOut,
   PanelLeftIcon,
+  Loader2,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -96,23 +97,23 @@ function SidebarSubItemLink({ subItem, isActive }: { subItem: NavSubItem, isActi
   )
 }
 
-function NavItemWithSub({ 
-  item, 
-  openGroups, 
-  onToggle 
-}: { 
-  item: NavItem; 
-  openGroups: string[]; 
-  onToggle: (title: string, open: boolean) => void; 
+function NavItemWithSub({
+  item,
+  openGroups,
+  onToggle
+}: {
+  item: NavItem;
+  openGroups: string[];
+  onToggle: (title: string, open: boolean) => void;
 }) {
   const pathname = usePathname()
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  
+
   // Determine if this item or any of its children are active
-  const isActive = item.href 
-    ? pathname === item.href 
+  const isActive = item.href
+    ? pathname === item.href
     : item.items?.some(sub => pathname.startsWith(sub.href))
 
   const isOpen = openGroups.includes(item.title)
@@ -121,7 +122,7 @@ function NavItemWithSub({
   // Scroll active leaf item into view
   useEffect(() => {
     if (isActive && !item.items && leafRef.current) {
-        leafRef.current.scrollIntoView({ block: "center", behavior: "smooth" })
+      leafRef.current.scrollIntoView({ block: "center", behavior: "smooth" })
     }
   }, [isActive, item.items])
 
@@ -158,61 +159,62 @@ function NavItemWithSub({
             <SidebarMenuButton
               tooltip={isDropdownOpen ? undefined : item.title}
               isActive={isActive}
-          className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <item.icon className="size-4 shrink-0" />
               <span className="sr-only">{item.title}</span>
               <ChevronRight className="ml-auto size-4 hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            side="right" 
-            align="start" 
+          <DropdownMenuContent
+            side="right"
+            align="start"
             className="w-60 p-1.5 bg-popover/95 backdrop-blur-sm border-border/40 animate-in slide-in-from-left-2 fade-in-50 duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] shadow-2xl ml-2 rounded-xl"
             sideOffset={-4}
           >
             {/* Header with Icon Box */}
             <div className="flex items-center gap-2.5 px-2.5 py-2 mb-1 border-b border-border/40 pb-2">
-                <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-accent/50 text-sidebar-accent-foreground ring-1 ring-border/30">
-                    <item.icon className="size-3.5" />
-                </div>
-                <div className="flex flex-col gap-0.5">
-                    <span className="text-[13px] font-semibold tracking-tight text-foreground leading-none">{item.title}</span>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium leading-none opacity-80">Module Group</span>
-                </div>
+              <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-sidebar-accent/50 text-sidebar-accent-foreground ring-1 ring-border/30">
+                <item.icon className="size-3.5" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[13px] font-semibold tracking-tight text-foreground leading-none">{item.title}</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium leading-none opacity-80">Module Group</span>
+              </div>
             </div>
 
             <div className="flex flex-col gap-0.5 mt-0.5">
-            {item.items.map((subItem) => {
-              const isSubActive = pathname === subItem.href
-              return (
-              <DropdownMenuItem 
-                key={subItem.title} 
-                asChild 
-                className={cn(
-                  "group flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer transition-all duration-200 outline-none",
-                  isSubActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm" 
-                    : "text-muted-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent"
-                )}
-              >
-                <Link href={subItem.href} className="w-full flex items-center gap-2">
-                   {/* Clean Dot Indicator */}
-                   <div className={cn(
-                      "flex items-center justify-center size-3 shrink-0 transition-colors",
-                      isSubActive ? "text-sidebar-accent-foreground" : "text-border group-hover:text-sidebar-foreground"
-                   )}>
+              {item.items.map((subItem) => {
+                const isSubActive = pathname === subItem.href
+                return (
+                  <DropdownMenuItem
+                    key={subItem.title}
+                    asChild
+                    className={cn(
+                      "group flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer transition-all duration-200 outline-none",
+                      isSubActive
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm"
+                        : "text-muted-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent"
+                    )}
+                  >
+                    <Link href={subItem.href} className="w-full flex items-center gap-2">
+                      {/* Clean Dot Indicator */}
+                      <div className={cn(
+                        "flex items-center justify-center size-3 shrink-0 transition-colors",
+                        isSubActive ? "text-sidebar-accent-foreground" : "text-border group-hover:text-sidebar-foreground"
+                      )}>
                         <div className={cn(
-                            "size-1.5 rounded-full bg-current shadow-sm", 
-                            !isSubActive && "scale-75 opacity-70 group-hover:opacity-100 group-hover:scale-90 transition-all"
+                          "size-1.5 rounded-full bg-current shadow-sm",
+                          !isSubActive && "scale-75 opacity-70 group-hover:opacity-100 group-hover:scale-90 transition-all"
                         )} />
-                   </div>
-                   <span className={cn("text-[13px] leading-tight", isSubActive ? "font-medium" : "font-normal")}>
-                     {subItem.title}
-                   </span>
-                </Link>
-              </DropdownMenuItem>
-            )})}
+                      </div>
+                      <span className={cn("text-[13px] leading-tight", isSubActive ? "font-medium" : "font-normal")}>
+                        {subItem.title}
+                      </span>
+                    </Link>
+                  </DropdownMenuItem>
+                )
+              })}
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -221,9 +223,9 @@ function NavItemWithSub({
   }
 
   return (
-    <Collapsible 
-      open={isOpen} 
-      onOpenChange={(open) => onToggle(item.title, open)} 
+    <Collapsible
+      open={isOpen}
+      onOpenChange={(open) => onToggle(item.title, open)}
       className="group/collapsible"
     >
       <SidebarMenuItem>
@@ -243,7 +245,8 @@ function NavItemWithSub({
               const isSubActive = pathname === subItem.href
               return (
                 <SidebarSubItemLink key={subItem.title} subItem={subItem} isActive={isSubActive} />
-            )})}
+              )
+            })}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>
@@ -263,6 +266,13 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   const { tenant, tenantId, setTenant, allTenants } = useTenant()
   const { user, logout, isDemo } = useAuth()
   const [openGroups, setOpenGroups] = useState<string[]>([])
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    await logout()
+  }
 
   // Tenant-aware module resolution
   const activeKernel = tenantId === "yayasan" ? yayasanCoreModules : kernelModules
@@ -272,8 +282,8 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
   // Helper to find the active group based on current path
   const getActiveGroupTitle = () => {
     const allGroups = [...activeKernel, ...activeBusiness, ...activeSupport]
-    return allGroups.find(g => 
-       g.items?.some(i => pathname === i.href || pathname.startsWith(i.href + '/'))
+    return allGroups.find(g =>
+      g.items?.some(i => pathname === i.href || pathname.startsWith(i.href + '/'))
     )?.title
   }
 
@@ -301,7 +311,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
         lastDesktopModeRef.current = sidebarMode
       }
     }
-    
+
     // Detect transition FROM mobile TO desktop - restore mode
     if (prevIsMobileRef.current && !isMobile) {
       // We're transitioning TO desktop, restore last desktop mode
@@ -309,12 +319,12 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
         setSidebarMode(lastDesktopModeRef.current)
       }
     }
-    
+
     // Update stored desktop mode whenever it changes on desktop
     if (!isMobile && sidebarMode !== "offcanvas") {
       lastDesktopModeRef.current = sidebarMode
     }
-    
+
     prevIsMobileRef.current = isMobile
   }, [isMobile, sidebarMode, setSidebarMode])
 
@@ -451,11 +461,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {activeKernel.map((item) => (
-                <NavItemWithSub 
-                  key={item.title} 
-                  item={item} 
-                  openGroups={openGroups} 
-                  onToggle={handleGroupToggle} 
+                <NavItemWithSub
+                  key={item.title}
+                  item={item}
+                  openGroups={openGroups}
+                  onToggle={handleGroupToggle}
                 />
               ))}
             </SidebarMenu>
@@ -471,11 +481,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {activeBusiness.map((item) => (
-                <NavItemWithSub 
-                  key={item.title} 
-                  item={item} 
-                  openGroups={openGroups} 
-                  onToggle={handleGroupToggle} 
+                <NavItemWithSub
+                  key={item.title}
+                  item={item}
+                  openGroups={openGroups}
+                  onToggle={handleGroupToggle}
                 />
               ))}
             </SidebarMenu>
@@ -491,11 +501,11 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {activeSupport.map((item) => (
-                <NavItemWithSub 
-                  key={item.title} 
-                  item={item} 
-                  openGroups={openGroups} 
-                  onToggle={handleGroupToggle} 
+                <NavItemWithSub
+                  key={item.title}
+                  item={item}
+                  openGroups={openGroups}
+                  onToggle={handleGroupToggle}
                 />
               ))}
             </SidebarMenu>
@@ -514,7 +524,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                 >
                   <Avatar className="size-8 rounded-md shrink-0">
                     <AvatarFallback className="rounded-md bg-secondary text-muted-foreground text-xs font-medium">
-                      {user?.name ? user.name.split(" ").map(n => n[0]).join("").slice(0,2).toUpperCase() : "DU"}
+                      {user?.name ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "DU"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -543,9 +553,17 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
                   Account settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem className="text-destructive-foreground focus:bg-accent focus:text-destructive-foreground" onClick={() => logout()}>
-                  <LogOut className="mr-2 size-4" />
-                  Log out
+                <DropdownMenuItem
+                  className="text-destructive-foreground focus:bg-accent focus:text-destructive-foreground"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                >
+                  {isLoggingOut ? (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  ) : (
+                    <LogOut className="mr-2 size-4" />
+                  )}
+                  {isLoggingOut ? "Signing out..." : "Log out"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
