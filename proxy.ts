@@ -27,9 +27,10 @@ const SECURITY_HEADERS: Record<string, string> = {
 }
 
 // CSP policy — strict but functional for Next.js
+// SECURITY: unsafe-eval only in development (needed for Next.js HMR/source maps)
 const CSP_POLICY = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com",
+    `script-src 'self' 'unsafe-inline'${IS_PRODUCTION ? "" : " 'unsafe-eval'"} https://accounts.google.com https://apis.google.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://*.googleusercontent.com",
