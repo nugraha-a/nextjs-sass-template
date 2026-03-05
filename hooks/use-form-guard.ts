@@ -1,54 +1,69 @@
 "use client"
 
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useMemo } from "react"
 
 /**
- * Bulletproof form submission guard — prevents spam clicks even from bots.
+ * Bulletproof anti-spam hook for form submissions and button actions.
  *
- * Layer 1: Synchronous `useRef` — blocks re-entry instantly (no render needed).
- * Layer 2: Always calls `preventDefault()` — even on blocked attempts.
- * Layer 3: Direct DOM mutation — disables ALL submit buttons via DOM API
- *          immediately, bypassing React's async render cycle.
- * Layer 4: Form-level `data-submitting` attribute blocks native resubmission.
+ * Combines THREE protection layers:
+ *   1. Synchronous useRef lock — blocks re-entry before React renders
+ *   2. Leading-edge debounce — blocks rapid re-clicks for `cooldownMs`
+ *      after the last execution, preserved across re-renders via useCallback
+ *   3. Direct DOM mutation — disables buttons via DOM API, no render needed
+ *
+ * The debounce is "leading edge" (immediate=true): the FIRST call executes
+ * immediately, then ALL subsequent calls within `cooldownMs` are dropped.
+ *
+ * @param cooldownMs - Minimum interval between executions (default: 400ms)
  */
-export function useFormGuard() {
+export function useFormGuard(cooldownMs = 400) {
     const lockedRef = useRef(false)
+    const lastCallRef = useRef(0)
 
     /**
-     * Wraps an async form onSubmit handler.
-     * IMPORTANT: The wrapped handler will receive the event with
-     * `preventDefault()` already called.
+     * Wraps a form onSubmit handler with multi-layer spam protection.
+     * Automatically calls `e.preventDefault()` even on blocked attempts.
+     *
+     * IMPORTANT: Wrap at the form level, not the inner handler.
+     * ✅ <form onSubmit={guardSubmit(handler)}>
+     * ✅ <form onSubmit={guardSubmit(form.handleSubmit(onSubmit))}>
      */
     const guardSubmit = useCallback(
         <T extends unknown[]>(handler: (...args: T) => Promise<void> | void) => {
+            // Return a stable function that checks all guard layers
             return async (...args: T) => {
-                // Always prevent default FIRST — even if we're going to block.
-                // This stops the native form from resubmitting.
+                // Always prevent default FIRST — even when blocking
                 const event = args[0]
                 if (event && typeof event === "object" && "preventDefault" in event) {
                     ; (event as Event).preventDefault()
+                        ; (event as Event).stopImmediatePropagation?.()
                 }
 
-                // Layer 1: Synchronous ref check — instant, no render needed
+                // Layer 1: Synchronous ref lock
                 if (lockedRef.current) return
                 lockedRef.current = true
 
-                // Layer 3: Locate the form and directly disable all submit buttons via DOM
+                // Layer 2: Leading-edge debounce — reject if within cooldown
+                const now = Date.now()
+                if (now - lastCallRef.current < cooldownMs) {
+                    lockedRef.current = false
+                    return
+                }
+                lastCallRef.current = now
+
+                // Layer 3: Direct DOM mutation — disable buttons immediately
                 let formEl: HTMLFormElement | null = null
                 const buttons: HTMLButtonElement[] = []
 
                 if (event && typeof event === "object") {
                     const e = event as Event
                     const target = e.target as HTMLElement | null
-                    if (target?.tagName === "FORM") {
-                        formEl = target as HTMLFormElement
-                    } else if (target?.closest?.("form")) {
-                        formEl = target.closest("form") as HTMLFormElement
-                    }
+                    formEl = target?.tagName === "FORM"
+                        ? (target as HTMLFormElement)
+                        : (target?.closest?.("form") ?? null)
                 }
 
                 if (formEl) {
-                    // Disable ALL buttons in the form (submit and non-typed)
                     formEl.querySelectorAll<HTMLButtonElement>(
                         'button[type="submit"], button:not([type])'
                     ).forEach((btn) => {
@@ -64,7 +79,6 @@ export function useFormGuard() {
                 } finally {
                     lockedRef.current = false
 
-                    // Re-enable all buttons
                     buttons.forEach((btn) => {
                         btn.disabled = false
                         btn.style.pointerEvents = ""
@@ -75,23 +89,31 @@ export function useFormGuard() {
                 }
             }
         },
-        []
+        [cooldownMs]
     )
 
     /**
-     * Wraps a non-form async action (button onClick, workspace select, etc.).
-     * Prevents double-firing of standalone actions.
+     * Wraps a standalone button action (not inside a <form>).
+     * Use for workspace select, logout, Google SSO, etc.
      */
     const guardAction = useCallback(
         <T extends unknown[]>(handler: (...args: T) => Promise<void> | void) => {
             return async (...args: T) => {
+                // Layer 1: Ref lock
                 if (lockedRef.current) return
                 lockedRef.current = true
 
-                // Directly disable the clicked button via DOM
+                // Layer 2: Leading-edge debounce
+                const now = Date.now()
+                if (now - lastCallRef.current < cooldownMs) {
+                    lockedRef.current = false
+                    return
+                }
+                lastCallRef.current = now
+
+                // Layer 3: Disable clicked button via DOM
                 let buttonEl: HTMLButtonElement | null = null
                 const event = args[0]
-
                 if (event && typeof event === "object" && "currentTarget" in event) {
                     const target = (event as React.MouseEvent).currentTarget
                     if (target instanceof HTMLButtonElement) {
@@ -112,15 +134,8 @@ export function useFormGuard() {
                 }
             }
         },
-        []
+        [cooldownMs]
     )
 
-    return {
-        guardSubmit,
-        guardAction,
-        /** Check if currently locked (for conditional rendering) */
-        get isGuarded() {
-            return lockedRef.current
-        },
-    }
+    return { guardSubmit, guardAction } as const
 }
