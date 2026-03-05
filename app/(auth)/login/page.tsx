@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const submittingRef = useRef(false)
 
   // Pre-fill demo credentials when demoAvailable becomes true (client-side only)
   React.useEffect(() => {
@@ -34,6 +35,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !password) return
+    if (submittingRef.current) return
+    submittingRef.current = true
 
     setIsLoading(true)
     setError("")
@@ -62,10 +65,13 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
       setIsLoading(false)
+      submittingRef.current = false
     }
   }
 
   const handleGoogleLogin = async () => {
+    if (submittingRef.current) return
+    submittingRef.current = true
     if (demoAvailable) {
       // In demo mode, Google login goes through demo flow
       setIsLoading(true)
@@ -83,8 +89,10 @@ export default function LoginPage() {
         // fall through
       } finally {
         setIsLoading(false)
+        submittingRef.current = false
       }
     }
+    submittingRef.current = false
     setError("Google SSO requires a configured OAuth client")
   }
 
@@ -93,7 +101,7 @@ export default function LoginPage() {
       <BrandPanel />
 
       <div className="flex flex-1 items-center justify-center px-6 py-12 lg:w-1/2">
-        <div className="w-full max-w-[420px] space-y-8">
+        <div className="w-full max-w-105 space-y-8">
           {/* Mobile logo */}
           <div className="lg:hidden flex justify-center mb-8">
             <div

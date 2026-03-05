@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback, Suspense } from "react"
+import React, { useState, useEffect, useCallback, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
@@ -27,6 +27,8 @@ function VerifyContent() {
   const [countdown, setCountdown] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const [isResending, setIsResending] = useState(false)
+  const submittingRef = useRef(false)
+  const resendingRef = useRef(false)
 
   // Countdown timer
   useEffect(() => {
@@ -40,7 +42,8 @@ function VerifyContent() {
 
   const handleVerify = useCallback(
     async (otpCode: string) => {
-      if (isLoading) return
+      if (submittingRef.current) return
+      submittingRef.current = true
       setIsLoading(true)
       setError("")
 
@@ -82,6 +85,7 @@ function VerifyContent() {
         setCode("")
       } finally {
         setIsLoading(false)
+        submittingRef.current = false
       }
     },
     [mode, verificationToken, router]
@@ -95,7 +99,8 @@ function VerifyContent() {
   }, [code, handleVerify, isLoading])
 
   const handleResend = async () => {
-    if (isResending) return
+    if (resendingRef.current) return
+    resendingRef.current = true
     setIsResending(true)
     setCountdown(60)
     setCanResend(false)
@@ -110,6 +115,7 @@ function VerifyContent() {
       })
     } finally {
       setIsResending(false)
+      resendingRef.current = false
     }
   }
 
@@ -130,7 +136,7 @@ function VerifyContent() {
       <BrandPanel />
 
       <div className="flex flex-1 items-center justify-center px-6 py-12 lg:w-1/2">
-        <div className="w-full max-w-[420px] space-y-8">
+        <div className="w-full max-w-105 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold tracking-tight">
               {titles[mode] || titles.forgot}

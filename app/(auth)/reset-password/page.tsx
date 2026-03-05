@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, Suspense } from "react"
+import React, { useState, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -44,6 +44,7 @@ function ResetPasswordContent() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const submittingRef = useRef(false)
 
   const form = useForm<ResetFormData>({
     resolver: zodResolver(resetSchema),
@@ -53,6 +54,8 @@ function ResetPasswordContent() {
   const password = form.watch("password")
 
   const onSubmit = async (data: ResetFormData) => {
+    if (submittingRef.current) return
+    submittingRef.current = true
     setIsLoading(true)
     setError("")
 
@@ -77,6 +80,7 @@ function ResetPasswordContent() {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
+      submittingRef.current = false
     }
   }
 
@@ -85,7 +89,7 @@ function ResetPasswordContent() {
       <BrandPanel />
 
       <div className="flex flex-1 items-center justify-center px-6 py-12 lg:w-1/2">
-        <div className="w-full max-w-[420px] space-y-8">
+        <div className="w-full max-w-105 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold tracking-tight">
               Set a new password

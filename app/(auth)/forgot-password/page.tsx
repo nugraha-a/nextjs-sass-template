@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -33,6 +33,7 @@ export default function ForgotPasswordPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const submittingRef = useRef(false)
 
   const form = useForm<ForgotFormData>({
     resolver: zodResolver(forgotSchema),
@@ -40,6 +41,8 @@ export default function ForgotPasswordPage() {
   })
 
   const onSubmit = async (data: ForgotFormData) => {
+    if (submittingRef.current) return
+    submittingRef.current = true
     setIsLoading(true)
     setError("")
 
@@ -64,6 +67,7 @@ export default function ForgotPasswordPage() {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
+      submittingRef.current = false
     }
   }
 
@@ -72,7 +76,7 @@ export default function ForgotPasswordPage() {
       <BrandPanel />
 
       <div className="flex flex-1 items-center justify-center px-6 py-12 lg:w-1/2">
-        <div className="w-full max-w-[420px] space-y-8">
+        <div className="w-full max-w-105 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold tracking-tight">
               Reset your password

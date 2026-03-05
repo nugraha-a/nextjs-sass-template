@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Building2, ChevronRight, LogOut, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +25,8 @@ export default function WorkspacePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [selecting, setSelecting] = useState<string | null>(null)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const selectingRef = useRef(false)
+  const logoutRef = useRef(false)
 
   const isBusy = selecting !== null || isLoggingOut
 
@@ -68,13 +70,15 @@ export default function WorkspacePage() {
   }
 
   const handleSelect = async (workspaceId: string) => {
-    if (isBusy) return
+    if (selectingRef.current || logoutRef.current) return
+    selectingRef.current = true
     setSelecting(workspaceId)
     await switchWorkspace(workspaceId)
   }
 
   const handleLogout = async () => {
-    if (isLoggingOut) return
+    if (logoutRef.current) return
+    logoutRef.current = true
     setIsLoggingOut(true)
     await logout()
   }
@@ -107,7 +111,7 @@ export default function WorkspacePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-[480px] space-y-8">
+      <div className="w-full max-w-120 space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">
             Choose a workspace
