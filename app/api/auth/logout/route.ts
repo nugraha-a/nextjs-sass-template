@@ -6,14 +6,17 @@ import {
   WORKSPACE_COOKIE,
   DEMO_SESSION_COOKIE,
   deleteCookieHeader,
+  verifySignedValue,
 } from "@/lib/api/cookies"
 
 export async function POST(request: NextRequest) {
   try {
-    const isDemoSession = request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
+    const rawDemo = request.cookies.get(DEMO_SESSION_COOKIE)?.value
+    const isDemoSession = rawDemo ? verifySignedValue(rawDemo) === "true" : false
 
     if (!isDemoSession) {
-      const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value
+      const rawRefresh = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value
+      const refreshToken = rawRefresh ? verifySignedValue(rawRefresh) : null
       if (refreshToken) {
         await authApi.logout(refreshToken).catch(() => { })
       }

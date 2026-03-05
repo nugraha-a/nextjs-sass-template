@@ -135,12 +135,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return
           }
 
-          // Normal session — refresh to keep alive
+          // Normal session — refresh to keep alive and get user data
           const refreshRes = await fetch("/api/auth/refresh", { method: "POST" })
           if (refreshRes.ok) {
-            const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-            const meRes = await fetch(`${API_BASE}/auth/me`, {
-              credentials: "include",
+            const { accessToken } = await refreshRes.json()
+            // SECURITY (L3): Route through BFF proxy to hide backend URL
+            const meRes = await fetch("/api/auth/me", {
+              headers: { "x-access-token": accessToken },
             })
             if (meRes.ok) {
               const user = await meRes.json()

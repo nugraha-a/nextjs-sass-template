@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import {
-  DEMO_ACCESS_TOKEN,
-  DEMO_REFRESH_TOKEN,
+  generateDemoAccessToken,
+  generateDemoRefreshToken,
 } from "@/lib/api/demo-data"
 import { authApi } from "@/lib/api/auth"
 import {
@@ -13,21 +13,26 @@ import {
   REFRESH_TOKEN_MAX_AGE,
   createCookieHeader,
   deleteCookieHeader,
+  verifySignedValue,
 } from "@/lib/api/cookies"
 
 export async function POST(request: NextRequest) {
-  const isDemoSession = request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
+  const rawDemo = request.cookies.get(DEMO_SESSION_COOKIE)?.value
+  const isDemoSession = rawDemo ? verifySignedValue(rawDemo) === "true" : false
 
-  // Demo session: always return fresh demo tokens with short TTL
+  // Demo session: generate fresh demo tokens with short TTL
   if (isDemoSession) {
-    const response = NextResponse.json({ accessToken: DEMO_ACCESS_TOKEN })
-    response.headers.append("Set-Cookie", createCookieHeader(ACCESS_TOKEN_COOKIE, DEMO_ACCESS_TOKEN, DEMO_SESSION_MAX_AGE))
-    response.headers.append("Set-Cookie", createCookieHeader(REFRESH_TOKEN_COOKIE, DEMO_REFRESH_TOKEN, DEMO_SESSION_MAX_AGE))
+    const demoAt = generateDemoAccessToken()
+    const demoRt = generateDemoRefreshToken()
+    const response = NextResponse.json({ accessToken: demoAt })
+    response.headers.append("Set-Cookie", createCookieHeader(ACCESS_TOKEN_COOKIE, demoAt, DEMO_SESSION_MAX_AGE))
+    response.headers.append("Set-Cookie", createCookieHeader(REFRESH_TOKEN_COOKIE, demoRt, DEMO_SESSION_MAX_AGE))
     return response
   }
 
   try {
-    const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value
+    const rawRefresh = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value
+    const refreshToken = rawRefresh ? verifySignedValue(rawRefresh) : null
 
     if (!refreshToken) {
       return NextResponse.json({ message: "No refresh token" }, { status: 401 })

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { ACCESS_TOKEN_COOKIE, DEMO_SESSION_COOKIE } from "@/lib/api/cookies"
+import { ACCESS_TOKEN_COOKIE, DEMO_SESSION_COOKIE, verifySignedValue } from "@/lib/api/cookies"
 
 /**
  * GET /api/auth/token
@@ -7,8 +7,10 @@ import { ACCESS_TOKEN_COOKIE, DEMO_SESSION_COOKIE } from "@/lib/api/cookies"
  * The BFF proxy pattern keeps tokens server-side.
  */
 export async function GET(request: NextRequest) {
-  const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value
-  const isDemoSession = request.cookies.get(DEMO_SESSION_COOKIE)?.value === "true"
+  const rawToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value
+  const accessToken = rawToken ? verifySignedValue(rawToken) : null
+  const rawDemo = request.cookies.get(DEMO_SESSION_COOKIE)?.value
+  const isDemoSession = rawDemo ? verifySignedValue(rawDemo) === "true" : false
 
   if (!accessToken) {
     return NextResponse.json({ authenticated: false, isDemo: false }, { status: 401 })

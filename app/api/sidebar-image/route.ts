@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { writeFile, unlink, mkdir, readdir } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
+import { isDemoToken } from "@/lib/api/demo-data"
+import { verifySignedValue } from "@/lib/api/cookies"
 
 const PUBLIC_DIR = path.resolve(process.cwd(), "public")
 const UPLOAD_DIR = path.join(PUBLIC_DIR, "uploads", "sidebar")
@@ -34,9 +36,27 @@ function sanitizeFilename(name: string): string {
     return name.replace(/[^a-zA-Z0-9._-]/g, "")
 }
 
+/**
+ * SECURITY: Validate token value, not just existence.
+ * Checks for valid demo token or non-empty real token.
+ * For production, this should verify JWT signature against backend.
+ */
 function isAuthenticated(request: NextRequest): boolean {
-    const accessToken = request.cookies.get("at")?.value
-    return Boolean(accessToken)
+    const rawToken = request.cookies.get("at")?.value
+    if (!rawToken) return false
+
+    const accessToken = verifySignedValue(rawToken)
+    if (!accessToken) return false
+
+    // Demo session: validate against known demo token prefix
+    const rawDemo = request.cookies.get("dm")?.value
+    const isDemoSession = rawDemo ? verifySignedValue(rawDemo) === "true" : false
+    if (isDemoSession) {
+        return isDemoToken(accessToken)
+    }
+
+    // Real session: token must be non-trivial (min JWT-like length)
+    return accessToken.length >= 20
 }
 
 /**

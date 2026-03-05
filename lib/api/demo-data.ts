@@ -186,7 +186,18 @@ export const DEMO_ENDPOINTS: Endpoint[] = [
   { id: "ep5", method: "POST", path: "/workflow/tasks", group: "Workflow", description: "Create task" },
 ]
 
-// ─── Demo Token (fake JWT-like string) ───
+// ─── Demo Token Generator ───
+// SECURITY: Generate unique tokens per session instead of static values
 
-export const DEMO_ACCESS_TOKEN = "demo.access.token"
-export const DEMO_REFRESH_TOKEN = "demo.refresh.token"
+export function generateDemoAccessToken(): string {
+  return `demo.at.${crypto.randomUUID()}`
+}
+
+export function generateDemoRefreshToken(): string {
+  return `demo.rt.${crypto.randomUUID()}`
+}
+
+// Keep a reference for validation: demo tokens always start with "demo."
+export function isDemoToken(token: string): boolean {
+  return token.startsWith("demo.at.") || token.startsWith("demo.rt.")
+}

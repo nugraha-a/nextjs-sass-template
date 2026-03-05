@@ -3,6 +3,7 @@ import { z } from "zod"
 import { IS_DEMO } from "@/lib/api/demo-data"
 import { authApi } from "@/lib/api/auth"
 import type { OtpChannel } from "@/lib/api/types"
+import { checkRateLimit, getClientId, FORGOT_PASSWORD_LIMIT } from "@/lib/api/rate-limit"
 
 const forgotPasswordSchema = z.object({
   identifier: z.string().min(1, "Identifier is required").max(255),
@@ -10,6 +11,16 @@ const forgotPasswordSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  // ─── Rate limiting ───
+  const clientId = getClientId(request)
+  const rl = checkRateLimit(`forgot:${clientId}`, FORGOT_PASSWORD_LIMIT)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { message: "Too many requests. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } }
+    )
+  }
+
   if (IS_DEMO) {
     return NextResponse.json({
       verificationToken: "demo-verification-token",

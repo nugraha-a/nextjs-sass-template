@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react"
 import { useTheme } from "next-themes"
 
 export type SidebarMode = "normal" | "compact" | "offcanvas"
@@ -67,48 +67,105 @@ export function useThemeSettings() {
 
 const STORAGE_KEY = "next-sass-theme-settings"
 
+const migrationMap: Record<string, ColorScheme> = {
+  carbon: "neutral",
+  slate: "sky",
+  teal: "cyan",
+  gold: "yellow",
+  amber: "orange",
+  indigo: "blue",
+  crimson: "neutral",
+  zinc: "neutral",
+  rose: "neutral",
+  green: "yellow",
+}
+
+/**
+ * SECURITY: Valid value whitelists — prevents localStorage poisoning.
+ * Any value not in these sets falls back to defaultSettings.
+ */
+const validValues: Record<string, readonly string[]> = {
+  themeMode: ["light", "dark", "system"],
+  colorScheme: ["default", "neutral", "sky", "navy", "blue", "cyan", "yellow", "orange"],
+  fontSize: ["small", "medium", "large"],
+  fontFamily: ["geist", "inter", "jakarta", "open-sans", "system"],
+  sidebarMode: ["normal", "compact", "offcanvas"],
+  sidebarTheme: ["default", "dark", "brand", "image", "aurora"],
+  contentMode: ["compact", "full"],
+  contentView: ["carded", "boxed"],
+  sidebarImageBrightness: ["bright", "medium", "dark"],
+}
+
+function sanitizeValue<T extends string>(key: string, value: unknown, fallback: T): T {
+  if (typeof value !== "string") return fallback
+  return (validValues[key]?.includes(value) ? value : fallback) as T
+}
+
+function sanitizeRadius(value: unknown): number {
+  const num = typeof value === "number" ? value : parseFloat(String(value))
+  if (isNaN(num) || num < 0 || num > 2) return defaultSettings.radius
+  return num
+}
+
+function sanitizeUrl(value: unknown): string | null {
+  if (typeof value !== "string" || !value) return null
+  try { new URL(value); return value.replace(/["\\]/g, "") } catch { return null }
+}
+
+/**
+ * Read and validate settings from localStorage synchronously.
+ * Runs as a lazy initializer for useState — prevents flicker
+ * by ensuring the very first render already has correct, sanitized values.
+ */
+function loadInitialSettings(): ThemeSettings {
+  if (typeof window === "undefined") return defaultSettings
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (!stored) return defaultSettings
+    const parsed = JSON.parse(stored)
+
+    // Migrate old color schemes
+    if (parsed.colorScheme && migrationMap[parsed.colorScheme]) {
+      parsed.colorScheme = migrationMap[parsed.colorScheme]
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...defaultSettings, ...parsed }))
+    }
+
+    // Validate every field against allowed values
+    return {
+      sidebarMode: sanitizeValue("sidebarMode", parsed.sidebarMode, defaultSettings.sidebarMode),
+      sidebarTheme: sanitizeValue("sidebarTheme", parsed.sidebarTheme, defaultSettings.sidebarTheme),
+      themeMode: sanitizeValue("themeMode", parsed.themeMode, defaultSettings.themeMode) as "light" | "dark" | "system",
+      colorScheme: sanitizeValue("colorScheme", parsed.colorScheme, defaultSettings.colorScheme),
+      fontFamily: sanitizeValue("fontFamily", parsed.fontFamily, defaultSettings.fontFamily),
+      fontSize: sanitizeValue("fontSize", parsed.fontSize, defaultSettings.fontSize),
+      contentMode: sanitizeValue("contentMode", parsed.contentMode, defaultSettings.contentMode),
+      contentView: sanitizeValue("contentView", parsed.contentView, defaultSettings.contentView),
+      radius: sanitizeRadius(parsed.radius),
+      sidebarImageUrl: sanitizeUrl(parsed.sidebarImageUrl),
+      sidebarImageBrightness: parsed.sidebarImageBrightness
+        ? sanitizeValue("sidebarImageBrightness", parsed.sidebarImageBrightness, "dark") as ImageBrightness
+        : null,
+    }
+  } catch {
+    return defaultSettings
+  }
+}
+
 export function ThemeSettingsProvider({ children }: { children: React.ReactNode }) {
   const { setTheme, theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [settings, setSettings] = useState<ThemeSettings>(defaultSettings)
+  // Synchronous localStorage read — prevents flicker on first render
+  const [settings, setSettings] = useState<ThemeSettings>(loadInitialSettings)
+  // Skip the first DOM-applying effect — the <head> blocking script already handled it
+  const isInitialHydration = useRef(true)
 
-  // Load settings from localStorage on mount
   useEffect(() => {
     setMounted(true)
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        // Migrate old color scheme names to new ones
-        const migrationMap: Record<string, ColorScheme> = {
-          carbon: "neutral",
-          slate: "sky",
-          teal: "cyan",
-          gold: "yellow",
-          amber: "orange",
-          indigo: "blue",
-          crimson: "neutral",
-          zinc: "neutral",
-          rose: "neutral",
-          green: "yellow",
-        }
-        const needsMigration = parsed.colorScheme && migrationMap[parsed.colorScheme]
-        if (needsMigration) {
-          parsed.colorScheme = migrationMap[parsed.colorScheme]
-        }
-        setSettings({ ...defaultSettings, ...parsed })
-        if (parsed.themeMode) {
-          setTheme(parsed.themeMode)
-        }
-        // Persist migrated settings
-        if (needsMigration) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...defaultSettings, ...parsed }))
-        }
-      } catch {
-        // Invalid JSON, use defaults
-      }
+    // Sync next-themes with our stored themeMode
+    if (settings.themeMode) {
+      setTheme(settings.themeMode)
     }
-  }, [setTheme])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Save settings to localStorage
   const saveSettings = useCallback((newSettings: ThemeSettings) => {
@@ -118,6 +175,12 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
   // Apply settings to document
   useEffect(() => {
     if (!mounted) return
+
+    // Skip first run — the blocking <head> script already applied these
+    if (isInitialHydration.current) {
+      isInitialHydration.current = false
+      return
+    }
 
     const root = document.documentElement
     const body = document.body

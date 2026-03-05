@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { IS_DEMO } from "@/lib/api/demo-data"
-import { ACCESS_TOKEN_COOKIE, WORKSPACE_COOKIE } from "@/lib/api/cookies"
+import { ACCESS_TOKEN_COOKIE, WORKSPACE_COOKIE, verifySignedValue } from "@/lib/api/cookies"
 
 /**
  * POST /api/auth/workspace
@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
 
         // Auth check (skip in demo mode)
         if (!IS_DEMO) {
-            const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value
+            const rawToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value
+            const accessToken = rawToken ? verifySignedValue(rawToken) : null
             if (!accessToken) {
                 return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
             }
