@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
@@ -13,6 +13,7 @@ import { BrandPanel } from "@/components/auth/brand-panel"
 import { PasswordInput } from "@/components/auth/password-input"
 import { GoogleSSOButton } from "@/components/auth/google-sso-button"
 import { useAuth } from "@/contexts/auth-context"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const submittingRef = useRef(false)
+  const { guardSubmit, guardAction } = useFormGuard()
 
   // Pre-fill demo credentials when demoAvailable becomes true (client-side only)
   React.useEffect(() => {
@@ -32,11 +33,9 @@ export default function LoginPage() {
     }
   }, [demoAvailable])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = guardSubmit(async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !password) return
-    if (submittingRef.current) return
-    submittingRef.current = true
 
     setIsLoading(true)
     setError("")
@@ -65,13 +64,10 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
       setIsLoading(false)
-      submittingRef.current = false
     }
-  }
+  })
 
-  const handleGoogleLogin = async () => {
-    if (submittingRef.current) return
-    submittingRef.current = true
+  const handleGoogleLogin = guardAction(async () => {
     if (demoAvailable) {
       // In demo mode, Google login goes through demo flow
       setIsLoading(true)
@@ -89,12 +85,10 @@ export default function LoginPage() {
         // fall through
       } finally {
         setIsLoading(false)
-        submittingRef.current = false
       }
     }
-    submittingRef.current = false
     setError("Google SSO requires a configured OAuth client")
-  }
+  })
 
   return (
     <>

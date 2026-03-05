@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,6 +21,7 @@ import { BrandPanel } from "@/components/auth/brand-panel"
 import { PasswordInput } from "@/components/auth/password-input"
 import { PasswordStrength } from "@/components/auth/password-strength"
 import { GoogleSSOButton } from "@/components/auth/google-sso-button"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 const inviteSchema = z
   .object({
@@ -53,9 +54,9 @@ export default function InvitePage() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const submittingRef = useRef(false)
   const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null)
   const [pageLoading, setPageLoading] = useState(true)
+  const { guardSubmit } = useFormGuard()
 
   const form = useForm<InviteFormData>({
     resolver: zodResolver(inviteSchema),
@@ -84,8 +85,6 @@ export default function InvitePage() {
   }
 
   const onSubmit = async (data: InviteFormData) => {
-    if (submittingRef.current) return
-    submittingRef.current = true
     setIsLoading(true)
     setError("")
 
@@ -111,7 +110,6 @@ export default function InvitePage() {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
-      submittingRef.current = false
     }
   }
 
@@ -151,7 +149,7 @@ export default function InvitePage() {
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={guardSubmit(form.handleSubmit(onSubmit))} className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"

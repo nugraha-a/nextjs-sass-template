@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Building2, ChevronRight, LogOut, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 interface WorkspaceItem {
   id: string
@@ -25,8 +26,8 @@ export default function WorkspacePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [selecting, setSelecting] = useState<string | null>(null)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const selectingRef = useRef(false)
-  const logoutRef = useRef(false)
+  const { guardAction: guardSelect } = useFormGuard()
+  const { guardAction: guardLogout } = useFormGuard()
 
   const isBusy = selecting !== null || isLoggingOut
 
@@ -69,19 +70,15 @@ export default function WorkspacePage() {
     }
   }
 
-  const handleSelect = async (workspaceId: string) => {
-    if (selectingRef.current || logoutRef.current) return
-    selectingRef.current = true
+  const handleSelect = guardSelect(async (workspaceId: string) => {
     setSelecting(workspaceId)
     await switchWorkspace(workspaceId)
-  }
+  })
 
-  const handleLogout = async () => {
-    if (logoutRef.current) return
-    logoutRef.current = true
+  const handleLogout = guardLogout(async () => {
     setIsLoggingOut(true)
     await logout()
-  }
+  })
 
   if (isLoading) {
     return (

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, Suspense } from "react"
+import React, { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,6 +19,7 @@ import {
 import { BrandPanel } from "@/components/auth/brand-panel"
 import { PasswordInput } from "@/components/auth/password-input"
 import { PasswordStrength } from "@/components/auth/password-strength"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 const resetSchema = z
   .object({
@@ -44,7 +45,7 @@ function ResetPasswordContent() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const submittingRef = useRef(false)
+  const { guardSubmit } = useFormGuard()
 
   const form = useForm<ResetFormData>({
     resolver: zodResolver(resetSchema),
@@ -54,8 +55,6 @@ function ResetPasswordContent() {
   const password = form.watch("password")
 
   const onSubmit = async (data: ResetFormData) => {
-    if (submittingRef.current) return
-    submittingRef.current = true
     setIsLoading(true)
     setError("")
 
@@ -80,7 +79,6 @@ function ResetPasswordContent() {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
-      submittingRef.current = false
     }
   }
 
@@ -106,7 +104,7 @@ function ResetPasswordContent() {
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={guardSubmit(form.handleSubmit(onSubmit))} className="space-y-4">
               <FormField
                 control={form.control}
                 name="password"

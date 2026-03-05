@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { BrandPanel } from "@/components/auth/brand-panel"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 const forgotSchema = z.object({
   identifier: z.string().min(1, "Email or phone is required"),
@@ -33,7 +34,7 @@ export default function ForgotPasswordPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const submittingRef = useRef(false)
+  const { guardSubmit } = useFormGuard()
 
   const form = useForm<ForgotFormData>({
     resolver: zodResolver(forgotSchema),
@@ -41,8 +42,6 @@ export default function ForgotPasswordPage() {
   })
 
   const onSubmit = async (data: ForgotFormData) => {
-    if (submittingRef.current) return
-    submittingRef.current = true
     setIsLoading(true)
     setError("")
 
@@ -67,7 +66,6 @@ export default function ForgotPasswordPage() {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
-      submittingRef.current = false
     }
   }
 
@@ -93,7 +91,7 @@ export default function ForgotPasswordPage() {
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={guardSubmit(form.handleSubmit(onSubmit))} className="space-y-6">
               <FormField
                 control={form.control}
                 name="identifier"

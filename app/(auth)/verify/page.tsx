@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback, useRef, Suspense } from "react"
+import React, { useState, useEffect, useCallback, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
@@ -12,6 +12,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { BrandPanel } from "@/components/auth/brand-panel"
+import { useFormGuard } from "@/hooks/use-form-guard"
 
 function VerifyContent() {
   const router = useRouter()
@@ -27,8 +28,8 @@ function VerifyContent() {
   const [countdown, setCountdown] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const [isResending, setIsResending] = useState(false)
-  const submittingRef = useRef(false)
-  const resendingRef = useRef(false)
+  const { guardAction: guardVerify } = useFormGuard()
+  const { guardAction: guardResend } = useFormGuard()
 
   // Countdown timer
   useEffect(() => {
@@ -41,9 +42,7 @@ function VerifyContent() {
   }, [countdown])
 
   const handleVerify = useCallback(
-    async (otpCode: string) => {
-      if (submittingRef.current) return
-      submittingRef.current = true
+    guardVerify(async (otpCode: string) => {
       setIsLoading(true)
       setError("")
 
@@ -85,9 +84,8 @@ function VerifyContent() {
         setCode("")
       } finally {
         setIsLoading(false)
-        submittingRef.current = false
       }
-    },
+    }),
     [mode, verificationToken, router]
   )
 
@@ -98,9 +96,7 @@ function VerifyContent() {
     }
   }, [code, handleVerify, isLoading])
 
-  const handleResend = async () => {
-    if (resendingRef.current) return
-    resendingRef.current = true
+  const handleResend = guardResend(async () => {
     setIsResending(true)
     setCountdown(60)
     setCanResend(false)
@@ -115,9 +111,8 @@ function VerifyContent() {
       })
     } finally {
       setIsResending(false)
-      resendingRef.current = false
     }
-  }
+  })
 
   const titles: Record<string, string> = {
     forgot: "Enter verification code",
