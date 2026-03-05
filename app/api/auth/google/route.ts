@@ -19,7 +19,6 @@ import {
 } from "@/lib/api/cookies"
 import { checkRateLimit, getClientId, LOGIN_LIMIT } from "@/lib/api/rate-limit"
 
-const IS_PRODUCTION = process.env.NODE_ENV === "production"
 
 const googleLoginSchema = z.object({
   idToken: z.string().min(1, "ID token is required").max(4096),
@@ -36,8 +35,8 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // SECURITY: Demo mode only allowed in non-production environments
-  if (IS_DEMO && !IS_PRODUCTION) {
+  // Demo mode: DEMO_MODE env var must be explicitly set
+  if (IS_DEMO) {
     const demoAt = generateDemoAccessToken()
     const demoRt = generateDemoRefreshToken()
     const response = NextResponse.json({ user: DEMO_USER, isDemo: true })

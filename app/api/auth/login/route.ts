@@ -19,7 +19,6 @@ import {
 } from "@/lib/api/cookies"
 import { checkRateLimit, getClientId, LOGIN_LIMIT } from "@/lib/api/rate-limit"
 
-const IS_PRODUCTION = process.env.NODE_ENV === "production"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email format").max(255),
@@ -52,7 +51,7 @@ export async function POST(request: NextRequest) {
     const { email, password } = parsed.data
 
     // ─── Demo mode: controlled login with specific email only ───
-    if (IS_DEMO && !IS_PRODUCTION && email === DEMO_EMAIL) {
+    if (IS_DEMO && email === DEMO_EMAIL) {
       const demoAt = generateDemoAccessToken()
       const demoRt = generateDemoRefreshToken()
       const response = NextResponse.json({
