@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   const isDemoSession = rawDemo ? verifySignedValue(rawDemo) === "true" : false
 
   if (!accessToken) {
-    return NextResponse.json({ authenticated: false, isDemo: false }, { status: 401 })
+    return NextResponse.json({ authenticated: false, isDemo: false })
   }
 
   return NextResponse.json({ authenticated: true, isDemo: isDemoSession })
