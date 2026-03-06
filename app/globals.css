@@ -11,11 +11,11 @@
   --n0: #FFFFFF;
   --n10: #FAFBFB;
   --n20: #F5F6F7;
-  --n30: #EBECF0;
+  --n30: #EBEDF0;
   --n40: #DFE2E6;
   --n50: #C2C7D0;
   --n60: #B3B9C4;
-  --n70: #A6AABB;
+  --n70: #A6AEBB;
   --n80: #98A1B0;
   --n90: #8993A4;
   --n100: #7A8699;
@@ -54,9 +54,9 @@
 
   /* ─── YAB Palette: Navy (10 Steps) ─── */
   --navy-50: #F5F9FC;
-  --navy-100: #E0F1F7;
-  --navy-200: #C4DAE5;
-  --navy-300: #8CC5DE;
+  --navy-100: #E6F1F7;
+  --navy-200: #C4DDEB;
+  --navy-300: #9CC5DE;
   --navy-400: #6EA8CC;
   --navy-500: #468BB5;
   --navy-600: #316E96;
@@ -65,9 +65,9 @@
   --navy-900: #023047;
 
   /* ─── YAB Palette: Cyan (10 Steps) ─── */
-  --cyan-50: #F0FDFA;
-  --cyan-100: #CCFBF1;
-  --cyan-200: #99EEE4;
+  --cyan-50: #F0F0FA;
+  --cyan-100: #CCF1F1;
+  --cyan-200: #99F6E4;
   --cyan-300: #5EEAD4;
   --cyan-400: #2DD4BF;
   --cyan-500: #219EBC;
@@ -80,7 +80,7 @@
   --sky-50: #F0F9FF;
   --sky-100: #E0F2FE;
   --sky-200: #BAE6FD;
-  --sky-300: #8CCAE6;
+  --sky-300: #8ECAE6;
   --sky-400: #38BDF8;
   --sky-500: #0EA5E9;
   --sky-600: #0284C7;
