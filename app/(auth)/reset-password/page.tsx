@@ -45,7 +45,7 @@ function ResetPasswordContent() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const { guardSubmit } = useFormGuard()
+  const { guardSubmit, reset } = useFormGuard()
 
   const form = useForm<ResetFormData>({
     resolver: zodResolver(resetSchema),
@@ -71,14 +71,16 @@ function ResetPasswordContent() {
       if (!res.ok) {
         const result = await res.json()
         setError(result.message || "Reset failed")
+        setIsLoading(false)
+        reset()
         return
       }
 
-      router.push("/login?reset=success")
+      router.push("/login?reset=success") // stays locked — navigating away
     } catch {
       setError("Something went wrong. Please try again.")
-    } finally {
       setIsLoading(false)
+      reset()
     }
   }
 

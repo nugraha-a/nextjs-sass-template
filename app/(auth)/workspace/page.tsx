@@ -73,11 +73,13 @@ export default function WorkspacePage() {
   const handleSelect = guardSelect(async (workspaceId: string) => {
     setSelecting(workspaceId)
     await switchWorkspace(workspaceId)
+    // stays locked — switchWorkspace navigates away
   })
 
   const handleLogout = guardLogout(async () => {
     setIsLoggingOut(true)
     await logout()
+    // stays locked — logout navigates away
   })
 
   if (isLoading) {

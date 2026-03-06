@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const { guardSubmit } = useFormGuard()
+  const { guardSubmit, reset } = useFormGuard()
 
   const form = useForm<ForgotFormData>({
     resolver: zodResolver(forgotSchema),
@@ -56,16 +56,18 @@ export default function ForgotPasswordPage() {
 
       if (!res.ok) {
         setError(result.message || "Something went wrong")
+        setIsLoading(false)
+        reset()
         return
       }
 
       router.push(
         `/verify?mode=forgot&token=${result.verificationToken}&contact=${encodeURIComponent(result.maskedContact)}`
-      )
+      ) // stays locked — navigating away
     } catch {
       setError("Something went wrong. Please try again.")
-    } finally {
       setIsLoading(false)
+      reset()
     }
   }
 

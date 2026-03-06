@@ -7,21 +7,35 @@ import { useRef, useCallback } from "react"
  *
  * 4-layer protection:
  *   1. Synchronous useRef lock — instant re-entry block
- *   2. Leading-edge debounce — blocks rapid re-clicks after unlock
- *   3. HTML `inert` attribute — BROWSER-LEVEL interaction blocking
- *      (disables all clicks, focus, keyboard for the entire form)
+ *   2. Leading-edge debounce — blocks rapid re-clicks after reset
+ *   3. HTML `inert` attribute — browser-level interaction blocking
  *   4. Direct DOM disabled + pointer-events on buttons
  *
- * @param cooldownMs - Minimum ms between allowed executions (default: 2000)
+ * IMPORTANT: The guard does NOT auto-unlock after the handler completes.
+ * This is by design — on success, the page navigates away and the component
+ * unmounts. Use `reset()` in your error handler to re-enable the form.
+ *
+ * @param cooldownMs - Min ms between allowed executions (default: 2000)
  */
 export function useFormGuard(cooldownMs = 2000) {
     const lockedRef = useRef(false)
     const lastCallRef = useRef(0)
+    const cleanupRef = useRef<(() => void) | null>(null)
+
+    /**
+     * Manually reset the guard — call this in `catch` blocks
+     * to re-enable the form after an error.
+     */
+    const reset = useCallback(() => {
+        lockedRef.current = false
+        cleanupRef.current?.()
+        cleanupRef.current = null
+    }, [])
 
     const guardSubmit = useCallback(
         <T extends unknown[]>(handler: (...args: T) => Promise<void> | void) => {
             return async (...args: T) => {
-                // ALWAYS prevent default — even when blocking
+                // Always prevent default — even when blocking
                 const event = args[0]
                 if (event && typeof event === "object" && "preventDefault" in event) {
                     ; (event as Event).preventDefault()
@@ -51,13 +65,11 @@ export function useFormGuard(cooldownMs = 2000) {
                 }
 
                 // Layer 3: Set HTML `inert` on the entire form
-                // This is BROWSER-LEVEL blocking — no CSS, no React, no transitions
-                // The browser itself refuses all clicks, focus, keyboard in the form
                 if (formEl) {
                     formEl.inert = true
                 }
 
-                // Layer 4: Also disable submit buttons via DOM for visual feedback
+                // Layer 4: Disable submit buttons via DOM
                 const buttons: HTMLButtonElement[] = []
                 if (formEl) {
                     formEl.querySelectorAll<HTMLButtonElement>(
@@ -69,21 +81,19 @@ export function useFormGuard(cooldownMs = 2000) {
                     })
                 }
 
-                try {
-                    await handler(...args)
-                } finally {
-                    lockedRef.current = false
-
-                    // Remove inert AFTER the request completes
-                    if (formEl) {
-                        formEl.inert = false
-                    }
-
+                // Store cleanup so reset() can undo DOM changes
+                cleanupRef.current = () => {
+                    if (formEl) formEl.inert = false
                     buttons.forEach((btn) => {
                         btn.disabled = false
                         btn.style.pointerEvents = ""
                     })
                 }
+
+                // Execute the handler — NO auto-unlock in finally
+                // On success: stays locked, component unmounts on navigation
+                // On error: caller calls reset() to re-enable
+                await handler(...args)
             }
         },
         [cooldownMs]
@@ -104,7 +114,7 @@ export function useFormGuard(cooldownMs = 2000) {
                 }
                 lastCallRef.current = now
 
-                // Layer 3+4: Disable the button via DOM + inert
+                // Layer 3+4: Disable the button
                 let buttonEl: HTMLButtonElement | null = null
                 const event = args[0]
                 if (event && typeof event === "object" && "currentTarget" in event) {
@@ -117,20 +127,21 @@ export function useFormGuard(cooldownMs = 2000) {
                     }
                 }
 
-                try {
-                    await handler(...args)
-                } finally {
-                    lockedRef.current = false
+                // Store cleanup
+                cleanupRef.current = () => {
                     if (buttonEl) {
                         buttonEl.disabled = false
                         buttonEl.style.pointerEvents = ""
                         buttonEl.inert = false
                     }
                 }
+
+                // NO auto-unlock
+                await handler(...args)
             }
         },
         [cooldownMs]
     )
 
-    return { guardSubmit, guardAction } as const
+    return { guardSubmit, guardAction, reset } as const
 }

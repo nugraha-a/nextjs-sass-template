@@ -56,7 +56,7 @@ export default function InvitePage() {
   const [error, setError] = useState("")
   const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null)
   const [pageLoading, setPageLoading] = useState(true)
-  const { guardSubmit } = useFormGuard()
+  const { guardSubmit, reset } = useFormGuard()
 
   const form = useForm<InviteFormData>({
     resolver: zodResolver(inviteSchema),
@@ -102,14 +102,16 @@ export default function InvitePage() {
       if (!res.ok) {
         const result = await res.json()
         setError(result.message || "Failed to accept invite")
+        setIsLoading(false)
+        reset()
         return
       }
 
-      router.push("/login?invite=accepted")
+      router.push("/login?invite=accepted") // stays locked — navigating away
     } catch {
       setError("Something went wrong. Please try again.")
-    } finally {
       setIsLoading(false)
+      reset()
     }
   }
 

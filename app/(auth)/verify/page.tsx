@@ -28,8 +28,8 @@ function VerifyContent() {
   const [countdown, setCountdown] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const [isResending, setIsResending] = useState(false)
-  const { guardAction: guardVerify } = useFormGuard()
-  const { guardAction: guardResend } = useFormGuard()
+  const { guardAction: guardVerify, reset: resetVerify } = useFormGuard()
+  const { guardAction: guardResend, reset: resetResend } = useFormGuard()
 
   // Countdown timer
   useEffect(() => {
@@ -58,10 +58,12 @@ function VerifyContent() {
         if (!res.ok) {
           setError(result.message || "Invalid code")
           setCode("")
+          setIsLoading(false)
+          resetVerify()
           return
         }
 
-        // Route based on mode
+        // Route based on mode — stays locked during navigation
         switch (mode) {
           case "forgot":
             router.push(`/reset-password?token=${result.resetToken}`)
@@ -82,8 +84,8 @@ function VerifyContent() {
       } catch {
         setError("Verification failed. Please try again.")
         setCode("")
-      } finally {
         setIsLoading(false)
+        resetVerify()
       }
     }),
     [mode, verificationToken, router]
@@ -110,7 +112,9 @@ function VerifyContent() {
         }),
       })
     } finally {
+      // Resend stays on the same page — always unlock
       setIsResending(false)
+      resetResend()
     }
   })
 

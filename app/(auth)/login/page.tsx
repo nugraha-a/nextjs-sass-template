@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const { guardSubmit, guardAction } = useFormGuard()
+  const { guardSubmit, guardAction, reset } = useFormGuard()
 
   // Pre-fill demo credentials when demoAvailable becomes true (client-side only)
   React.useEffect(() => {
@@ -34,7 +34,10 @@ export default function LoginPage() {
   }, [demoAvailable])
 
   const handleSubmit = guardSubmit(async (e: React.FormEvent) => {
-    if (!email || !password) return
+    if (!email || !password) {
+      reset()
+      return
+    }
 
     setIsLoading(true)
     setError("")
@@ -55,20 +58,19 @@ export default function LoginPage() {
 
       if (data.requires2FA) {
         router.push(`/verify?mode=2fa&token=${data.verificationToken}`)
-        return
+        return // stays locked — navigating away
       }
 
-      router.push("/")
+      router.push("/") // stays locked — navigating away
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
-    } finally {
       setIsLoading(false)
+      reset() // only unlock on error
     }
   })
 
   const handleGoogleLogin = guardAction(async () => {
     if (demoAvailable) {
-      // In demo mode, Google login goes through demo flow
       setIsLoading(true)
       try {
         const res = await fetch("/api/auth/google", {
@@ -77,16 +79,17 @@ export default function LoginPage() {
           body: JSON.stringify({ idToken: "demo" }),
         })
         if (res.ok) {
-          router.push("/")
+          router.push("/") // stays locked — navigating away
           return
         }
       } catch {
         // fall through
-      } finally {
-        setIsLoading(false)
       }
+      setIsLoading(false)
+      reset()
     }
     setError("Google SSO requires a configured OAuth client")
+    reset()
   })
 
   return (
