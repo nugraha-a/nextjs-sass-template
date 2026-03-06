@@ -214,7 +214,7 @@ export default function KesekretariatanPage() {
       <div className="grid gap-4 lg:grid-cols-12">
 
         {/* Hero Banner */}
-        <Card className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
+        <Card className="lg:col-span-5 bg-linear-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
           <CardContent className="p-5">
@@ -398,7 +398,7 @@ export default function KesekretariatanPage() {
                           <p className="text-[10px] text-muted-foreground lg:hidden">{s.tanggal}</p>
                         </div>
                       </TableCell>
-                      <TableCell className="py-3 text-[12px] text-muted-foreground hidden md:table-cell max-w-[180px] truncate">{s.pengirim}</TableCell>
+                      <TableCell className="py-3 text-[12px] text-muted-foreground hidden md:table-cell max-w-45 truncate">{s.pengirim}</TableCell>
                       <TableCell className="py-3 text-[12px] text-muted-foreground hidden sm:table-cell">{s.tujuan}</TableCell>
                       <TableCell className="py-3">
                         <Badge
@@ -485,7 +485,7 @@ export default function KesekretariatanPage() {
                           <p className="text-[10px] text-muted-foreground lg:hidden">{s.tanggal}</p>
                         </div>
                       </TableCell>
-                      <TableCell className="py-3 text-[12px] text-muted-foreground hidden md:table-cell max-w-[180px] truncate">{s.penerima}</TableCell>
+                      <TableCell className="py-3 text-[12px] text-muted-foreground hidden md:table-cell max-w-45 truncate">{s.penerima}</TableCell>
                       <TableCell className="py-3 text-[12px] text-muted-foreground hidden sm:table-cell">{s.pengirim}</TableCell>
                       <TableCell className="py-3 pr-6">
                         <Badge
@@ -583,7 +583,7 @@ export default function KesekretariatanPage() {
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="h-[280px]">
+              <div className="h-70">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={volumeSuratBulanan} barGap={4}>
                     <defs>

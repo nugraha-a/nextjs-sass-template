@@ -216,7 +216,7 @@ export default function KeuanganPage() {
       <div className="grid gap-4 lg:grid-cols-12">
 
         {/* Hero Banner */}
-        <Card className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
+        <Card className="lg:col-span-5 bg-linear-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
           <CardContent className="p-5">
@@ -366,7 +366,7 @@ export default function KeuanganPage() {
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="h-[280px]">
+                <div className="h-70">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={arusKasBulanan} barGap={4}>
                       <defs>
@@ -407,7 +407,7 @@ export default function KeuanganPage() {
                 <CardDescription className="text-[11px] text-muted-foreground">Distribusi per kategori anggaran</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="h-[180px]">
+                <div className="h-45">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={kategoriPengeluaran} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
@@ -466,7 +466,7 @@ export default function KeuanganPage() {
             <CardContent className="pt-0">
               {/* Visual Timeline */}
               <div className="relative">
-                <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border" />
+                <div className="absolute left-3.75 top-2 bottom-2 w-px bg-border" />
                 <div className="space-y-4">
                   {filteredTransaksi.map((txn) => (
                     <div key={txn.id} className="flex gap-3 relative group">

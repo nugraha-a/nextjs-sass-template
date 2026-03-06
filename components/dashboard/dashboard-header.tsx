@@ -165,11 +165,11 @@ export function DashboardHeader() {
                         {isLast ? (
                           <BreadcrumbPage className="truncate md:max-w-none font-medium">{crumb.label}</BreadcrumbPage>
                         ) : crumb.href === "#" ? (
-                          <span className="truncate inline-block max-w-[120px] sm:max-w-none align-middle text-muted-foreground/80">
+                          <span className="truncate inline-block max-w-30 sm:max-w-none align-middle text-muted-foreground/80">
                             {crumb.label}
                           </span>
                         ) : (
-                          <BreadcrumbLink href={crumb.href} className="truncate inline-block max-w-[120px] sm:max-w-none align-middle">
+                          <BreadcrumbLink href={crumb.href} className="truncate inline-block max-w-30 sm:max-w-none align-middle">
                             {crumb.label}
                           </BreadcrumbLink>
                         )}
@@ -183,7 +183,7 @@ export function DashboardHeader() {
             </Breadcrumb>
           </div>
 
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <Button
               variant="ghost"
               className="hidden md:flex h-8 px-3 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150 gap-2 text-sm leading-none items-center"

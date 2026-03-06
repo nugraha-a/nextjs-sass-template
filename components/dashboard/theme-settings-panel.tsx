@@ -83,7 +83,7 @@ export function ThemeSettingsPanel() {
           <span className="sr-only">Theme Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[320px] sm:w-[360px] bg-background border-border overflow-y-auto p-0 flex flex-col h-full">
+      <SheetContent className="w-[320px] sm:w-90 bg-background border-border overflow-y-auto p-0 flex flex-col h-full">
         <div className="p-6 border-b border-border shrink-0">
           <SheetHeader className="p-0">
             <SheetTitle className="text-foreground flex items-center gap-2 text-base font-semibold">
@@ -598,7 +598,7 @@ function SidebarImageSection() {
       </div>
 
       {/* Current / Pending preview */}
-      <div className="relative overflow-hidden rounded-md border border-border aspect-[16/9] bg-muted">
+      <div className="relative overflow-hidden rounded-md border border-border aspect-video bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={pendingPreview || currentImage}
@@ -693,7 +693,7 @@ function SidebarModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-15 cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -728,7 +728,7 @@ function SidebarThemeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-15 cursor-pointer",
         currentTheme === theme
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -762,7 +762,7 @@ function ThemeModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[60px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1.5 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-15 cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -787,7 +787,7 @@ function ColorSchemeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 py-2 px-1.5 rounded-md border transition-all duration-150 min-h-[52px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1.5 py-2 px-1.5 rounded-md border transition-all duration-150 min-h-13 cursor-pointer",
         isSelected
           ? "border-primary bg-secondary"
           : "border-border hover:border-border/80 hover:bg-secondary/50"
@@ -818,7 +818,7 @@ function ContentModeButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-17 cursor-pointer",
         currentMode === mode
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"
@@ -848,7 +848,7 @@ function ContentViewButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-[68px] cursor-pointer",
+        "flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-md border transition-all duration-150 min-h-17 cursor-pointer",
         currentView === view
           ? "border-primary bg-secondary text-foreground"
           : "border-border text-muted-foreground hover:border-border/80 hover:bg-secondary/50 hover:text-foreground/80"

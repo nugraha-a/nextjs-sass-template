@@ -114,7 +114,7 @@ export function NotificationPopover() {
             </Button>
           )}
         </div>
-        <ScrollArea className="h-[320px] py-2">
+        <ScrollArea className="h-80 py-2">
           <div className="flex flex-col gap-0.5 px-2">
             {mockNotifications.map((item) => (
               <div

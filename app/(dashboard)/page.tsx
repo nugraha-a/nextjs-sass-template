@@ -428,7 +428,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="h-[220px]">
+            <div className="h-55">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyReport} barCategoryGap="20%">
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -475,7 +475,7 @@ export default function DashboardPage() {
           <CardContent className="pt-0">
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border" />
+              <div className="absolute left-3.75 top-2 bottom-2 w-px bg-border" />
               <div className="space-y-4">
                 {recentActivity.map((activity) => (
                   <div key={activity.id} className="flex gap-3 relative">
@@ -874,7 +874,7 @@ function MiniBarChart({ data }: { data: number[] }) {
       {data.map((value, i) => (
         <div
           key={i}
-          className={`flex-1 rounded-t-sm min-w-[3px] transition-all duration-300 ${
+          className={`flex-1 rounded-t-sm min-w-0.75 transition-all duration-300 ${
             value >= 80 ? "bg-emerald-500" :
             value >= 60 ? "bg-primary" :
             value >= 40 ? "bg-amber-500" : "bg-rose-400"

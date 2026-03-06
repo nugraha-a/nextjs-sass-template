@@ -271,7 +271,7 @@ export default function ApiClientsPage() {
 
                   {client.status === "expired" && (
                     <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-2 rounded-md">
-                      <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
+                      <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                       <span>Expired — regenerate credentials</span>
                     </div>
                   )}

@@ -133,7 +133,7 @@ function NavItemWithSub({
           asChild
           isActive={isActive}
           tooltip={item.title}
-          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
+          className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8!"
         >
           <Link ref={leafRef} href={item.href || "#"} className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <span className="flex items-center gap-2 group-data-[collapsible=icon]:gap-0">
@@ -159,7 +159,7 @@ function NavItemWithSub({
             <SidebarMenuButton
               tooltip={isDropdownOpen ? undefined : item.title}
               isActive={isActive}
-              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8 justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="transition-all duration-300 ease-[cubic-bezier(0.2,0.4,0,1)] text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:font-semibold group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8! justify-center data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <item.icon className="size-4 shrink-0" />
               <span className="sr-only">{item.title}</span>
@@ -232,7 +232,7 @@ function NavItemWithSub({
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
             tooltip={item.title}
-            className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:!size-8"
+            className="transition-colors duration-150 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent data-[state=open]:text-foreground group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:size-8!"
           >
             <item.icon className="size-4 shrink-0" />
             <span className="text-sm leading-4 group-data-[collapsible=icon]:hidden">{item.title}</span>
@@ -443,7 +443,7 @@ export function AppSidebar({ collapsible = "icon" }: AppSidebarProps) {
             variant="ghost"
             size="icon"
             onClick={() => setOpenMobile(false)}
-            className="absolute top-1/2 -translate-y-1/2 right-[-2rem] flex size-8 items-center justify-center rounded-r-md border border-l-0 border-sidebar-border bg-sidebar text-sidebar-foreground shadow-xs hover:bg-sidebar focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none z-50 rounded-l-none"
+            className="absolute top-1/2 -translate-y-1/2 -right-8 flex size-8 items-center justify-center rounded-r-md border border-l-0 border-sidebar-border bg-sidebar text-sidebar-foreground shadow-xs hover:bg-sidebar focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none z-50 rounded-l-none"
           >
             <PanelLeftIcon className="size-4" />
             <span className="sr-only">Close Sidebar</span>

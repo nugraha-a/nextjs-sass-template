@@ -133,10 +133,10 @@ function WorkflowCanvas() {
           <div
             className={`flex items-center justify-center px-3 py-2 rounded-lg border text-[11px] font-medium transition-colors ${
               step.type === "start" || step.type === "end"
-                ? "bg-primary/10 border-primary/30 text-primary rounded-full min-w-[60px]"
+                ? "bg-primary/10 border-primary/30 text-primary rounded-full min-w-15"
                 : step.type === "condition"
-                ? "bg-amber-500/10 border-amber-500/30 text-amber-400 rotate-0 min-w-[90px]"
-                : "bg-card border-border text-card-foreground min-w-[110px]"
+                ? "bg-amber-500/10 border-amber-500/30 text-amber-400 rotate-0 min-w-22.5"
+                : "bg-card border-border text-card-foreground min-w-27.5"
             }`}
           >
             {step.label}
@@ -248,7 +248,7 @@ export default function WorkflowPage() {
       {/* ─── Row 1: Welcome Banner + Completion Donut + Status ─── */}
       <div className="grid gap-4 lg:grid-cols-12">
         {/* Welcome Banner */}
-        <Card className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
+        <Card className="lg:col-span-5 bg-linear-to-br from-primary/8 via-primary/3 to-background border-primary/20 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
           <CardContent className="p-5">
@@ -564,7 +564,7 @@ export default function WorkflowPage() {
             <CardContent className="pt-0">
               {/* Visual Timeline */}
               <div className="relative">
-                <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border" />
+                <div className="absolute left-3.75 top-2 bottom-2 w-px bg-border" />
                 <div className="space-y-4">
                   {activeInstances.map((instance) => (
                     <div key={instance.id} className="flex gap-3 relative group">

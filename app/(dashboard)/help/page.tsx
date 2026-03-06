@@ -74,7 +74,7 @@ export default function HelpPage() {
                 ))}
             </div>
 
-            <Card className="bg-gradient-to-br from-primary/5 to-background border-primary/20">
+            <Card className="bg-linear-to-br from-primary/5 to-background border-primary/20">
                 <CardContent className="p-6 text-center space-y-3">
                     <h3 className="text-sm font-medium text-foreground">Can&apos;t find what you&apos;re looking for?</h3>
                     <p className="text-xs text-muted-foreground">Our support team is ready to help</p>

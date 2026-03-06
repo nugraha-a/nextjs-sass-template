@@ -56,7 +56,7 @@ export function SearchCommand({ open, setOpen }: SearchCommandProps) {
            <X className="size-4" />
         </button>
       </div>
-      <CommandList className="max-h-[500px] overflow-y-auto p-2">
+      <CommandList className="max-h-125 overflow-y-auto p-2">
         <CommandEmpty>No results found.</CommandEmpty>
         
         <div className="px-2 py-2">
