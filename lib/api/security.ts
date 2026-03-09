@@ -1,4 +1,5 @@
 import { fetchApi } from "./http-client"
+import { revalidateTag } from "next/cache"
 import type {
   OtpChannel,
   Setup2FAResult,
@@ -39,33 +40,43 @@ export const securityApi = {
   },
 
   listSessions(token: string) {
-    return fetchApi<Session[]>("/security/sessions", { token })
-  },
-
-  revokeSession(sessionId: string, token: string) {
-    return fetchApi<void>(`/security/sessions/${sessionId}`, {
-      method: "DELETE",
+    return fetchApi<Session[]>("/security/sessions", {
       token,
+      next: { tags: ["sessions"] },
     })
   },
 
-  revokeAllSessions(token: string) {
-    return fetchApi<void>("/security/sessions", {
+  async revokeSession(sessionId: string, token: string) {
+    const result = await fetchApi<void>(`/security/sessions/${sessionId}`, {
       method: "DELETE",
       token,
     })
+    revalidateTag("sessions", "max")
+    return result
+  },
+
+  async revokeAllSessions(token: string) {
+    const result = await fetchApi<void>("/security/sessions", {
+      method: "DELETE",
+      token,
+    })
+    revalidateTag("sessions", "max")
+    return result
   },
 
   getConnectedAccounts(token: string) {
     return fetchApi<ConnectedAccount[]>("/security/connected-accounts", {
       token,
+      next: { tags: ["connected-accounts"] },
     })
   },
 
-  disconnectAccount(provider: string, token: string) {
-    return fetchApi<void>(`/security/connected-accounts/${provider}`, {
+  async disconnectAccount(provider: string, token: string) {
+    const result = await fetchApi<void>(`/security/connected-accounts/${provider}`, {
       method: "DELETE",
       token,
     })
+    revalidateTag("connected-accounts", "max")
+    return result
   },
 }

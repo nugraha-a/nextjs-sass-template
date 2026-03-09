@@ -1,4 +1,5 @@
 import { fetchApi } from "./http-client"
+import { revalidateTag } from "next/cache"
 import type {
   User,
   UserListParams,
@@ -15,39 +16,55 @@ export const usersApi = {
     if (params.search) query.set("search", params.search)
     if (params.role) query.set("role", params.role)
     if (params.status) query.set("status", params.status)
-    return fetchApi<PaginatedResult<User>>(`/users?${query}`, { token })
+    return fetchApi<PaginatedResult<User>>(`/users?${query}`, {
+      token,
+      next: { tags: ["users"] },
+    })
   },
 
   getById(id: string, token: string) {
-    return fetchApi<User>(`/users/${id}`, { token })
+    return fetchApi<User>(`/users/${id}`, {
+      token,
+      next: { tags: ["users"] },
+    })
   },
 
-  invite(data: InviteUserDto, token: string) {
-    return fetchApi<void>("/users/invite", {
+  async invite(data: InviteUserDto, token: string) {
+    const result = await fetchApi<void>("/users/invite", {
       method: "POST",
       body: data,
       token,
     })
+    revalidateTag("users", "max")
+    return result
   },
 
-  update(id: string, data: UpdateUserDto, token: string) {
-    return fetchApi<User>(`/users/${id}`, {
+  async update(id: string, data: UpdateUserDto, token: string) {
+    const result = await fetchApi<User>(`/users/${id}`, {
       method: "PATCH",
       body: data,
       token,
     })
+    revalidateTag("users", "max")
+    return result
   },
 
-  suspend(id: string, token: string) {
-    return fetchApi<void>(`/users/${id}/suspend`, { method: "POST", token })
+  async suspend(id: string, token: string) {
+    const result = await fetchApi<void>(`/users/${id}/suspend`, { method: "POST", token })
+    revalidateTag("users", "max")
+    return result
   },
 
-  reactivate(id: string, token: string) {
-    return fetchApi<void>(`/users/${id}/reactivate`, { method: "POST", token })
+  async reactivate(id: string, token: string) {
+    const result = await fetchApi<void>(`/users/${id}/reactivate`, { method: "POST", token })
+    revalidateTag("users", "max")
+    return result
   },
 
-  delete(id: string, token: string) {
-    return fetchApi<void>(`/users/${id}`, { method: "DELETE", token })
+  async delete(id: string, token: string) {
+    const result = await fetchApi<void>(`/users/${id}`, { method: "DELETE", token })
+    revalidateTag("users", "max")
+    return result
   },
 
   resendInvite(id: string, token: string) {

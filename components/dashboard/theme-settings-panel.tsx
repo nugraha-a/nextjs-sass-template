@@ -1,5 +1,7 @@
 "use client"
 
+import { uploadSidebarImageAction, deleteSidebarImageAction } from "@/actions/auth-actions"
+
 import { useState, useRef } from "react"
 import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush, Upload, ImageIcon, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -520,27 +522,21 @@ function SidebarImageSection() {
     try {
       const formData = new FormData()
       formData.append("image", pendingFile)
-
-      const headers: HeadersInit = {}
       if (sidebarImageUrl) {
-        headers["x-old-image"] = sidebarImageUrl
+        formData.append("oldImage", sidebarImageUrl)
       }
 
-      const res = await fetch("/api/sidebar-image", {
-        method: "POST",
-        headers,
-        body: formData,
-      })
+      const result = await uploadSidebarImageAction(formData)
 
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || "Upload failed")
+      if (result.error) {
+        throw new Error(result.error)
       }
 
-      const { url } = await res.json()
-      setSidebarImageUrl(url)
-      setSidebarImageBrightness(pendingBrightness)
-      toast.success("Sidebar image updated")
+      if (result.url) {
+        setSidebarImageUrl(result.url)
+        setSidebarImageBrightness(pendingBrightness)
+        toast.success("Sidebar image updated")
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Upload failed")
     } finally {
@@ -565,18 +561,7 @@ function SidebarImageSection() {
     setIsResetting(true)
 
     try {
-      const res = await fetch("/api/sidebar-image", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: sidebarImageUrl }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        toast.error(data.error || "Failed to delete image")
-        return
-      }
-
+      await deleteSidebarImageAction(sidebarImageUrl)
       setSidebarImageUrl(null)
       setSidebarImageBrightness(null)
       toast.success("Reset to default image")

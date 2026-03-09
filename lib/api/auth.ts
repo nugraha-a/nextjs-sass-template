@@ -59,6 +59,6 @@ export const authApi = {
   },
 
   getMe(token: string) {
-    return fetchApi<User>("/auth/me", { token })
+    return fetchApi<User>("/auth/me", { token, cache: "no-store" })
   },
 }

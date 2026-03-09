@@ -19,13 +19,14 @@ export class ApiError extends Error {
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: unknown
   token?: string
+  next?: NextFetchRequestConfig
 }
 
 export async function fetchApi<T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> {
-  const { body, token, headers: customHeaders, ...rest } = options
+  const { body, token, next, headers: customHeaders, ...rest } = options
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -40,6 +41,7 @@ export async function fetchApi<T>(
     ...rest,
     headers,
     body: body ? JSON.stringify(body) : undefined,
+    ...(next ? { next } : {}),
   })
 
   if (!response.ok) {
@@ -72,15 +74,15 @@ export async function fetchApiServer<T>(
 
   const cookieHeader = cookieMap
     ? Object.entries(cookieMap)
-        .map(([k, v]) => `${k}=${v}`)
-        .join("; ")
+      .map(([k, v]) => `${k}=${v}`)
+      .join("; ")
     : undefined
 
   if (cookieHeader && !rest.headers) {
     rest.headers = {} as Record<string, string>
   }
   if (cookieHeader) {
-    ;(rest.headers as Record<string, string>)["Cookie"] = cookieHeader
+    ; (rest.headers as Record<string, string>)["Cookie"] = cookieHeader
   }
 
   return fetchApi<T>(endpoint, rest)

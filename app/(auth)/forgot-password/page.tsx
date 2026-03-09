@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form"
 import { BrandPanel } from "@/components/auth/brand-panel"
 import { useFormGuard } from "@/hooks/use-form-guard"
+import { forgotPasswordAction } from "@/actions/auth-actions"
 
 const forgotSchema = z.object({
   identifier: z.string().min(1, "Email or phone is required"),
@@ -46,24 +47,22 @@ export default function ForgotPasswordPage() {
     setError("")
 
     try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
+      const formData = new FormData()
+      formData.append("identifier", data.identifier)
+      formData.append("channel", data.channel)
 
-      const result = await res.json()
+      const result = await forgotPasswordAction(undefined, formData)
 
-      if (!res.ok) {
-        setError(result.message || "Something went wrong")
+      if (!result.success) {
+        setError(result.error || "Something went wrong")
         setIsLoading(false)
         reset()
         return
       }
 
       router.push(
-        `/verify?mode=forgot&token=${result.verificationToken}&contact=${encodeURIComponent(result.maskedContact)}`
-      ) // stays locked — navigating away
+        `/verify?mode=forgot&token=${result.verificationToken}&contact=${encodeURIComponent(result.maskedContact || "")}`
+      )
     } catch {
       setError("Something went wrong. Please try again.")
       setIsLoading(false)

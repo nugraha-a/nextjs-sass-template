@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react"
 import { useTheme } from "next-themes"
+import { deleteSidebarImageAction } from "@/actions/auth-actions"
 
 export type SidebarMode = "normal" | "compact" | "offcanvas"
 export type SidebarTheme = "default" | "dark" | "brand" | "image" | "aurora"
@@ -314,11 +315,7 @@ export function ThemeSettingsProvider({ children }: { children: React.ReactNode 
     // Delete sidebar image file from disk if one exists
     const currentImageUrl = settings.sidebarImageUrl
     if (currentImageUrl && currentImageUrl.startsWith("/uploads/sidebar/")) {
-      fetch("/api/sidebar-image", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: currentImageUrl }),
-      }).catch(() => { })
+      deleteSidebarImageAction(currentImageUrl).catch(() => { })
     }
 
     setSettings(defaultSettings)

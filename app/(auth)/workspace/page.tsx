@@ -6,6 +6,7 @@ import { Building2, ChevronRight, LogOut, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import { useFormGuard } from "@/hooks/use-form-guard"
+import { getWorkspacesAction } from "@/actions/auth-actions"
 
 interface WorkspaceItem {
   id: string
@@ -43,25 +44,22 @@ export default function WorkspacePage() {
     }
 
     try {
-      const tokenRes = await fetch("/api/auth/token")
-      if (!tokenRes.ok) {
+      const result = await getWorkspacesAction()
+      if (!result.success) {
         router.push("/login")
         return
       }
-      const { accessToken } = await tokenRes.json()
 
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-      const res = await fetch(`${API_BASE}/workspaces`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
+      const data = result.workspaces.map((ws) => ({
+        id: ws.id,
+        name: ws.name,
+        memberCount: ws.memberCount,
+        role: ws.role || "Member",
+      }))
+      setWorkspaces(data)
 
-      if (res.ok) {
-        const data = await res.json()
-        setWorkspaces(data)
-
-        if (data.length === 1) {
-          await handleSelect(data[0].id)
-        }
+      if (data.length === 1) {
+        await handleSelect(data[0].id)
       }
     } catch {
       // Error loading workspaces

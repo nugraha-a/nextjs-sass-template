@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { IS_DEMO } from "@/lib/api/demo-data"
 
+export const dynamic = "force-static"
+
 /**
  * GET /api/config
  * Public endpoint returning non-sensitive app configuration.

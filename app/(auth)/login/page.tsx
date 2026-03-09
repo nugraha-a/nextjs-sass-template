@@ -17,7 +17,7 @@ import { useFormGuard } from "@/hooks/use-form-guard"
 
 export default function LoginPage() {
   const router = useRouter()
-  const { demoAvailable } = useAuth()
+  const { demoAvailable, login, loginWithGoogle } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [remember, setRemember] = useState(false)
@@ -43,29 +43,18 @@ export default function LoginPage() {
     setError("")
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
+      const result = await login(email, password)
 
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.message || "Login failed")
+      if (result.requires2FA) {
+        router.push(`/verify?mode=2fa&token=${result.verificationToken}`)
+        return
       }
 
-      const data = await res.json()
-
-      if (data.requires2FA) {
-        router.push(`/verify?mode=2fa&token=${data.verificationToken}`)
-        return // stays locked — navigating away
-      }
-
-      router.push("/") // stays locked — navigating away
+      router.push("/")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
       setIsLoading(false)
-      reset() // only unlock on error
+      reset()
     }
   })
 
@@ -73,15 +62,13 @@ export default function LoginPage() {
     if (demoAvailable) {
       setIsLoading(true)
       try {
-        const res = await fetch("/api/auth/google", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idToken: "demo" }),
-        })
-        if (res.ok) {
-          router.push("/") // stays locked — navigating away
+        const result = await loginWithGoogle("demo")
+        if (result.requires2FA) {
+          router.push(`/verify?mode=2fa&token=${result.verificationToken}`)
           return
         }
+        router.push("/")
+        return
       } catch {
         // fall through
       }

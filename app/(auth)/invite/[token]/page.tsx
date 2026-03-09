@@ -22,6 +22,7 @@ import { PasswordInput } from "@/components/auth/password-input"
 import { PasswordStrength } from "@/components/auth/password-strength"
 import { GoogleSSOButton } from "@/components/auth/google-sso-button"
 import { useFormGuard } from "@/hooks/use-form-guard"
+import { getInviteInfoAction, acceptInviteAction } from "@/actions/auth-actions"
 
 const inviteSchema = z
   .object({
@@ -71,11 +72,13 @@ export default function InvitePage() {
 
   const loadInviteInfo = async () => {
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-      const res = await fetch(`${API_BASE}/invites/${token}`)
-      if (res.ok) {
-        const info = await res.json()
-        setInviteInfo(info)
+      const result = await getInviteInfoAction(token)
+      if (result.success) {
+        setInviteInfo({
+          workspaceName: result.workspaceName || "",
+          role: result.role || "",
+          email: result.email || "",
+        })
       }
     } catch {
       // Invite may be invalid or expired
@@ -89,25 +92,21 @@ export default function InvitePage() {
     setError("")
 
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-      const res = await fetch(`${API_BASE}/invites/${token}/accept`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.name,
-          password: data.password,
-        }),
-      })
+      const formData = new FormData()
+      formData.append("token", token)
+      formData.append("name", data.name)
+      formData.append("password", data.password)
 
-      if (!res.ok) {
-        const result = await res.json()
-        setError(result.message || "Failed to accept invite")
+      const result = await acceptInviteAction(undefined, formData)
+
+      if (!result.success) {
+        setError(result.error || "Failed to accept invite")
         setIsLoading(false)
         reset()
         return
       }
 
-      router.push("/login?invite=accepted") // stays locked — navigating away
+      router.push("/login?invite=accepted")
     } catch {
       setError("Something went wrong. Please try again.")
       setIsLoading(false)

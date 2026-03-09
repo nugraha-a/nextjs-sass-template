@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/input-otp"
 import { BrandPanel } from "@/components/auth/brand-panel"
 import { useFormGuard } from "@/hooks/use-form-guard"
+import { verifyOtpAction, forgotPasswordAction } from "@/actions/auth-actions"
 
 function VerifyContent() {
   const router = useRouter()
@@ -47,33 +48,26 @@ function VerifyContent() {
       setError("")
 
       try {
-        const res = await fetch("/api/auth/verify-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code: otpCode, verificationToken }),
-        })
+        const formData = new FormData()
+        formData.append("code", otpCode)
+        formData.append("verificationToken", verificationToken)
 
-        const result = await res.json()
+        const result = await verifyOtpAction(undefined, formData)
 
-        if (!res.ok) {
-          setError(result.message || "Invalid code")
+        if (!result.success) {
+          setError(result.error || "Invalid code")
           setCode("")
           setIsLoading(false)
           resetVerify()
           return
         }
 
-        // Route based on mode — stays locked during navigation
         switch (mode) {
           case "forgot":
             router.push(`/reset-password?token=${result.resetToken}`)
             break
           case "2fa":
-            if (result.user?.workspaces?.length > 1) {
-              router.push("/workspace")
-            } else {
-              router.push("/")
-            }
+            router.push("/")
             break
           case "invite":
             router.push(`/invite/${verificationToken}`)
@@ -103,16 +97,11 @@ function VerifyContent() {
     setCountdown(60)
     setCanResend(false)
     try {
-      await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier: maskedContact,
-          channel: "email",
-        }),
-      })
+      const formData = new FormData()
+      formData.append("identifier", maskedContact)
+      formData.append("channel", "email")
+      await forgotPasswordAction(undefined, formData)
     } finally {
-      // Resend stays on the same page — always unlock
       setIsResending(false)
       resetResend()
     }

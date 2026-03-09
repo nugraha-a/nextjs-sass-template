@@ -20,6 +20,7 @@ import { BrandPanel } from "@/components/auth/brand-panel"
 import { PasswordInput } from "@/components/auth/password-input"
 import { PasswordStrength } from "@/components/auth/password-strength"
 import { useFormGuard } from "@/hooks/use-form-guard"
+import { resetPasswordAction } from "@/actions/auth-actions"
 
 const resetSchema = z
   .object({
@@ -59,24 +60,20 @@ function ResetPasswordContent() {
     setError("")
 
     try {
-      const res = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          resetToken,
-          newPassword: data.password,
-        }),
-      })
+      const formData = new FormData()
+      formData.append("resetToken", resetToken)
+      formData.append("newPassword", data.password)
 
-      if (!res.ok) {
-        const result = await res.json()
-        setError(result.message || "Reset failed")
+      const result = await resetPasswordAction(undefined, formData)
+
+      if (!result.success) {
+        setError(result.error || "Reset failed")
         setIsLoading(false)
         reset()
         return
       }
 
-      router.push("/login?reset=success") // stays locked — navigating away
+      router.push("/login?reset=success")
     } catch {
       setError("Something went wrong. Please try again.")
       setIsLoading(false)

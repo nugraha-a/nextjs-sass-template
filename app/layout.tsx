@@ -4,6 +4,7 @@ import { Geist_Mono, Inter, Open_Sans, Plus_Jakarta_Sans, Geist } from 'next/fon
 import { ThemeProvider } from "@/components/theme-provider"
 import { ThemeSettingsProvider } from "@/contexts/theme-settings-context"
 import { AuthProvider } from "@/contexts/auth-context"
+import { themeScript } from "@/lib/theme-script"
 import './globals.css'
 
 const geistMono = Geist_Mono({
@@ -36,7 +37,6 @@ export const metadata: Metadata = {
   },
 }
 
-import { themeScript } from "@/lib/theme-script"
 
 export default function RootLayout({
   children,
@@ -46,6 +46,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/*
+          SECURITY NOTE: This dangerouslySetInnerHTML is SAFE because:
+          1. themeScript is a static build-time constant from lib/theme-script.ts
+          2. Contains NO user input — only hardcoded whitelist validation
+          3. Required to be inline+blocking to prevent FOUC (Flash of Unstyled Content)
+          4. next/script beforeInteractive is NOT truly blocking — causes flicker
+          5. This is the official Next.js pattern for theme initialization
+          Ref: OWASP XSS — only dangerous with dynamic/user-supplied content
+        */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body suppressHydrationWarning className={`${geistMono.variable} ${inter.variable} ${openSans.variable} ${jakarta.variable} ${geistSans.variable} font-sans antialiased`}>
