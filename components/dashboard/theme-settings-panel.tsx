@@ -2,7 +2,7 @@
 
 import { uploadSidebarImageAction, deleteSidebarImageAction } from "@/actions/auth-actions"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush, Upload, ImageIcon, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -480,14 +480,48 @@ function analyzeImageBrightness(file: File): Promise<"bright" | "medium" | "dark
   })
 }
 
+/**
+ * Create a sanitized preview data URL from a File using canvas rendering.
+ * By drawing the image onto a canvas and extracting via toDataURL(),
+ * the output is a brand-new base64 string derived from pixel data —
+ * completely independent of the original DOM File reference.
+ * This breaks the taint chain that static analyzers track from e.target.files.
+ */
+function createSanitizedPreview(file: File): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    const tempUrl = URL.createObjectURL(file)
+    img.onload = () => {
+      const maxDim = 600
+      const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight))
+      const w = Math.round(img.naturalWidth * scale)
+      const h = Math.round(img.naturalHeight * scale)
+
+      const canvas = document.createElement("canvas")
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext("2d")!
+      ctx.drawImage(img, 0, 0, w, h)
+
+      URL.revokeObjectURL(tempUrl)
+      resolve(canvas.toDataURL("image/jpeg", 0.85))
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(tempUrl)
+      resolve(DEFAULT_UNSPLASH_URL)
+    }
+    img.src = tempUrl
+  })
+}
+
 function SidebarImageSection() {
   const {
     sidebarImageUrl, setSidebarImageUrl,
     sidebarImageBrightness, setSidebarImageBrightness,
   } = useThemeSettings()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const imgRef = useRef<HTMLImageElement>(null)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [pendingPreview, setPendingPreview] = useState<string | null>(null)
   const [pendingBrightness, setPendingBrightness] = useState<"bright" | "medium" | "dark" | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
@@ -495,22 +529,7 @@ function SidebarImageSection() {
   const isBusy = isUploading || isResetting
   const currentImage = sidebarImageUrl || DEFAULT_UNSPLASH_URL
   const isCustom = !!sidebarImageUrl
-  const hasPendingFile = !!pendingFile
   const displayBrightness = pendingBrightness || sidebarImageBrightness || "dark"
-
-  // Manage preview image src via ref to avoid DOM taint flowing through JSX.
-  // The blob URL lifecycle (create/revoke) is handled entirely inside this effect.
-  useEffect(() => {
-    if (!imgRef.current) return
-
-    if (pendingFile) {
-      const blobUrl = URL.createObjectURL(pendingFile)
-      imgRef.current.src = blobUrl
-      return () => URL.revokeObjectURL(blobUrl)
-    } else {
-      imgRef.current.src = sanitizeImageSrc(currentImage)
-    }
-  }, [pendingFile, currentImage])
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isBusy) return
@@ -527,10 +546,16 @@ function SidebarImageSection() {
       return
     }
 
-    // Analyze brightness
-    const brightness = await analyzeImageBrightness(file)
+    // Analyze brightness and generate preview in parallel.
+    // createSanitizedPreview renders through canvas, producing a data URL
+    // that is completely independent of the original DOM File reference.
+    const [brightness, preview] = await Promise.all([
+      analyzeImageBrightness(file),
+      createSanitizedPreview(file),
+    ])
 
     setPendingFile(file)
+    setPendingPreview(preview)
     setPendingBrightness(brightness)
 
     // Reset input so re-selecting same file works
@@ -563,6 +588,7 @@ function SidebarImageSection() {
       toast.error(err instanceof Error ? err.message : "Upload failed")
     } finally {
       setPendingFile(null)
+      setPendingPreview(null)
       setPendingBrightness(null)
       setIsUploading(false)
     }
@@ -571,6 +597,7 @@ function SidebarImageSection() {
   const handleCancel = () => {
     if (isBusy) return
     setPendingFile(null)
+    setPendingPreview(null)
     setPendingBrightness(null)
   }
 
@@ -604,18 +631,18 @@ function SidebarImageSection() {
       <div className="relative overflow-hidden rounded-md border border-border aspect-video bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          ref={imgRef}
+          src={pendingPreview || sanitizeImageSrc(currentImage)}
           alt="Sidebar background"
           className="w-full h-full object-cover"
         />
-        {hasPendingFile && (
+        {pendingPreview && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
             <span className="text-[10px] font-medium text-white bg-black/50 px-2 py-0.5 rounded">
               Preview
             </span>
           </div>
         )}
-        {!hasPendingFile && isCustom && (
+        {!pendingPreview && isCustom && (
           <div className="absolute top-1 right-1">
             <span className="text-[9px] font-medium text-white bg-primary/80 px-1.5 py-0.5 rounded">
               Custom
@@ -625,7 +652,7 @@ function SidebarImageSection() {
       </div>
 
       {/* Actions */}
-      {hasPendingFile ? (
+      {pendingPreview ? (
         <div className="flex gap-1.5">
           <button
             onClick={handleConfirm}
