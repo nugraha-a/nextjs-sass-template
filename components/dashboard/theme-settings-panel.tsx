@@ -426,6 +426,14 @@ export function ThemeSettingsPanel() {
 const DEFAULT_UNSPLASH_URL = "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
 const BRIGHTNESS_LABELS = { bright: "Bright", medium: "Medium", dark: "Dark" } as const
 
+/** Validate image src against known safe URL patterns to prevent XSS */
+function sanitizeImageSrc(src: string): string {
+  if (src.startsWith("blob:")) return src
+  if (src.startsWith("/uploads/sidebar/")) return src
+  if (src.startsWith("https://images.unsplash.com/")) return src
+  return DEFAULT_UNSPLASH_URL
+}
+
 /** Analyze average brightness of an image file using Canvas */
 function analyzeImageBrightness(file: File): Promise<"bright" | "medium" | "dark"> {
   return new Promise((resolve) => {
@@ -586,7 +594,7 @@ function SidebarImageSection() {
       <div className="relative overflow-hidden rounded-md border border-border aspect-video bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={pendingPreview || currentImage}
+          src={sanitizeImageSrc(pendingPreview || currentImage)}
           alt="Sidebar background"
           className="w-full h-full object-cover"
         />

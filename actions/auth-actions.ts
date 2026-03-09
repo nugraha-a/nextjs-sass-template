@@ -528,9 +528,13 @@ export async function getWorkspacesAction(): Promise<WorkspaceListResult> {
 
 /** Get invite info for a token */
 export async function getInviteInfoAction(token: string): Promise<InviteInfoResult> {
+    if (!token || !/^[a-zA-Z0-9_-]{1,128}$/.test(token)) {
+        return { success: false }
+    }
+
     try {
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-        const res = await fetch(`${API_BASE}/invites/${token}`)
+        const res = await fetch(`${API_BASE}/invites/${encodeURIComponent(token)}`)
         if (res.ok) {
             const info = await res.json()
             return { success: true, ...info }
@@ -554,9 +558,13 @@ export async function acceptInviteAction(
         return { success: false, error: "All fields are required." }
     }
 
+    if (!/^[a-zA-Z0-9_-]{1,128}$/.test(token)) {
+        return { success: false, error: "Invalid invite token." }
+    }
+
     try {
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1"
-        const res = await fetch(`${API_BASE}/invites/${token}/accept`, {
+        const res = await fetch(`${API_BASE}/invites/${encodeURIComponent(token)}/accept`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, password }),

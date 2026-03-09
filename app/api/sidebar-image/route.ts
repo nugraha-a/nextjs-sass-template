@@ -63,15 +63,24 @@ function isAuthenticated(request: NextRequest): boolean {
  * Convert a public URL path like "/uploads/sidebar/img.jpg"
  * to an absolute filesystem path, safely.
  *
- * SECURITY: Strips leading slashes, resolves to canonical path,
- * and verifies the result is inside UPLOAD_DIR.
+ * SECURITY: Extracts only the basename from the input, validates it
+ * against a strict allowlist pattern, and constructs the path from
+ * scratch under UPLOAD_DIR. This eliminates any user-controlled
+ * directory components, making path traversal impossible.
  */
 function resolveUploadPath(urlPath: string): string | null {
-    // Strip leading slash to avoid path.resolve treating it as absolute root
-    const cleaned = urlPath.replace(/^\/+/, "")
-    const resolved = path.resolve(PUBLIC_DIR, cleaned)
+    // Extract only the filename — ignores any directory traversal in user input
+    const basename = path.basename(urlPath)
 
-    // Must be inside UPLOAD_DIR (prevents path traversal)
+    // Reject empty, dotfiles, or filenames with unsafe characters
+    if (!basename || basename.startsWith(".") || /[^a-zA-Z0-9._-]/.test(basename)) {
+        return null
+    }
+
+    // Construct path from validated basename only (never from raw user input)
+    const resolved = path.join(UPLOAD_DIR, basename)
+
+    // Belt-and-suspenders: verify the resolved path is still inside UPLOAD_DIR
     if (!resolved.startsWith(UPLOAD_DIR + path.sep) && resolved !== UPLOAD_DIR) {
         return null
     }
