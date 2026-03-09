@@ -2,7 +2,7 @@
 
 import { uploadSidebarImageAction, deleteSidebarImageAction } from "@/actions/auth-actions"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Settings, Monitor, Moon, Sun, PanelLeft, PanelLeftClose, Columns2, Type, Palette, RotateCcw, Maximize2, Minimize2, LayoutGrid, Layers, Paintbrush, Upload, ImageIcon, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -486,8 +486,8 @@ function SidebarImageSection() {
     sidebarImageBrightness, setSidebarImageBrightness,
   } = useThemeSettings()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
-  const [pendingPreview, setPendingPreview] = useState<string | null>(null)
   const [pendingBrightness, setPendingBrightness] = useState<"bright" | "medium" | "dark" | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
@@ -495,7 +495,22 @@ function SidebarImageSection() {
   const isBusy = isUploading || isResetting
   const currentImage = sidebarImageUrl || DEFAULT_UNSPLASH_URL
   const isCustom = !!sidebarImageUrl
+  const hasPendingFile = !!pendingFile
   const displayBrightness = pendingBrightness || sidebarImageBrightness || "dark"
+
+  // Manage preview image src via ref to avoid DOM taint flowing through JSX.
+  // The blob URL lifecycle (create/revoke) is handled entirely inside this effect.
+  useEffect(() => {
+    if (!imgRef.current) return
+
+    if (pendingFile) {
+      const blobUrl = URL.createObjectURL(pendingFile)
+      imgRef.current.src = blobUrl
+      return () => URL.revokeObjectURL(blobUrl)
+    } else {
+      imgRef.current.src = sanitizeImageSrc(currentImage)
+    }
+  }, [pendingFile, currentImage])
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isBusy) return
@@ -516,7 +531,6 @@ function SidebarImageSection() {
     const brightness = await analyzeImageBrightness(file)
 
     setPendingFile(file)
-    setPendingPreview(URL.createObjectURL(file))
     setPendingBrightness(brightness)
 
     // Reset input so re-selecting same file works
@@ -548,9 +562,7 @@ function SidebarImageSection() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Upload failed")
     } finally {
-      if (pendingPreview) URL.revokeObjectURL(pendingPreview)
       setPendingFile(null)
-      setPendingPreview(null)
       setPendingBrightness(null)
       setIsUploading(false)
     }
@@ -558,9 +570,7 @@ function SidebarImageSection() {
 
   const handleCancel = () => {
     if (isBusy) return
-    if (pendingPreview) URL.revokeObjectURL(pendingPreview)
     setPendingFile(null)
-    setPendingPreview(null)
     setPendingBrightness(null)
   }
 
@@ -594,18 +604,18 @@ function SidebarImageSection() {
       <div className="relative overflow-hidden rounded-md border border-border aspect-video bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={sanitizeImageSrc(pendingPreview || currentImage)}
+          ref={imgRef}
           alt="Sidebar background"
           className="w-full h-full object-cover"
         />
-        {pendingPreview && (
+        {hasPendingFile && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
             <span className="text-[10px] font-medium text-white bg-black/50 px-2 py-0.5 rounded">
               Preview
             </span>
           </div>
         )}
-        {!pendingPreview && isCustom && (
+        {!hasPendingFile && isCustom && (
           <div className="absolute top-1 right-1">
             <span className="text-[9px] font-medium text-white bg-primary/80 px-1.5 py-0.5 rounded">
               Custom
@@ -615,7 +625,7 @@ function SidebarImageSection() {
       </div>
 
       {/* Actions */}
-      {pendingPreview ? (
+      {hasPendingFile ? (
         <div className="flex gap-1.5">
           <button
             onClick={handleConfirm}
