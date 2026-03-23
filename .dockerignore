@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+LICENSE
+.env*.local
+.env
+.vercel
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+k8s/

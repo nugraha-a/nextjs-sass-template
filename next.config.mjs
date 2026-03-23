@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable standalone output for Docker deployments
+  output: 'standalone',
   // SECURITY: Do NOT set ignoreBuildErrors — TypeScript errors can mask security issues
   images: {
     unoptimized: true,

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: erp-template
+  namespace: erp-template
+  labels:
+    app.kubernetes.io/name: erp-template
+  annotations:
+    # Uncomment sesuai ingress controller yang digunakan:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    # ⚠️ Ganti dengan domain kamu
+    - host: erp.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: erp-template
+                port:
+                  number: 80
+  # Uncomment untuk HTTPS (pastikan cert-manager sudah terinstall):
+  # tls:
+  #   - hosts:
+  #       - erp.example.com
+  #     secretName: erp-template-tls
